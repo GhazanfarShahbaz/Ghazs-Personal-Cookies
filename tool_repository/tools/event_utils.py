@@ -1,0 +1,157 @@
+from copy import copy
+from datetime import datetime, timedelta
+from typing import Dict, List, Set
+
+from dateutil.relativedelta import relativedelta
+
+from repository.events import EventRepository
+from repository.model import Event
+
+
+weekday = {
+    "sun": 0,
+    "sat": 1, 
+    "m": 2,
+    "t": 3,
+    "w": 4,
+    "th": 5,
+    "f": 6,    
+}
+date_formats = ('%m/%d/%y %H:%M', '%m-%d-%y %H:%M',  '%m.%d.%y %H:%M', '%m/%d/%y %I:%M %p', '%m-%d-%y %I:%M %p', '%m.%d.%y %I:%M %p', '%m/%d/%Y %H:%M', '%m-%d-%Y %H:%M',  '%m.%d.%Y %H:%M', '%m/%d/%Y %I:%M %p', '%m-%d-%Y %I:%M %p', '%m.%d.%Y %I:%M %p')
+
+def create_event_information(event_data: dict) -> List[Event]:
+    event_list: List[dict]= []
+
+    event_template = {
+        "Name": event_data.get("Name"), 
+        "Type": event_data.get("Type"),
+        "Location": event_data.get("Location"),
+        "Description": event_data.get("Description")
+    }
+
+    if not event_data.get("RecurranceType"):
+        start_date: datetime = string_to_date(event_data.get("StartDate"))
+        end_date: datetime = string_to_date(event_data.get("EndDate"))
+
+        if start_date > end_date:
+            start_date, end_date = end_date, start_date 
+
+        event_template["StartDate"] =  start_date
+        event_template["EndDate"] = end_date
+        event_list.append(event_template)
+    else:
+        reccurance_id: int = None 
+
+       
+        reccurance_id = EventRepository().get_reccurance_count()
+
+        event_template["ReccuranceId"] = reccurance_id 
+
+        if event_data["RecurranceType"] not in {"weekly", "monthly", "yearly"}:
+            event_list = get_daily_reccurance_event_list(event_template, event_data["StartDate"], event_data["EndDate"], event_data["RecurranceType"],event_data["RecurranceDateTo"])
+
+        else:
+            event_list = get_other_reccurance_event_list(event_template, event_data["StartDate"], event_data["EndDate"], event_data["RecurranceType"],event_data["RecurranceDateTo"])
+
+    return event_dict_list_to_event_type_list(event_list)
+
+
+def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_date: str, reccurance_type: str, reccurance_end_date_string: str) -> List[dict]:
+    reccurance_nums: Set[int] = []
+    if reccurance_type == "daily":
+        reccurance_nums = [0,1,2,3,4,5,6]
+    else:
+        for reccurance_str in reccurance_type.split("/"):
+            reccurance_str = reccurance_str.strip()
+            global weekday
+            if weekday.get(reccurance_str):
+                reccurance_nums.add(weekday[reccurance_str])
+
+    start_date: datetime = string_to_date(start_date)
+    end_date: datetime = string_to_date(end_date)
+    start_date_hour: int = start_date.hour
+    start_date_minute: int = start_date.minute
+    end_date_hour: int = end_date.hour
+    end_date_minute: int = end_date.minute
+
+
+    if end_date < start_date:
+        start_date, end_date = end_date, start_date
+    
+
+    current_date: datetime = copy(start_date)
+    reccurance_end_date: datetime = string_to_date(reccurance_end_date_string)
+
+    event_list: List[dict] = []
+    time_delta: timedelta = timedelta(days=1)
+    
+    while current_date <= reccurance_end_date:
+        print(current_date.weekday(), reccurance_nums)
+        if current_date.weekday() in reccurance_nums:
+            insertion_start_date: datetime = datetime(current_date.year, current_date.month, current_date.day, start_date_hour, start_date_minute)
+            insertion_end_date: datetime = datetime(current_date.year, current_date.month, current_date.day, end_date_hour, end_date_minute)
+            event = copy(event_template)
+            event["StartDate"] = insertion_start_date
+            event["EndDate"] = insertion_end_date
+            event_list.append(event)
+
+        current_date += time_delta
+    print(event_list)
+    return event_list
+
+
+def get_other_reccurance_event_list(event_template: dict, start_date: str, end_date: str, reccurance_type: str, reccurance_end_date_string: str) -> List[Dict[datetime, datetime]]:
+    start_date: datetime = string_to_date(start_date)
+    end_date: datetime = string_to_date(end_date)
+    start_date_hour: int = start_date.hour
+    start_date_minute: int = start_date.minute
+    end_date_hour: int = end_date.hour
+    end_date_minute: int = end_date.minute
+
+
+    if end_date < start_date:
+        start_date, end_date = end_date, start_date
+    
+    current_date: datetime = copy(start_date)
+    reccurance_end_date: datetime = string_to_date(reccurance_end_date_string)
+
+    time_delta: timedelta or relativedelta = None 
+    if reccurance_type == "weekly":
+        time_delta = timedelta(weeks=1)
+    elif reccurance_type == "monthly":
+        time_delta = relativedelta(months=+1)
+    elif reccurance_type == "yearly":
+        time_delta = relativedelta(years=+1)
+    else:
+        return []
+
+    event_list: List[Dict[datetime, datetime]] = []
+
+    while current_date <= reccurance_end_date:
+        insertion_start_date: datetime = datetime(current_date.year, current_date.month, current_date.day, start_date_hour, start_date_minute)
+        insertion_end_date: datetime = datetime(current_date.year, current_date.month, current_date.day, end_date_hour, end_date_minute)
+        event = copy(event_template)
+        event["StartDate"] = insertion_start_date
+        event["EndDate"] = insertion_end_date
+        event_list.append(event)
+
+        current_date += time_delta
+
+    return event_list
+
+def string_to_date(date_string: str) -> datetime:
+    global date_formats
+    for date_format in date_formats:
+        try:
+            date: datetime = datetime.strptime(date_string, date_format)
+            return date
+        except:
+            pass
+    
+    raise ValueError("This is not a valid date format")
+
+def event_dict_list_to_event_type_list(event_list: List[dict]) -> List[Event]:
+    return [Event(event) for event in event_list]
+
+def event_type_list_to_event_type_list(event_list: List[Event]) -> List[dict]:
+    return [event.to_dict() for event in event_list]    
