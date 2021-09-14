@@ -4,9 +4,10 @@ from stringcolor import cs as color
 
 
 def print_events(event_list: List[dict], exclude_attributes: Set[str]) -> None:
+    event_string_list: List[str] = []
     for event in event_list:
-        print_event(event, exclude_attributes)
-
+        event_string_list.append(print_event(event, exclude_attributes))
+    return event_string_list
 
 def print_event(event: dict, exclude_attributes: Set[str]) -> None:
     event_string: str = f"{color(event['Name'], 'dodgerblue')} {dates_to_string(event['StartDate'], event['EndDate'])} "
@@ -16,6 +17,8 @@ def print_event(event: dict, exclude_attributes: Set[str]) -> None:
 
     if "type" not in exclude_attributes:
         event_string += f"and is a {color(event['Type'], 'blue3')} type event "
+
+    return event_string
 
     
 def dates_to_string(start_date: datetime, end_date: datetime) -> str:
