@@ -1,28 +1,15 @@
-from sqlalchemy import (Boolean, Column, DateTime, Integer, String,
-                        create_engine, Text, ForeignKey)
+from sqlalchemy import (ARRAY, Boolean, Column, DateTime, Float, Integer, 
+                        String, Text, ForeignKey)
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
-from dotenv import load_dotenv
-import os
 
-def get_engine() -> Engine:
-    load_dotenv()
-    sql_type: str = os.environ["SQL_TYPE"]
-    sql_host: str = os.environ["SQL_HOST"]
-    sql_address: str = os.environ["SQL_ADDRESS"]
-    sql_port: str = os.environ["SQL_PORT"]
-    sql_database: str = os.environ["SQL_DATABASE"]
-    engine: Engine = create_engine(f"{sql_type}://{sql_host}:{sql_address}:{sql_port}/{sql_database}")
-
-    return engine
-
+from get_db_engine import get_engine
 
 Engine: Engine = get_engine()
 Session = sessionmaker(Engine)
 Base = declarative_base()
-
 
 class Event(Base):  # was originally Events
     __tablename__ = "events"
@@ -183,6 +170,37 @@ class Definition(Base):
             "Definition": self.Definition,
         }
 
+
+def CodingQuestion(Base):
+    __tablename__ = "coding_questions"
+
+    QuestionId = Column("QuestionId", Integer, autoincrement=True, primary_key=True)
+    WebsiteId = Column("WebsiteId", Integer, nullable=False)
+    QuestionLink = Column("QuestionLink", String(256), nullable=True)
+    Difficulty = Column("Difficulty", String(32), nullable=True)
+    AcceptanceRate = Column("AcceptanceRate", Float, nullable=True)
+    Tags = Column("Tags", ARRAY(Integer), nullable=True)
+    RequiresSubscription = Column("RequiresSubscription", Boolean, nullable=True)
+
+    def __init__(self, question_information: dict) -> None:
+        self.QuestionId = question_information.get("QuestionId")
+        self.WebsiteId = question_information.get("WebsiteId")
+        self.QuestionLink = question_information.get("QuestionLink")
+        self.Difficulty = question_information.get("Difficulty")
+        self.AcceptanceRate = question_information.get("AcceptanceRate")
+        self.Tags = question_information.get("Tags")
+        self.RequiresSubscription = question_information.get("RequiresSubscription")
+
+    def to_dict(self) -> dict:
+        return {
+            "QuestionId": self.QuestionId,
+            "WebsiteId": self.WebsiteId,
+            "QuestionLink": self.QuestionLink,
+            "Difficulty": self.Difficulty,
+            "AcceptanceRate": self.AcceptanceRate,
+            "Tags": self.Tags,
+            "RequiresSubscription": self.DefRequiresSubscriptioninition
+        }
 
 def init_db():
     global Base, Engine
