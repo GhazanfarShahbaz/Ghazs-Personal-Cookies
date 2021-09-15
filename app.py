@@ -1,12 +1,13 @@
-from werkzeug.middleware.dispatcher import DispatcherMiddleware # use to combine each Flask app into a larger one that is dispatched based on prefix
-from werkzeug.serving import run_simple # werkzeug development server
+from werkzeug.middleware.dispatcher import \
+    DispatcherMiddleware  # use to combine each Flask app into a larger one that is dispatched based on prefix
+from werkzeug.serving import run_simple  # werkzeug development server
+
 from tool_repository.requests import app
 
 
-
-
 def set_up_application():
-    application = DispatcherMiddleware(app)
+    application: DispatcherMiddleware = DispatcherMiddleware(app)
+
     return application
 
 

@@ -3,7 +3,7 @@ from flask import Flask
 from flask import request, jsonify
 
 from tools.repository.model import Event
-from tools.process_event_requests import process_create_event, process_get_event, process_update_event, process_delete_event
+from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
 from response_processing.event_processing import print_events
 from validate import validate_user
 
@@ -29,12 +29,13 @@ def get_events():
     event_list: List[Event] = []
 
     if validate_user(request_form.get("username"), request_form.get("password")):
-        if request_form.get("filterForm"):
+        if request_form.get("defaultForm"):
+            event_list = process_get_default_event(request_form.get("defaultForm"))
+        elif request_form.get("filterForm"):
             event_list = process_get_event(request_form.get("filterForm"))
         else:
             event_list = process_get_event({})
-
-    return jsonify(event_list) if request_form.get("stringifyResult") is False else jsonify(print_events(event_list, set()))
+    return jsonify(event_list) if request_form.get("stringifyResult") is None else jsonify(print_events(event_list, set()))
 
 
 @app.route("/updateEvent", methods=["POST"])
@@ -64,4 +65,4 @@ def delete_event():
     return "Success"
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
