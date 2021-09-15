@@ -140,6 +140,26 @@ class Assignment(Base):
     Submitted = Column("Submitted", Boolean, nullable=False, default=False)
 
 
+    def __init__(self, assignment_information: dict) -> None:
+        self.SectionId = assignment_information.get("ClassId")
+        self.AssignmentId = assignment_information.get("AssignmentId")
+        self.Grade = assignment_information.get("Grade")
+        self.DateAssigned = assignment_information.get("DateAssigned")
+        self.DateDue = assignment_information.get("DateDue")
+        self.Submitted = assignment_information.get("Submitted")
+    
+    def to_dict(self) -> dict:
+        return {
+            "ClassId": self.ClassId,
+            "AssignmentId": self.AssignmentId,
+            "Grade": self.Grade,
+            "DateAssigned": self.DateAssigned,
+            "DateDue": self.DateDue,
+            "Submitted": self.Submitted,
+        }
+
+
+
 class Definition(Base):
     __tablename__ = "definitions"
     
