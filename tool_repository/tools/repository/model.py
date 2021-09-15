@@ -4,11 +4,17 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.expression import null
-
+from dotenv import load_dotenv
+import os
 
 def get_engine() -> Engine:
-    engine: Engine = create_engine('mysql://doadmin:xwP23NrI_qxocdyg@db-mysql-ghaz-do-user-8116866-0.b.db.ondigitalocean.com:25060/defaultdb')
+    load_dotenv()
+    sql_type: str = os.environ["SQL_TYPE"]
+    sql_host: str = os.environ["SQL_HOST"]
+    sql_address: str = os.environ["SQL_ADDRESS"]
+    sql_port: str = os.environ["SQL_PORT"]
+    sql_database: str = os.environ["SQL_DATABASE"]
+    engine: Engine = create_engine(f"{sql_type}://{sql_host}:{sql_address}:{sql_port}/{sql_database}")
 
     return engine
 
@@ -25,8 +31,8 @@ class Event(Base):  # was originally Events
     ReccuranceId = Column("RecurranceId", Integer, nullable=True)
 
     Name = Column("Name", String(256), nullable=False)
-    StartDate = Column("StartDate", DateTime, nullable=False)
-    EndDate = Column("EndDate", DateTime, nullable=False)
+    StartDate = Column("StartDate", DateTime(timezone=True), nullable=False)
+    EndDate = Column("EndDate", DateTime(timezone=True), nullable=False)
     Type = Column("Type", String(32), nullable=False)
     Location = Column("Location", String(1024), nullable=False)
     ReccuranceType = Column("ReccurranceType", String(64), nullable=True)
@@ -95,8 +101,8 @@ class Assignment(Base):
 
     Name = Column("Name", String(64), nullable=False)
     Grade = Column("Grade", Integer, nullable=False)
-    DateAssigned = Column("DateAssigned", DateTime, nullable=True)
-    DateDue = Column("DateDue", DateTime, nullable=True)
+    DateAssigned = Column("DateAssigned", DateTime(timezone=True), nullable=True)
+    DateDue = Column("DateDue", DateTime(timezone=True), nullable=True)
     Submitted = Column("Submitted", Boolean, nullable=False, default=False)
 
 
