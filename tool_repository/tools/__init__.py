@@ -6,4 +6,4 @@ current = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(current)
 
 
-import process_event_requests
+import process_event_requests, process_weather_requests

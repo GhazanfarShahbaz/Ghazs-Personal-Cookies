@@ -4,12 +4,11 @@ from flask import request, jsonify
 
 from tools.repository.model import Event
 from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
+from tools.process_weather_requests import get_weather
 from response_processing.event_processing import print_events
 from validate import validate_user
 
-
 app = Flask(__name__)
-
 
 @app.route("/createEvent", methods=["POST"])
 def create_event():
@@ -63,6 +62,15 @@ def delete_event():
     
 
     return "Success"
+
+@app.route("/getWeather", methods=["POST"])
+def get_weather():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return get_weather()
 
 if __name__ == "__main__":
     app.run(debug=True)
