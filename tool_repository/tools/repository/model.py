@@ -74,13 +74,13 @@ class Class(Base):
     Syllabus = relationship("Syllabus", backref="classes",
                             cascade="all, delete-orphan", passive_deletes=True)
 
-    def __init__(self, event_information: dict) -> None:
-        self.ClassId = event_information.get("ClassId")
-        self.Department = event_information.get("Department")
-        self.Professor = event_information.get("Professor")
-        self.Name = event_information.get("Name")
-        self.Semester = event_information.get("Semester")
-        self.Syllabus = event_information.get("Syllabus")
+    def __init__(self, class_inforamtion: dict) -> None:
+        self.ClassId = class_inforamtion.get("ClassId")
+        self.Department = class_inforamtion.get("Department")
+        self.Professor = class_inforamtion.get("Professor")
+        self.Name = class_inforamtion.get("Name")
+        self.Semester = class_inforamtion.get("Semester")
+        self.Syllabus = class_inforamtion.get("Syllabus")
     
     def to_dict(self) -> dict:
         return {
@@ -106,6 +106,22 @@ class Syllabus(Base):
 
     Assignments = relationship(
         "Assignment", backref="syllabi", cascade="all, delete-orphan", passive_deletes=True)
+
+    def __init__(self, syllabus_information: dict) -> None:
+        self.ClassId = syllabus_information.get("ClassId")
+        self.SectionId = syllabus_information.get("SectionId")
+        self.Section = syllabus_information.get("Section")
+        self.Percentage = syllabus_information.get("Percentage")
+        self.Droppable = syllabus_information.get("Droppable")
+    
+    def to_dict(self) -> dict:
+        return {
+            "ClassId": self.ClassId,
+            "SectionId": self.SectionId,
+            "Section": self.Section,
+            "Percentage": self.Percentage,
+            "Droppable": self.Droppable,
+        }
 
 
 class Assignment(Base):
