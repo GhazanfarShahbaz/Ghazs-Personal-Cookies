@@ -74,6 +74,24 @@ class Class(Base):
     Syllabus = relationship("Syllabus", backref="classes",
                             cascade="all, delete-orphan", passive_deletes=True)
 
+    def __init__(self, event_information: dict) -> None:
+        self.ClassId = event_information.get("ClassId")
+        self.Department = event_information.get("Department")
+        self.Professor = event_information.get("Professor")
+        self.Name = event_information.get("Name")
+        self.Semester = event_information.get("Semester")
+        self.Syllabus = event_information.get("Syllabus")
+    
+    def to_dict(self) -> dict:
+        return {
+            "ClassId": self.ClassId,
+            "Department": self.Department,
+            "Professor": self.Professor,
+            "Name": self.Name,
+            "Semester": self.Semester,
+            "Syllabus": self.Syllabus,
+        }
+
 
 class Syllabus(Base):
     __tablename__ = "syllabi"
