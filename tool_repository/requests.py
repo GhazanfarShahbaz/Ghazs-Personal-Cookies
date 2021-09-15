@@ -1,3 +1,4 @@
+from apscheduler.schedulers.background import BackgroundScheduler
 from typing import List
 from flask import Flask 
 from flask import request, jsonify
@@ -194,6 +195,15 @@ def get_question():
 
     return {}
 
+@app.route("/syncQuestion", methods=["POST"])
+def sync_question():
+    # request_form = request.json
+    # print("SUCCES")
+    # if not validate_user(request_form.get("username"), request_form.get("password")):
+    #     return "Invalid"
+
+    print("Test")
+
 
 @app.route("/getWeather", methods=["POST"])
 def get_weather():
@@ -203,6 +213,10 @@ def get_weather():
         return "Invalid"
 
     return get_weather()
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=sync_question, trigger="interval", hours=1)
+scheduler.start()
 
 if __name__ == "__main__":
     app.run(debug=True)
