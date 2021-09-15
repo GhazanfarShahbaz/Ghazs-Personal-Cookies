@@ -22,6 +22,7 @@ def create_event():
 
     return "Success"
     
+
 @app.route("/getEvent", methods=["POST"])
 def get_events():
     request_form = request.json
@@ -62,6 +63,137 @@ def delete_event():
     
 
     return "Success"
+
+
+@app.route("/addClass", methods=["POST"])
+def add_class():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/getClass", methods=["POST"])
+def get_class():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/updateClass", methods=["POST"])
+def update_class():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/deleteClass", methods=["POST"])
+def delete_class():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/addSyllabus", methods=["POST"])
+def add_syllabus():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/getSyllabus", methods=["POST"])
+def get_syllabus():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/updateSyllabus", methods=["POST"])
+def update_syllabus():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/deleteSyllabus", methods=["POST"])
+def delete_syllabus():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/addGrade", methods=["POST"])
+def add_grade():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/getGrade", methods=["POST"])
+def get_grade():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/updateGrade", methods=["POST"])
+def update_grade():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/deleteGrade", methods=["POST"])
+def delete_grade():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
+
+@app.route("/getQuestion", methods=["POST"])
+def get_question():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return {}
+
 
 @app.route("/getWeather", methods=["POST"])
 def get_weather():
