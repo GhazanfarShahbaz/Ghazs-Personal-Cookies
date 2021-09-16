@@ -174,9 +174,9 @@ class Definition(Base):
 def CodingQuestion(Base):
     __tablename__ = "coding_questions"
 
-    QuestionId = Column("QuestionId", Integer, autoincrement=True, primary_key=True)
-    WebsiteId = Column("WebsiteId", Integer, nullable=False)
+    QuestionId = Column("QuestionId", String(64), primary_key=True)
     QuestionLink = Column("QuestionLink", String(256), nullable=True)
+    QuestionName = Column("QuestionName", String(128), nullable=True)
     Difficulty = Column("Difficulty", String(32), nullable=True)
     AcceptanceRate = Column("AcceptanceRate", Float, nullable=True)
     Tags = Column("Tags", ARRAY(Integer), nullable=True)
@@ -184,7 +184,7 @@ def CodingQuestion(Base):
 
     def __init__(self, question_information: dict) -> None:
         self.QuestionId = question_information.get("QuestionId")
-        self.WebsiteId = question_information.get("WebsiteId")
+        self.QuestionName = question_information.get("QuestionName")
         self.QuestionLink = question_information.get("QuestionLink")
         self.Difficulty = question_information.get("Difficulty")
         self.AcceptanceRate = question_information.get("AcceptanceRate")
@@ -194,12 +194,12 @@ def CodingQuestion(Base):
     def to_dict(self) -> dict:
         return {
             "QuestionId": self.QuestionId,
-            "WebsiteId": self.WebsiteId,
             "QuestionLink": self.QuestionLink,
+            "QuestionName": self.QuestionName,
             "Difficulty": self.Difficulty,
             "AcceptanceRate": self.AcceptanceRate,
             "Tags": self.Tags,
-            "RequiresSubscription": self.DefRequiresSubscriptioninition
+            "RequiresSubscription": self.RequiresSubscription
         }
 
 def init_db():

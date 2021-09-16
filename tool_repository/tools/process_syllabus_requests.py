@@ -17,5 +17,5 @@ def process_get_syllabus_request(filter_form: dict) -> List[dict]:
     return syllabus_type_list_to_event_dict_list(syllabus_list)
 
 
-def process_delete_event_request(delete_form: dict) -> None: 
+def process_delete_syllabus_request(delete_form: dict) -> None: 
     SyllabusRepository().delete(delete_form)
