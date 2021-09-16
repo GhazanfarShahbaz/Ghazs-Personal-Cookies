@@ -5,6 +5,9 @@ from flask import request, jsonify
 
 from tools.repository.model import Event
 from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
+from tools.process_class_requests import process_create_class, process_get_class_request, process_update_class, process_delete_class_request
+from tools.process_syllabus_requests import process_get_syllabus_request, process_create_syllabus, process_update_syllabus, process_delete_syllabus_request
+from tools.process_grade_requests import process_get_grade_request, process_create_grade, process_update_grade, process_delete_event_request
 from tools.process_weather_requests import get_weather
 from response_processing.event_processing import print_events
 from validate import validate_user
@@ -73,6 +76,9 @@ def add_class():
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
+    if request_form.get("classForm"):
+        process_create_class(request_form.get("classForm"))
+
     return {}
 
 
@@ -82,6 +88,9 @@ def get_class():
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
+
+    if request_form.get("filterForm"):
+        process_get_class_request(request_form.get("filterForm"))
 
     return {}
 
@@ -93,6 +102,9 @@ def update_class():
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
+    if request_form.get("updateForm"):
+        process_update_class(request_form.get("updateForm"))
+
     return {}
 
 
@@ -102,6 +114,9 @@ def delete_class():
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
+
+    if request_form.get("deleteForm"):
+        process_delete_class_request(request_form.get("deleteForm"))
 
     return {}
 
@@ -113,6 +128,9 @@ def add_syllabus():
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
+    if request_form.get("syllabusForm"):
+        process_create_syllabus(request_form.get("syllabusForm"))
+
     return {}
 
 
@@ -122,6 +140,9 @@ def get_syllabus():
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
+
+    if request_form.get("filterForm"):
+        process_get_syllabus_request(request_form.get("filterForm"))
 
     return {}
 
@@ -133,6 +154,9 @@ def update_syllabus():
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
+    if request_form.get("updateForm"):
+        process_update_syllabus(request_form.get("updateForm"))
+
     return {}
 
 
@@ -142,6 +166,9 @@ def delete_syllabus():
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
+
+    if request_form.get("deleteForm"):
+        process_delete_syllabus_request(request_form.get("deleteForm"))
 
     return {}
 
@@ -153,6 +180,9 @@ def add_grade():
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
+    if request_form.get("gradeForm"):
+        process_create_grade(request_form.get("gradeForm"))
+
     return {}
 
 
@@ -162,6 +192,9 @@ def get_grade():
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
+
+    if request_form.get("filterForm"):
+        process_get_grade_request(request_form.get("filterForm"))
 
     return {}
 
@@ -173,6 +206,9 @@ def update_grade():
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
+    if request_form.get("updateForm"):
+        process_update_grade(request_form.get("updateForm"))
+
     return {}
 
 
@@ -182,6 +218,9 @@ def delete_grade():
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
+
+    if request_form.get("deleteForm"):
+        process_delete_event_request(request_form.get("deleteForm"))
 
     return {}
 

@@ -10,12 +10,12 @@ def process_create_event(event_data: dict) -> None:
     
     EventRepository().insert(event_list)
 
-def process_get_default_event(default_form: dict) -> List[dict]:
 
+def process_get_default_event(default_form: dict) -> List[dict]:
     default_form["DateFrom"], default_form["DateTo"] = default_form_get_date_to_and_date_from(default_form.get("DefaultOption"))
 
-    print(default_form)
     return process_get_event(default_form)
+
 
 def process_get_event(filter_form: dict) -> List[dict]:
     event_list: List[Event] = EventRepository().get(filter_form)
@@ -26,8 +26,10 @@ def process_get_event(filter_form: dict) -> List[dict]:
 def process_update_event(update_form: dict) -> None:
     if update_form.get("EventId"):
         EventRepository().update_by_id(update_form.get("EventId"), update_form.get("updateDictionary"))
+
     elif update_form.get("RecurranceId"):
         EventRepository().update_by_recurrance_id(update_form.get("RecurranceId"), update_form.get("updateDictionary"))
+
 
 def process_delete_event(delete_form: dict) -> None:
     EventRepository().delete(delete_form)
