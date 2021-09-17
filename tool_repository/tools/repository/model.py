@@ -11,7 +11,7 @@ Engine: Engine = get_engine()
 Session = sessionmaker(Engine)
 Base = declarative_base()
 
-class Event(Base):  # was originally Events
+class Event(Base):
     __tablename__ = "events"
 
     EventId = Column("EventId", Integer, primary_key=True, autoincrement=True)
@@ -167,11 +167,11 @@ class Definition(Base):
             "DefinitionId": self.DefinitionId,
             "ClassName": self.ClassName,
             "FileName": self.FileName,
-            "Definition": self.Definition,
+            "Definition": self.Definition
         }
 
 
-def CodingQuestion(Base):
+class CodingQuestion(Base):
     __tablename__ = "coding_questions"
 
     QuestionId = Column("QuestionId", String(64), primary_key=True)

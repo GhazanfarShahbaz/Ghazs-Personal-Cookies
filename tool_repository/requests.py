@@ -7,7 +7,7 @@ from tools.repository.model import Event
 from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
 from tools.process_class_requests import process_create_class, process_get_class_request, process_update_class, process_delete_class_request
 from tools.process_syllabus_requests import process_get_syllabus_request, process_create_syllabus, process_update_syllabus, process_delete_syllabus_request
-from tools.process_grade_requests import process_get_grade_request, process_create_grade, process_update_grade, process_delete_event_request
+from tools.process_assignment_requests import process_get_assignment_request, process_create_assignment, process_update_assignment, process_delete_assignment_request
 from tools.process_weather_requests import get_weather
 from response_processing.event_processing import print_events
 from validate import validate_user
@@ -173,54 +173,54 @@ def delete_syllabus():
     return {}
 
 
-@app.route("/addGrade", methods=["POST"])
-def add_grade():
+@app.route("/addAssignment", methods=["POST"])
+def add_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
-    if request_form.get("gradeForm"):
-        process_create_grade(request_form.get("gradeForm"))
+    if request_form.get("assignmentForm"):
+        process_create_assignment(request_form.get("assignmentForm"))
 
     return {}
 
 
-@app.route("/getGrade", methods=["POST"])
-def get_grade():
+@app.route("/getAssignment", methods=["POST"])
+def get_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
     if request_form.get("filterForm"):
-        process_get_grade_request(request_form.get("filterForm"))
+        process_get_assignment_request(request_form.get("filterForm"))
 
     return {}
 
 
-@app.route("/updateGrade", methods=["POST"])
-def update_grade():
+@app.route("/updateAssignment", methods=["POST"])
+def update_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
     if request_form.get("updateForm"):
-        process_update_grade(request_form.get("updateForm"))
+        process_update_assignment(request_form.get("updateForm"))
 
     return {}
 
 
-@app.route("/deleteGrade", methods=["POST"])
-def delete_grade():
+@app.route("/deleteAssignment", methods=["POST"])
+def delete_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
     if request_form.get("deleteForm"):
-        process_delete_event_request(request_form.get("deleteForm"))
+        process_delete_assignment_request(request_form.get("deleteForm"))
 
     return {}
 
