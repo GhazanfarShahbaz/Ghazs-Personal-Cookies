@@ -1,7 +1,9 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from typing import List
+
 from flask import Flask 
 from flask import request, jsonify
+
 
 from tools.repository.model import Event
 from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
@@ -9,16 +11,22 @@ from tools.process_class_requests import process_create_class, process_get_class
 from tools.process_syllabus_requests import process_get_syllabus_request, process_create_syllabus, process_update_syllabus, process_delete_syllabus_request
 from tools.process_assignment_requests import process_get_assignment_request, process_create_assignment, process_update_assignment, process_delete_assignment_request
 from tools.process_weather_requests import get_weather
+
 from response_processing.event_processing import print_events
+
 from validate import validate_user
 
+import logging
+
 app = Flask(__name__)
+logging.basicConfig(filename='logs/tool_requests.log', level=logging.DEBUG)
 
 @app.route("/createEvent", methods=["POST"])
 def create_event():
     request_form = request.json
     
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("eventForm"):
@@ -39,6 +47,9 @@ def get_events():
             event_list = process_get_event(request_form.get("filterForm"))
         else:
             event_list = process_get_event({})
+    else:
+        app.logger.info('Invalid Username and Password were supplied')
+
     return jsonify(event_list) if request_form.get("stringifyResult") is None else jsonify(print_events(event_list, set()))
 
 
@@ -47,6 +58,8 @@ def update_event():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("filterForm"):
@@ -60,6 +73,8 @@ def delete_event():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("deleteForm"):
@@ -74,6 +89,7 @@ def add_class():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("classForm"):
@@ -87,6 +103,7 @@ def get_class():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("filterForm"):
@@ -100,6 +117,7 @@ def update_class():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("updateForm"):
@@ -113,6 +131,7 @@ def delete_class():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("deleteForm"):
@@ -126,6 +145,7 @@ def add_syllabus():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("syllabusForm"):
@@ -139,6 +159,7 @@ def get_syllabus():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("filterForm"):
@@ -152,6 +173,7 @@ def update_syllabus():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("updateForm"):
@@ -165,6 +187,7 @@ def delete_syllabus():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("deleteForm"):
@@ -178,6 +201,7 @@ def add_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("assignmentForm"):
@@ -191,6 +215,7 @@ def get_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("filterForm"):
@@ -204,6 +229,7 @@ def update_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("updateForm"):
@@ -217,6 +243,7 @@ def delete_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     if request_form.get("deleteForm"):
@@ -225,23 +252,25 @@ def delete_assignment():
     return {}
 
 
-@app.route("/getQuestion", methods=["POST"])
-def get_question():
-    request_form = request.json
+# @app.route("/getQuestion", methods=["POST"])
+# def get_question():
+#     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+#     if not validate_user(request_form.get("username"), request_form.get("password")):
+# app.logger.info('Invalid Username and Password were supplied')
+#         return "Invalid"
 
-    return {}
+#     return {}
 
-@app.route("/syncQuestion", methods=["POST"])
-def sync_question():
+# @app.route("/syncQuestion", methods=["POST"])
+# def sync_question():
     # request_form = request.json
     # print("SUCCES")
     # if not validate_user(request_form.get("username"), request_form.get("password")):
+    # app.logger.info('Invalid Username and Password were supplied')
     #     return "Invalid"
 
-    print("Test")
+    # print("Test")
 
 
 @app.route("/getWeather", methods=["POST"])
@@ -249,13 +278,14 @@ def get_weather():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info('Invalid Username and Password were supplied')
         return "Invalid"
 
     return get_weather()
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=sync_question, trigger="interval", hours=1)
-scheduler.start()
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=sync_question, trigger="interval", hours=1)
+# scheduler.start()
 
 if __name__ == "__main__":
     app.run(debug=True)

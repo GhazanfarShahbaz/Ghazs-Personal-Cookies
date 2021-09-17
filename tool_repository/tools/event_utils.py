@@ -28,7 +28,7 @@ weeknum = {
     6: "f"
 }
 
-date_formats = ('%m/%d/%y %H:%M', '%m-%d-%y %H:%M',  '%m.%d.%y %H:%M', '%m/%d/%y %I:%M %p', '%m-%d-%y %I:%M %p', '%m.%d.%y %I:%M %p', '%m/%d/%Y %H:%M', '%m-%d-%Y %H:%M',  '%m.%d.%Y %H:%M', '%m/%d/%Y %I:%M %p', '%m-%d-%Y %I:%M %p', '%m.%d.%Y %I:%M %p')
+date_formats = ('%m/%d/%y %H:%M', '%m-%d-%y %H:%M',  '%m.%d.%y %H:%M', '%m/%d/%y %I:%M %p', '%m-%d-%y %I:%M %p', '%m.%d.%y %I:%M %p', '%m/%d/%y %I:%M%p', '%m-%d-%y %I:%M%p', '%m.%d.%y %I:%M%p', '%m/%d/%Y %H:%M', '%m-%d-%Y %H:%M',  '%m.%d.%Y %H:%M', '%m/%d/%Y %I:%M %p', '%m-%d-%Y %I:%M %p', '%m.%d.%Y %I:%M %p', '%m/%d/%Y %I:%M%p', '%m-%d-%Y %I:%M%p', '%m.%d.%Y %I:%M%p')
 
 def create_event_information(event_data: dict) -> List[Event]:
     event_list: List[dict]= []
@@ -156,6 +156,8 @@ def get_other_reccurance_event_list(event_template: dict, start_date: str, end_d
 
 
 def string_to_date(date_string: str) -> datetime:
+    date_string = date_string.strip()
+
     global date_formats
     for date_format in date_formats:
         try:
@@ -172,7 +174,6 @@ def default_form_get_date_to_and_date_from(default_option: str) -> tuple:
     date_from: datetime = None
     date_to: datetime = None 
     
-    print(default_option)
     if default_option == "today":
         date_from = datetime(current_date.year, current_date.month, current_date.day, 0, 0, 0)
         date_to = datetime(current_date.year, current_date.month, current_date.day, 23, 59, 59)
@@ -196,7 +197,6 @@ def default_form_get_date_to_and_date_from(default_option: str) -> tuple:
 
         date_to =  datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59) 
 
-    print(date_from, date_to)    
     return date_from, date_to
 
 
