@@ -1,8 +1,0 @@
-INFO:werkzeug: * Running on http://localhost:5000/ (Press CTRL+C to quit)
-INFO:personal_website.requests:Someone accessed the website
-INFO:werkzeug:127.0.0.1 - - [17/Sep/2021 05:56:24] "GET / HTTP/1.0" 200 -
-INFO:personal_website.requests:Someone accessed the website
-INFO:werkzeug:127.0.0.1 - - [17/Sep/2021 05:56:24] "GET / HTTP/1.0" 200 -
-INFO:personal_website.requests:Someone accessed the website
-INFO:werkzeug:127.0.0.1 - - [17/Sep/2021 05:56:24] "GET / HTTP/1.0" 200 -
-INFO:werkzeug: * Running on http://localhost:5000/ (Press CTRL+C to quit)
