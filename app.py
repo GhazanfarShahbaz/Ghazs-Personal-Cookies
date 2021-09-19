@@ -12,5 +12,6 @@ def set_up_application():
     return application
 
 
-if __name__ == '__main__':
-    run_simple('localhost', 5000, set_up_application())
+
+app = DispatcherMiddleware(personal_website_app, {"/tools": tool_app})
+# run_simple('localhost', 5000, set_up_application())

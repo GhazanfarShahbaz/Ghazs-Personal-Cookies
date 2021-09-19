@@ -7,7 +7,7 @@ logging.basicConfig(filename='logs/personal_website_requests.log', level=logging
 
 @app.route("/")
 def home_route():
-    app.logger.info('Someone accessed the website')
+    app.logger.info(f'Someone accessed the website {request.remote_addr}')
     return "This site is under maintenance"
 
 if __name__ == "__main__":
