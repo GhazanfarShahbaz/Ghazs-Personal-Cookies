@@ -36,9 +36,6 @@ class EventRepository(object):
         if update_dictionary.get("Type"):
             event.Type = update_dictionary["Type"]
 
-        if update_dictionary.get("Type"):
-            event.Type = update_dictionary["Type"]
-
         if update_dictionary.get("Description"):
             event.Description = update_dictionary["Description"]
 

@@ -12,11 +12,13 @@ from tools.process_syllabus_requests import process_get_syllabus_request, proces
 from tools.process_assignment_requests import process_get_assignment_request, process_create_assignment, process_update_assignment, process_delete_assignment_request
 from tools.process_weather_requests import get_weather
 from tools.process_gmail_requests import get_emails
+from tools.process_help_requests import get_command
 
 from response_processing.event_processing import print_events
 
-
 import logging
+import json
+
 from datetime import datetime
 
 
@@ -355,7 +357,7 @@ def get_current_weather():
 
 
 @app.route("/getGmailEmails", methods=["POST"])
-def getGmailEmails():
+def get_gmail_emails():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
@@ -366,6 +368,21 @@ def getGmailEmails():
         return "Invalid"
     
     return get_emails(request_form.get("authorizationFile"), request_form.get("labelFilters"), request_form.get("maxResults"))
+
+@app.route("/getHelp", methods=["POST"])
+def get_help():
+    request_form = request.json
+
+    app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
+    app.logger.info(request.json)
+    
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info(f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
+        return "Invalid"
+    
+    return jsonify(get_command(request_form.get("command")))
+    
+
 
 # scheduler = BackgroundScheduler()
 # scheduler.add_job(func=sync_question, trigger="interval", hours=1)
