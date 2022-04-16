@@ -17,7 +17,7 @@ def create_authorization_file(authorization_dict: Dict) -> tempfile:
     authorization_file: tempfile = tempfile.NamedTemporaryFile()
     
     authorization_file.write(
-        json.dumps(authorization_file).encode('utf-8')
+        json.dumps(authorization_dict).encode('utf-8')
     )
     
     authorization_file.flush()
@@ -25,15 +25,15 @@ def create_authorization_file(authorization_dict: Dict) -> tempfile:
 
 
 def get_credentials(authorization_dict: Dict) -> Credentials:
-    authorization_file: tempfile = authorization_dict(authorization_dict)
-    creds: Credentials = Credentials.from_authorized_user_file(authorization_file)
-    authorization_file.close()
+    authorization_file: tempfile = create_authorization_file(authorization_dict)
+    creds: Credentials = Credentials.from_authorized_user_file(authorization_file.name)
     
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
             
-    return authorization_file
+    authorization_file.close()
+    return creds
     
     
 def get_emails(authorization_dict: Dict, label_filters: list, max_results: int) -> dict:
