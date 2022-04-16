@@ -11,11 +11,10 @@ from tools.process_class_requests import process_create_class, process_get_class
 from tools.process_syllabus_requests import process_get_syllabus_request, process_create_syllabus, process_update_syllabus, process_delete_syllabus_request
 from tools.process_assignment_requests import process_get_assignment_request, process_create_assignment, process_update_assignment, process_delete_assignment_request
 from tools.process_weather_requests import get_weather
-from tools.gmail_utils import get_emails
+from tools.process_gmail_requests import get_emails
 
 from response_processing.event_processing import print_events
 
-# from validate import validate_user
 
 import logging
 from datetime import datetime
@@ -36,6 +35,7 @@ def create_event():
     request_form = request.json
     
     app.logger.info(f"{request.remote_addr} visited endpoint createEvent")
+    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         app.logger.info(f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
@@ -53,6 +53,7 @@ def get_events():
     event_list: List[Event] = []
 
     app.logger.info(f"{request.remote_addr} visited endpoint getEvent")
+    app.logger.info(request.json)
 
     if validate_user(request_form.get("username"), request_form.get("password")):
         if request_form.get("defaultForm"):
@@ -72,6 +73,7 @@ def update_event():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint updateEvent")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -89,6 +91,7 @@ def delete_event():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint deleteEvent")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -109,6 +112,7 @@ def add_class():
     
 
     app.logger.info(f"{request.remote_addr} visited endpoint addClass")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -126,6 +130,7 @@ def get_class():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint getClass")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -143,6 +148,7 @@ def update_class():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint updateClass")
+    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         app.logger.info(f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
@@ -159,6 +165,7 @@ def delete_class():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint deleteClass")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -176,6 +183,7 @@ def add_syllabus():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint addSyllabus")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -193,6 +201,7 @@ def get_syllabus():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint getSyllabus")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -210,6 +219,7 @@ def update_syllabus():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint updateSyllabus")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -227,6 +237,7 @@ def delete_syllabus():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint deleteSyllabus")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -258,6 +269,7 @@ def get_assignment():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint getAssignment")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -275,6 +287,7 @@ def update_assignment():
     request_form = request.json
     
     app.logger.info(f"{request.remote_addr} visited endpoint updateAssignment")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -292,6 +305,7 @@ def delete_assignment():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint deleteAssignment")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -325,11 +339,12 @@ def delete_assignment():
     # print("Test")
 
 
-@app.route("/getWeather", methods=["POST"])
-def get_weather():
+@app.route("/getCurrentWeather", methods=["POST"])
+def get_current_weather():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint getWeather")
+    app.logger.info(request.json)
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -339,11 +354,12 @@ def get_weather():
     return get_weather()
 
 
-@app.route("/getEmails", methods=["POST"])
-def get_weather():
+@app.route("/getGmailEmails", methods=["POST"])
+def getGmailEmails():
     request_form = request.json
 
     app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
+    app.logger.info(request.json)
     
     if not validate_user(request_form.get("username"), request_form.get("password")):
         app.logger.info(f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
