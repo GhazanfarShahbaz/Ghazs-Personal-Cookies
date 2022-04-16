@@ -1,3 +1,4 @@
+from urllib.robotparser import RequestRate
 from apscheduler.schedulers.background import BackgroundScheduler
 from typing import List
 
@@ -10,6 +11,7 @@ from tools.process_class_requests import process_create_class, process_get_class
 from tools.process_syllabus_requests import process_get_syllabus_request, process_create_syllabus, process_update_syllabus, process_delete_syllabus_request
 from tools.process_assignment_requests import process_get_assignment_request, process_create_assignment, process_update_assignment, process_delete_assignment_request
 from tools.process_weather_requests import get_weather
+from tools.gmail_utils import get_emails
 
 from response_processing.event_processing import print_events
 
@@ -335,6 +337,19 @@ def get_weather():
         return "Invalid"
 
     return get_weather()
+
+
+@app.route("/getEmails", methods=["POST"])
+def get_weather():
+    request_form = request.json
+
+    app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
+    
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        app.logger.info(f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
+        return "Invalid"
+    
+    return get_emails(request_form.get("authorizationFile"), request_form.get("labelFilters"), request_form.get("maxResults"))
 
 # scheduler = BackgroundScheduler()
 # scheduler.add_job(func=sync_question, trigger="interval", hours=1)
