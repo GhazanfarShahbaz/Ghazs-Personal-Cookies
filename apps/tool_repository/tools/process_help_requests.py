@@ -108,7 +108,20 @@ commands = {
             "labelFilters": "an optional parameter, a list of strings",
             "maxResults": "an optional parameter, integer type"
         }
-    }
+    },
+    
+    "getTranslation": {
+        "Description": "Translates a piece of text based on a series of parameters",
+        "RequestTemplate": {
+            "username": "your username",
+            "password": "your password",
+            "translationForm": {
+                "text": "a required parameter, string type",
+                "source": "an optional parameter, string type",
+                "target": "an optional parameter, string type"
+            }
+        }
+    }  
 }
 
 def get_command(command: str or None) -> dict:
