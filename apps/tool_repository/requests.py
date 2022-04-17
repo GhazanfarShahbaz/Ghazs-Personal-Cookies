@@ -26,10 +26,11 @@ logging.basicConfig(filename='logs/tool_requests.log', level=logging.DEBUG)
 
 
 def validate_user(username: str, password: str) -> bool:
-    if not username or not password and request.remote_addr != "74.90.216.220":
-        return False
-
-    return username == "q_o1S6jV/Ttb8aq(a39aIFZCY;vA@" and password == "6&K5PO:zupdED{OmM])5fVPkPDqy8Yn"
+    if (username and username == "q_o1S6jV/Ttb8aq(a39aIFZCY;vA@") and (password and password == "6&K5PO:zupdED{OmM])5fVPkPDqy8Yn") and request.remote_addr == "74.90.216.220":
+        return True
+    
+    app.logger.info(f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
+    return False
 
 
 @app.route("/createEvent", methods=["POST"])
@@ -40,8 +41,6 @@ def create_event():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("eventForm"):
@@ -66,9 +65,6 @@ def get_events():
             event_list = process_get_event(request_form.get("filterForm"))
         else:
             event_list = process_get_event({})
-    else:
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
 
     return jsonify(event_list) if request_form.get("stringifyResult") is None else jsonify(print_events(event_list, set()))
 
@@ -81,8 +77,6 @@ def update_event():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("filterForm"):
@@ -99,10 +93,6 @@ def delete_event():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("deleteForm"):
@@ -119,8 +109,6 @@ def add_class():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("classForm"):
@@ -137,8 +125,6 @@ def get_class():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("filterForm"):
@@ -155,8 +141,6 @@ def update_class():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("updateForm"):
@@ -173,8 +157,6 @@ def delete_class():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("deleteForm"):
@@ -191,8 +173,6 @@ def add_syllabus():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("syllabusForm"):
@@ -209,8 +189,6 @@ def get_syllabus():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("filterForm"):
@@ -227,8 +205,6 @@ def update_syllabus():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("updateForm"):
@@ -245,8 +221,6 @@ def delete_syllabus():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("deleteForm"):
@@ -260,8 +234,6 @@ def add_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("assignmentForm"):
@@ -278,8 +250,6 @@ def get_assignment():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("filterForm"):
@@ -296,8 +266,6 @@ def update_assignment():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("updateForm"):
@@ -314,8 +282,6 @@ def delete_assignment():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     if request_form.get("deleteForm"):
@@ -353,8 +319,6 @@ def get_current_weather():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     return get_weather()
@@ -368,8 +332,6 @@ def get_gmail_emails():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
     return get_emails(request_form.get("authorizationFile"), request_form.get("labelFilters"), request_form.get("maxResults"))
@@ -383,11 +345,9 @@ def get_translation():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
-    return process_translate(request.get("translationForm"))
+    return process_translate(request_form.get("translationForm"))
 
 
 @app.route("/getHelp", methods=["POST"])
@@ -398,11 +358,9 @@ def get_help():
     app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        app.logger.info(
-            f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
         return "Invalid"
 
-    return jsonify(get_command(request_form.get("command")))
+    return get_command(request_form.get("command"))
 
 
 # scheduler = BackgroundScheduler()

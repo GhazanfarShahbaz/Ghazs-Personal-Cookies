@@ -14,9 +14,9 @@ commands = {
                 "Description": "an optional field, string type",
                 "RecurranceType": "an optional field, string type. Options: daily, weekly, monthly, yearly or some form of sun/m/t/w/th/f/sat"
             }
-        } 
+        }
     },
-    
+
     "getEvent": {
         "Description": "Gets event based on a series of parameters",
         "RequestTemplate": {
@@ -24,7 +24,7 @@ commands = {
             "password": "your password",
             "defaultForm": {
                 "defaultOption": "a required field, stirng type. Options: today, week, month"
-            },    
+            },
             "filterForm": {
                 "EventIds": "an optional field, list of integers",
                 "RecurranceIds": "an optional field, list of integers",
@@ -40,7 +40,7 @@ commands = {
         },
         "AdditionalInformation": "DdefaultForm and filterForm are optional. Defaults to get all events."
     },
-    
+
     "updateEvent": {
         "Description": "Updates an event[s] based on a series of parameters",
         "RequestTemplate": {
@@ -56,10 +56,10 @@ commands = {
                     "Type": "an optional field, string type",
                     "Description": "an optional field, string type"
                 }
-            }        
+            }
         }
     },
-    
+
     "deleteEvent": {
         "Description": "Deletes an event[s] based on a series of parameters",
         "RequestTemplate": {
@@ -79,7 +79,7 @@ commands = {
             }
         }
     },
-    
+
     "getCurrentWeather": {
         "Description": "Gets today's weather",
         "RequestTemplate": {
@@ -87,7 +87,7 @@ commands = {
             "password": "your password",
         }
     },
-    
+
     "getGmailEmails": {
         "Description": "Gets gmail email snippets based on a series of paremeters",
         "RequestTemplate": {
@@ -109,7 +109,7 @@ commands = {
             "maxResults": "an optional parameter, integer type"
         }
     },
-    
+
     "getTranslation": {
         "Description": "Translates a piece of text based on a series of parameters",
         "RequestTemplate": {
@@ -121,8 +121,9 @@ commands = {
                 "target": "an optional parameter, string type"
             }
         }
-    }  
+    }
 }
+
 
 def get_command(command: str or None) -> dict:
     if command:
@@ -130,7 +131,5 @@ def get_command(command: str or None) -> dict:
             return commands[command]
         else:
             return {}
-    
+
     return commands
-        
-    
