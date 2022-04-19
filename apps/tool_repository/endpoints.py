@@ -1,3 +1,7 @@
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
 from urllib.robotparser import RequestRate
 from apscheduler.schedulers.background import BackgroundScheduler
 from typing import List
@@ -20,16 +24,34 @@ from response_processing.event_processing import print_events
 from datetime import datetime
 
 import logging
+import os
+
 
 app = Flask(__name__)
 logging.basicConfig(filename='logs/tool_requests.log', level=logging.DEBUG)
 
+cred = credentials.Certificate(os.getenv("FIRESTORE_TOKEN"))
+firebase_admin.initialize_app(cred)
+
+
+def get_login() -> dict:
+    db = firestore.client()
+
+    users_ref = db.collection(os.environ["FIRESTORE_SERVER"])
+    docs = users_ref.stream()
+
+    for doc in docs:
+        if doc.id == os.environ["FIRESTORE_DOC_ID"]:
+            return doc.to_dict()
+
 
 def validate_user(username: str, password: str) -> bool:
-    if (username and username == "q_o1S6jV/Ttb8aq(a39aIFZCY;vA@") and (password and password == "6&K5PO:zupdED{OmM])5fVPkPDqy8Yn") and request.remote_addr == "74.90.216.220":
+    token = get_login()
+    if (username and username == token["username"]) and (password and password == token["password"]) and request.remote_addr == "74.90.216.220":
         return True
-    
-    app.logger.info(f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
+
+    app.logger.info(
+        f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
     return False
 
 
