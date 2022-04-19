@@ -37,7 +37,7 @@ def get_credentials(authorization_dict: Dict) -> Credentials:
     
     
 def get_emails(authorization_dict: Dict, label_filters: list, max_results: int) -> dict:
-    creds: Credentils = get_credentials(authorization_dict)
+    creds: Credentials = get_credentials(authorization_dict)
     
     # Connect to the Gmail API
     service = build('gmail', 'v1', credentials=creds)

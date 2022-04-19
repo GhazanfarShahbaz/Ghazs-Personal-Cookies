@@ -3,7 +3,7 @@ from werkzeug.middleware.dispatcher import \
 from werkzeug.serving import run_simple  # werkzeug development server
 
 from apps.personal_website.requests import app as personal_website_app
-from apps.tool_repository.requests import app as tool_app
+from apps.tool_repository.endpoints import app as tool_app
 
 def set_up_application():
     application: DispatcherMiddleware = DispatcherMiddleware(personal_website_app, {"/tools": tool_app})
