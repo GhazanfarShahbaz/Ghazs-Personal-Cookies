@@ -1,13 +1,12 @@
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
 
-from urllib.robotparser import RequestRate
-from apscheduler.schedulers.background import BackgroundScheduler
-from typing import List
+# from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import datetime
 
 from flask import Flask
 from flask import request, jsonify
+
+from firebase_admin import credentials, firestore, initialize_app
+from response_processing.event_processing import print_events
 
 from tools.repository.model import Event
 from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
@@ -19,39 +18,49 @@ from tools.process_gmail_requests import get_emails
 from tools.process_help_requests import get_command
 from tools.process_translate_request import process_translate
 
-from response_processing.event_processing import print_events
+# from secrets import choice
+# from string import ascii_letters, digits
+# from celery import Celery
 
-from datetime import datetime
+from typing import List
 
 import logging
 import os
 
 
 app = Flask(__name__)
+# app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
+# app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+
+# celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+# celery.conf.update(app.config)
 logging.basicConfig(filename='logs/tool_requests.log', level=logging.DEBUG)
 
 cred = credentials.Certificate(os.getenv("FIRESTORE_TOKEN"))
-firebase_admin.initialize_app(cred)
+initialize_app(cred)
 
 
-def get_login() -> dict:
+def get_login(from_server = False) -> dict:
     db = firestore.client()
-
     users_ref = db.collection(os.environ["FIRESTORE_SERVER"])
-    docs = users_ref.stream()
 
-    for doc in docs:
-        if doc.id == os.environ["FIRESTORE_DOC_ID"]:
-            return doc.to_dict()
+    login_allow = users_ref.document('allow').get().to_dict()
+
+    if not from_server and login_allow["allow"] is False:
+        return None
+
+    return users_ref.document(os.environ["FIRESTORE_DOC_ID"]).get().to_dict()
 
 
 def validate_user(username: str, password: str) -> bool:
     token = get_login()
-    if (username and username == token["username"]) and (password and password == token["password"]) and request.remote_addr == "74.90.216.220":
+
+    if token and (username and username == token["username"]) and (password and password == token["password"]):
         return True
 
     app.logger.info(
-        f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}')
+        f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}'
+    )
     return False
 
 
@@ -384,9 +393,25 @@ def get_help():
 
     return get_command(request_form.get("command"))
 
+# @celery.task()
+# def generate_new_credentials():
+#     app.logger.info(f"Updated credentials at {datetime.now()}")
+#     alphabet = ascii_letters + digits
+    
+#     db = firestore.client()
+#     users_ref = db.collection(os.environ["FIRESTORE_SERVER"])
+#     credentials_document = users_ref.document(os.environ["FIRESTORE_DOC_ID"])
+    
+#     credentials_document.update({
+#         "username": ''.join(choice(alphabet) for i in range(32)),
+#         "password":  ''.join(choice(alphabet) for i in range(32))
+#     })
 
+
+# task = generate_new_credentials.apply_async(countdown=60)
 # scheduler = BackgroundScheduler()
-# scheduler.add_job(func=sync_question, trigger="interval", hours=1)
+# scheduler.add_job(func=generate_new_credentials, trigger="interval", hours=24)
 # scheduler.start()
+
 if __name__ == "__main__":
     app.run(debug=True)
