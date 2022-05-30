@@ -337,7 +337,7 @@ def get_gmail_emails():
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
-    return get_emails(request_form.get("authorizationFile"), request_form.get("labelFilters"), request_form.get("maxResults"))
+    return get_emails(request_form.get("authorizationFile"), request_form.get("labelFilters"), request_form.get("maxResults"), request_form.get("snippet"))
 
 
 @app.route("/getTranslation", methods=["POST"])
