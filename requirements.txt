@@ -39,6 +39,7 @@ grpcio==1.44.0
 gunicorn==20.1.0
 httplib2==0.20.4
 idna==3.2
+iniconfig==1.1.1
 itsdangerous==2.0.1
 Jinja2==3.0.1
 kombu==5.2.4
@@ -48,13 +49,16 @@ msgpack==1.0.3
 multidict==5.1.0
 oauthlib==3.2.0
 packaging==21.3
+pluggy==1.0.0
 prompt-toolkit==3.0.29
 proto-plus==1.20.3
 protobuf==3.20.0
 psycopg2-binary==2.9.1
+py==1.11.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pyparsing==3.0.8
+pytest==7.1.2
 python-dateutil==2.8.2
 python-dotenv==0.19.0
 pytz==2022.1
@@ -66,6 +70,7 @@ soupsieve==2.3.2.post1
 SQLAlchemy==1.4.23
 SQLAlchemy-Utils==0.37.8
 string-color==1.2.1
+tomli==2.0.1
 toolz==0.11.1
 typing-extensions==3.10.0.2
 tzlocal==2.1
