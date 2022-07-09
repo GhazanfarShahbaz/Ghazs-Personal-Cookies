@@ -58,7 +58,7 @@ def test_validate_user():
     assert response is True
 
 
-def test_validate_get_help():
+def test_validate_get_help_one():
     login_allow = users_ref.document('allow')
 
     login_allow.update({
@@ -89,6 +89,27 @@ def test_validate_get_help():
             }
         }
     }
+    
+def test_validate_get_help_two():
+    login_allow = users_ref.document('allow')
+
+    login_allow.update({
+        u'allow': True
+    })
+
+    response = app.test_client().post(
+        "/getHelp",
+        json={
+            "username": credentials['username'],
+            "password": credentials['password'],
+            "command": "somethingFake"
+        }
+    )
+
+    response_dict = json.loads(response.data.decode('UTF-8'))
+
+    assert response.status_code == 200
+    assert response_dict == {}
 
 
 def test_validate_get_current_weather():
