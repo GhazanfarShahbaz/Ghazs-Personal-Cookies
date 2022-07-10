@@ -5,7 +5,6 @@ from flask import Flask
 from flask import request, jsonify
 
 from firebase_admin import credentials, firestore, initialize_app
-from apps.tool_repository.tools.file_storage_utils import upload_file_object
 from response_processing.event_processing import print_events
 
 from tools.repository.model import Event
@@ -17,7 +16,7 @@ from tools.process_weather_requests import get_weather
 from tools.process_gmail_requests import get_emails
 from tools.process_help_requests import get_command
 from tools.process_translate_request import process_translate
-from tools.process_file_storage_requests import process_upload_file_object, process_upload_file
+from tools.process_file_storage_requests import process_upload_file, process_delete_file
 
 from typing import List
 from json import loads 
@@ -358,7 +357,6 @@ def get_translation():
 
 @app.route("/uploadFile", methods=["POST"])
 def upload_file():
-    
     request_form = loads(request.form["json"])
     
     app.logger.info(f"{request.remote_addr} visited endpoint uploadFile")
@@ -369,7 +367,21 @@ def upload_file():
     
     file = request.files["file"]
     
-    return process_upload_file_object(file,request.mimetype)
+    return process_upload_file(file, request.mimetype)
+
+
+@app.route("/deleteFile", methods=["POST"])
+def delete_file():
+    request_form = request.json
+
+    app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
+    app.logger.info(request.json)
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+    
+    return process_delete_file(request_form.get("deleteForm"))
+    
 
 @app.route("/getHelp", methods=["POST"])
 def get_help():
