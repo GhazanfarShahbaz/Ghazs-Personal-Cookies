@@ -5,6 +5,7 @@ from flask import Flask
 from flask import request, jsonify
 
 from firebase_admin import credentials, firestore, initialize_app
+from apps.tool_repository.tools.file_storage_utils import upload_file_object
 from response_processing.event_processing import print_events
 
 from tools.repository.model import Event
@@ -16,8 +17,10 @@ from tools.process_weather_requests import get_weather
 from tools.process_gmail_requests import get_emails
 from tools.process_help_requests import get_command
 from tools.process_translate_request import process_translate
+from tools.process_file_storage_requests import process_upload_file_object, process_upload_file
 
 from typing import List
+from json import loads 
 
 import logging
 import os
@@ -352,6 +355,21 @@ def get_translation():
 
     return process_translate(request_form.get("translationForm"))
 
+
+@app.route("/uploadFile", methods=["POST"])
+def upload_file():
+    
+    request_form = loads(request.form["json"])
+    
+    app.logger.info(f"{request.remote_addr} visited endpoint uploadFile")
+    app.logger.info(request_form)
+    
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+    
+    file = request.files["file"]
+    
+    return process_upload_file_object(file,request.mimetype)
 
 @app.route("/getHelp", methods=["POST"])
 def get_help():
