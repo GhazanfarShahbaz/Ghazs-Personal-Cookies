@@ -1,9 +1,9 @@
 import boto3
-import os
+import os 
 
-from typing import Dict
+from typing import Dict, List 
 
-function_mapper = {
+function_mapper: Dict[str, callable] = {
     "client": boto3.client,
     "resource": boto3.resource
 }
@@ -19,10 +19,10 @@ def get_aws_credentials() -> Dict[str, str]:
     }
 
 
-def get_aws_client_or_resource(type: str):
+def get_aws_client_or_resource(aws_type: str):
     credentials: Dict[str, str] = get_aws_credentials()
 
-    client_or_resource = function_mapper[type](
+    client_or_resource = function_mapper[aws_type](
         credentials["AWS_FILE_SERVICE"],
         aws_access_key_id=credentials["AWS_ACCESS_KEY_ID"],
         aws_secret_access_key=credentials["AWS_ACCESS_KEY"],
@@ -41,7 +41,6 @@ def upload_file(file, content_type) -> str:
             Body=file,
             Bucket=bucket_name,
             Key=f"server_files/{file.filename}",
-            # Key= f"server_files/{file.filename}",
             ContentType=content_type
         )
     except:
@@ -59,3 +58,24 @@ def delete_file(bucket_name: str, file_path: str) -> str:
     )
 
     return "Success"
+
+def list_bucket_files(bucket_name: str, prefix: str) -> Dict[Dict, List[str]]:
+    client = get_aws_client_or_resource("resource")
+    bucket = client.Bucket(bucket_name)
+    prefix = prefix.strip()
+    
+    bucket_data: list = bucket.objects.all() if not prefix else bucket.objects.filter(Prefix=prefix)
+    
+    data: Dict[Dict, List[str]] = {
+        "files": [],
+        "folders": []
+    }
+    
+    for file in bucket_data:
+        bucket_entry_name: str = file.key
+        entry_type: str = "files" if not bucket_entry_name.endswith("/") else "folders"
+        
+        
+        data[entry_type].append(file.key)
+        
+    return data
