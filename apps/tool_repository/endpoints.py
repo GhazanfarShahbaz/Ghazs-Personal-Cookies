@@ -382,19 +382,7 @@ def delete_file():
     
     return process_delete_file(request_form.get("deleteForm"))
     
-
-@app.route("/getHelp", methods=["POST"])
-def get_help():
-    request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
-    app.logger.info(request.json)
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
-
-    return get_command(request_form.get("command"))
-
+    
 @app.route("/sendTextMessage", methods=["POST"])
 def send_message():
     request_form = request.json
@@ -404,6 +392,20 @@ def send_message():
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
+
+
+@app.route("/getHelp", methods=["POST"])
+def get_help():
+    request_form = request.json
+
+    app.logger.info(f"{request.remote_addr} visited endpoint getHelp")
+    app.logger.info(request.json)
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return get_command(request_form.get("command"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -16,7 +16,7 @@ def send_message(message: str):
     client.api.account.messages.create(
         to="+13475936743",
         from_=os.getenv("TWILIO_PHONE_NUMBER"),
-        body="Hello there!"
+        body=message
     )
     
 send_message("TEST")
