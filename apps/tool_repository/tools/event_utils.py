@@ -47,7 +47,7 @@ def create_event_information(event_data: dict) -> List[Event]:
         if start_date > end_date:
             start_date, end_date = end_date, start_date 
 
-        event_template["StartDate"] =  start_date
+        event_template["StartDate"] = start_date
         event_template["EndDate"] = end_date
         event_list.append(event_template)
     else:
