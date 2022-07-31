@@ -1,4 +1,4 @@
-import os
+from os import system 
 
 def start_flask() -> None:
-    os.system("python3 endpoints.py")
+    system("python3 endpoints.py")
