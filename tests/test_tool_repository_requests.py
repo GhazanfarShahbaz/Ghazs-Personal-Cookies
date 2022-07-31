@@ -1,32 +1,22 @@
-from dotenv import load_dotenv
-from os import getenv, environ
-from firebase_admin import credentials, firestore, initialize_app, delete_app
-
-load_dotenv()
-
-def load_environment() -> None:
-    cred = credentials.Certificate(getenv("FIRESTORE_TOKEN"))
-    application = initialize_app(cred) 
-    
-    db = firestore.client()
-    environment_vars = db.collection(getenv("FIRESTORE_SERVER")).document(getenv("FIRESTORE_ENVIRONMENT_ID")).get().to_dict()
-    
-    delete_app(application)
-    
-    for key, value in environment_vars.items():
-        environ[key] = value
-
-load_environment()
-
-from apps.tool_repository.endpoints import get_login, validate_user
-from apps.tool_repository.endpoints import app
-import json
-import pytest
 import sys
-
 
 ROOT_DIRECTORY: str = "/home/ghaz/flask_gateway/"
 sys.path.append(ROOT_DIRECTORY)
+
+from os import environ
+from firebase_admin import credentials, firestore
+
+import json
+import pytest
+
+from generate_env import load_environment
+load_environment()
+
+from apps.tool_repository.endpoints import app
+from apps.tool_repository.endpoints import get_login, validate_user
+
+
+# print(environ)
 
 
 db = firestore.client()
