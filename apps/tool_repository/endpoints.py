@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 from flask import Flask
@@ -7,7 +6,7 @@ from flask import request, jsonify
 from firebase_admin import credentials, firestore, initialize_app
 from response_processing.event_processing import print_events
 
-from os import environ
+from os import environ, getenv
 
 from tools.repository.model import Event
 from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
@@ -35,7 +34,6 @@ initialize_app(cred)
 def get_login(from_server = False) -> dict:
     db = firestore.client()
     users_ref = db.collection(environ["FIRESTORE_SERVER"])
-
     login_allow = users_ref.document('allow')
 
     if not from_server and login_allow.get().to_dict()["allow"] is False:
@@ -406,6 +404,35 @@ def get_help():
 
     return get_command(request_form.get("command"))
 
+
+@app.route("/setEnvironmentVariable", methods=["POST"])
+def set_environment_variable():
+    request_form = request.json
+
+    app.logger.info(f"{request.remote_addr} visited endpoint getHelp")
+    app.logger.info(request.json)
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    environment_form = request_form.get("environmentForm")
+    key: str = environment_form["key"]
+    value: str = environment_form["value"]
+    
+    if getenv(key) and not environ[environment_form["overwrite"]]:
+        return {"response": "Needs overwrite persmission"} 
+        
+    db = firestore.client()
+    users_ref = db.collection(environ["FIRESTORE_SERVER"])
+    environment_document = users_ref.document(environ["FIRESTORE_ENVIRONMENT_ID"])
+    
+    environment_document.update({
+        key: value
+    })
+    
+    environ[key] = value
+    return {"response": "success"} 
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
