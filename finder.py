@@ -1,4 +1,4 @@
-import os
+from os import getcwd, listdir, path
 
 def create_requirements_file(requirements: dict) -> None:
     requirements_file = open("requirements.txt", "w")
@@ -25,16 +25,16 @@ def get_requirements_from_file(requirements: dict, file_path: str) -> None:
         None 
 
 def get_requirements() -> dict:
-    path: str = os.getcwd()
+    path: str = getcwd()
     requirements: dict = {}
     
 
-    for content in os.listdir(path):
+    for content in listdir(path):
         current_path = f"{path}/{content}"
         
-        if os.path.isdir(current_path):
+        if path.isdir(current_path):
             try:
-                for nested_content in os.listdir(current_path):
+                for nested_content in listdir(current_path):
                     nested_path = f"{current_path}/{nested_content}"
 
                     if nested_content == "requirements.txt":
