@@ -1,34 +1,36 @@
 from copy import copy
 from datetime import datetime, timedelta
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Tuple
+from pytz import timezone
 
 from dateutil.relativedelta import relativedelta
 
 from repository.events import EventRepository
 from repository.model import Event
 
+newyork_tz = timezone('America/New_York')
 
-weekday = {
-    "sun": 0,
-    "sat": 1, 
-    "m": 2,
-    "t": 3,
-    "w": 4,
-    "th": 5,
-    "f": 6,    
+weekday: Dict[str, int]= {
+    "m": 0,
+    "t": 1,
+    "w": 2,
+    "th": 3,
+    "f": 4,    
+    "sat": 5,
+    "sun": 6
 }
 
-weeknum = {
-    0: "sun",
-    1: "sat",
-    2: "m",
-    3: "t",
-    4: "w",
-    5: "th", 
-    6: "f"
+weeknum: Dict[int ,str]= {
+    0: "m",
+    1: "t",
+    2: "w",
+    3: "th", 
+    4: "f",
+    5: "sat",
+    6: "sun"
 }
 
-date_formats = ('%m/%d/%y %H:%M', '%m-%d-%y %H:%M',  '%m.%d.%y %H:%M', '%m/%d/%y %I:%M %p', '%m-%d-%y %I:%M %p', '%m.%d.%y %I:%M %p', '%m/%d/%y %I:%M%p', '%m-%d-%y %I:%M%p', '%m.%d.%y %I:%M%p', '%m/%d/%Y %H:%M', '%m-%d-%Y %H:%M',  '%m.%d.%Y %H:%M', '%m/%d/%Y %I:%M %p', '%m-%d-%Y %I:%M %p', '%m.%d.%Y %I:%M %p', '%m/%d/%Y %I:%M%p', '%m-%d-%Y %I:%M%p', '%m.%d.%Y %I:%M%p')
+date_formats: Tuple[str] = ('%m/%d/%y %H:%M', '%m-%d-%y %H:%M',  '%m.%d.%y %H:%M', '%m/%d/%y %I:%M %p', '%m-%d-%y %I:%M %p', '%m.%d.%y %I:%M %p', '%m/%d/%y %I:%M%p', '%m-%d-%y %I:%M%p', '%m.%d.%y %I:%M%p', '%m/%d/%Y %H:%M', '%m-%d-%Y %H:%M',  '%m.%d.%Y %H:%M', '%m/%d/%Y %I:%M %p', '%m-%d-%Y %I:%M %p', '%m.%d.%Y %I:%M %p', '%m/%d/%Y %I:%M%p', '%m-%d-%Y %I:%M%p', '%m.%d.%Y %I:%M%p')
 
 def create_event_information(event_data: dict) -> List[Event]:
     event_list: List[dict]= []
@@ -56,7 +58,7 @@ def create_event_information(event_data: dict) -> List[Event]:
 
         event_template["ReccuranceId"] = reccurance_id 
 
-        if event_data["RecurranceType"] not in {"weekly", "monthly", "yearly"}:
+        if event_data["RecurranceType"].lower() not in {"weekly", "monthly", "yearly"}:
             event_list = get_daily_reccurance_event_list(event_template, event_data["StartDate"], event_data["EndDate"], event_data["RecurranceType"],event_data["RecurranceDateTo"])
 
         else:
@@ -73,7 +75,7 @@ def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_d
         reccurance_nums = {0,1,2,3,4,5,6}
     else:
         for reccurance_str in reccurance_type.split("/"):
-            reccurance_str = reccurance_str.strip()
+            reccurance_str = reccurance_str.strip().lower()
             global weekday
 
             if weekday.get(reccurance_str):
@@ -123,7 +125,6 @@ def get_other_reccurance_event_list(event_template: dict, start_date: str, end_d
     end_date_hour: int = end_date.hour
     end_date_minute: int = end_date.minute
 
-
     if end_date < start_date:
         start_date, end_date = end_date, start_date
     
@@ -170,8 +171,7 @@ def string_to_date(date_string: str) -> datetime:
 
 
 def default_form_get_date_to_and_date_from(default_option: str) -> tuple: 
-    current_date: datetime = datetime.now()
-    date_from: datetime = None
+    current_date: datetime = datetime.now(timezone('America/New_York'))
     date_to: datetime = None 
     
     if default_option == "today":
