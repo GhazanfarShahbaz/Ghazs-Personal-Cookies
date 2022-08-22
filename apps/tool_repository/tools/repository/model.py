@@ -206,6 +206,17 @@ class EndpointDiagnostics(Base):
     Date            = Column("Date", DateTime(timezone=True), nullable=False)
     Error           = Column("Error", String(1024), nullable=False)
     Latency         = Column("Float", Float, nullable=False)
+    
+    def to_dict(self) -> dict:
+        return {
+            "DiagnosticId"  : self.DiagnosticId,
+            "Endpoint"      : self.Endpoint,
+            "Request"       : self.Request,
+            "Response"      : self.Response,
+            "Date"          : self.Date,
+            "Error"         : self.Error,
+            "Latency"       : self.Latency
+        }
 
 
 def init_db():
