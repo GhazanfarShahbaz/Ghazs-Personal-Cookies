@@ -1,11 +1,12 @@
-
 from datetime import datetime
 
 from flask import Flask
-from flask import request, jsonify
+from flask import request, jsonify, send_file
 
 from firebase_admin import credentials, firestore, initialize_app
 from response_processing.event_processing import print_events
+
+from os import environ, getenv
 
 from tools.repository.model import Event
 from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
@@ -17,25 +18,23 @@ from tools.process_gmail_requests import get_emails
 from tools.process_help_requests import get_command
 from tools.process_translate_request import process_translate
 from tools.process_file_storage_requests import process_upload_file, process_delete_file
+from tools.process_qr_code_requests import processs_generate_link_qr_code
 
 from typing import List
 from json import loads 
 
 import logging
-import os
-
 
 app = Flask(__name__)
 logging.basicConfig(filename='logs/tool_requests.log', level=logging.DEBUG)
 
-cred = credentials.Certificate(os.getenv("FIRESTORE_TOKEN"))
+cred = credentials.Certificate(environ["FIRESTORE_TOKEN"])
 initialize_app(cred)
 
 
 def get_login(from_server = False) -> dict:
     db = firestore.client()
-    users_ref = db.collection(os.environ["FIRESTORE_SERVER"])
-
+    users_ref = db.collection(environ["FIRESTORE_SERVER"])
     login_allow = users_ref.document('allow')
 
     if not from_server and login_allow.get().to_dict()["allow"] is False:
@@ -45,7 +44,7 @@ def get_login(from_server = False) -> dict:
         u'allow': False
     })
 
-    return users_ref.document(os.environ["FIRESTORE_DOC_ID"]).get().to_dict()
+    return users_ref.document(environ["FIRESTORE_DOC_ID"]).get().to_dict()
 
 
 def validate_user(username: str, password: str) -> bool:
@@ -394,6 +393,23 @@ def send_message():
         return "Invalid"
 
 
+@app.route("/generateLinkQRCode", methods=["POST"])
+def generate_qr_code_for_link():
+    request_form = request.json
+
+    app.logger.info(f"{request.remote_addr} visited endpoint generateLinkQRCode")
+    app.logger.info(request.json)
+    
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+    
+    qr_io = processs_generate_link_qr_code(request_form["qrForm"])
+    
+    app.logger.info(qr_io)
+    
+    return send_file(qr_io, mimetype='image/jpeg')
+    
+
 @app.route("/getHelp", methods=["POST"])
 def get_help():
     request_form = request.json
@@ -406,6 +422,35 @@ def get_help():
 
     return get_command(request_form.get("command"))
 
+
+@app.route("/setEnvironmentVariable", methods=["POST"])
+def set_environment_variable():
+    request_form = request.json
+
+    app.logger.info(f"{request.remote_addr} visited endpoint setEnvironmentVariable")
+    app.logger.info(request.json)
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    environment_form = request_form.get("environmentForm")
+    key: str = environment_form["key"]
+    value: str = environment_form["value"]
+    
+    if getenv(key) and not environ[environment_form["overwrite"]]:
+        return {"response": "Needs overwrite permission"} 
+        
+    db = firestore.client()
+    users_ref = db.collection(environ["FIRESTORE_SERVER"])
+    environment_document = users_ref.document(environ["FIRESTORE_ENVIRONMENT_ID"])
+    
+    environment_document.update({
+        key: value
+    })
+    
+    environ[key] = value
+    return {"response": "success"} 
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

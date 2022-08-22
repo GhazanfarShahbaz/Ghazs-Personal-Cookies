@@ -7,7 +7,7 @@ from event_utils import create_event_information, default_form_get_date_to_and_d
 
 def process_create_event(event_data: dict) -> None:
     event_list: List[Event] = create_event_information(event_data)
-    
+
     EventRepository().insert(event_list)
 
 
