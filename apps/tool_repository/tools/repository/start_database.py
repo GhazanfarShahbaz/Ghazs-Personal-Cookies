@@ -1,7 +1,7 @@
-import os
 import time
-
 import mysql.connector
+
+from os import system
 
 # activate /env/bin/source
 
@@ -20,9 +20,9 @@ def check_database_status() -> bool:
         return False
 
 def start_myql() -> None:
-    os.system("brew services start mysql")
+    system("brew services start mysql")
     time.sleep(5)
 
 
 def stop_myql() -> None:
-    os.system("brew services stop mysql")
+    system("brew services stop mysql")
