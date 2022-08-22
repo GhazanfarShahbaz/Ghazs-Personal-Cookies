@@ -1,6 +1,6 @@
 import boto3
-import os 
 
+from os import environ
 from typing import Dict, List 
 
 function_mapper: Dict[str, callable] = {
@@ -11,11 +11,11 @@ function_mapper: Dict[str, callable] = {
 
 def get_aws_credentials() -> Dict[str, str]:
     return {
-        "AWS_FILE_SERVICE":  os.getenv("AWS_FILE_SERVICE"),
-        "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
-        "AWS_ACCESS_KEY": os.getenv("AWS_ACCESS_KEY"),
-        "AWS_PASSWORD": os.getenv("AWS_PASSWORD"),
-        "AWS_REGION_NAME": os.getenv("AWS_REGION_NAME"),
+        "AWS_FILE_SERVICE":  environ["AWS_FILE_SERVICE"],
+        "AWS_ACCESS_KEY_ID": environ["AWS_ACCESS_KEY_ID"],
+        "AWS_ACCESS_KEY": environ["AWS_ACCESS_KEY"],
+        "AWS_PASSWORD": environ["AWS_PASSWORD"],
+        "AWS_REGION_NAME": environ["AWS_REGION_NAME"],
     }
 
 
@@ -34,7 +34,7 @@ def get_aws_client_or_resource(aws_type: str):
 
 def upload_file(file, content_type) -> str:
     client = get_aws_client_or_resource("client")
-    bucket_name: str = os.getenv("AWS_BUCKET_NAME")
+    bucket_name: str = environ["AWS_BUCKET_NAME"]
 
     try:
         client.put_object(
