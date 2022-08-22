@@ -1,4 +1,5 @@
-from sqlalchemy import (ARRAY, Boolean, Column, DateTime, Float, Integer, 
+from mimetypes import init
+from sqlalchemy import (ARRAY, Boolean, Column, DateTime, JSON, Float, Integer,
                         String, Text, ForeignKey)
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -10,6 +11,7 @@ from get_db_engine import get_engine
 Engine: Engine = get_engine()
 Session = sessionmaker(Engine)
 Base = declarative_base()
+
 
 class Event(Base):
     __tablename__ = "events"
@@ -34,7 +36,7 @@ class Event(Base):
         self.Type = event_information.get("Type")
         self.ReccuranceType = event_information.get("ReccuranceType")
         self.Description = event_information.get("Description")
-    
+
     def to_dict(self) -> dict:
         return {
             "Id": self.EventId,
@@ -46,6 +48,7 @@ class Event(Base):
             "Description": self.Description,
             "ReccuranceType": self.ReccuranceType
         }
+
 
 class Class(Base):
     __tablename__ = "classes"
@@ -68,7 +71,7 @@ class Class(Base):
         self.Name = class_inforamtion.get("Name")
         self.Semester = class_inforamtion.get("Semester")
         self.Syllabus = class_inforamtion.get("Syllabus")
-    
+
     def to_dict(self) -> dict:
         return {
             "ClassId": self.ClassId,
@@ -100,7 +103,7 @@ class Syllabus(Base):
         self.Section = syllabus_information.get("Section")
         self.Percentage = syllabus_information.get("Percentage")
         self.Droppable = syllabus_information.get("Droppable")
-    
+
     def to_dict(self) -> dict:
         return {
             "ClassId": self.ClassId,
@@ -119,13 +122,12 @@ class Assignment(Base):
     AssignmentId = Column("AssignmentId", Integer,
                           autoincrement=True, primary_key=True)
 
-
     Name = Column("Name", String(64), nullable=False)
     Grade = Column("Grade", Integer, nullable=False)
-    DateAssigned = Column("DateAssigned", DateTime(timezone=True), nullable=True)
+    DateAssigned = Column("DateAssigned", DateTime(
+        timezone=True), nullable=True)
     DateDue = Column("DateDue", DateTime(timezone=True), nullable=True)
     Submitted = Column("Submitted", Boolean, nullable=False, default=False)
-
 
     def __init__(self, assignment_information: dict) -> None:
         self.SectionId = assignment_information.get("ClassId")
@@ -134,7 +136,7 @@ class Assignment(Base):
         self.DateAssigned = assignment_information.get("DateAssigned")
         self.DateDue = assignment_information.get("DateDue")
         self.Submitted = assignment_information.get("Submitted")
-    
+
     def to_dict(self) -> dict:
         return {
             "ClassId": self.ClassId,
@@ -146,12 +148,12 @@ class Assignment(Base):
         }
 
 
-
 class Definition(Base):
     __tablename__ = "definitions"
-    
-    DefinitionId = Column("DefinitionId", Integer, autoincrement=True, primary_key=True)
-    
+
+    DefinitionId = Column("DefinitionId", Integer,
+                          autoincrement=True, primary_key=True)
+
     ClassName = Column("ClassName", String(128), nullable=False)
     FileName = Column("FileName", String(128), nullable=False)
     Definition = Column("Definition", Text, nullable=True)
@@ -161,7 +163,7 @@ class Definition(Base):
         self.ClassName = assignment_information.get("ClassName")
         self.FileName = assignment_information.get("FileName")
         self.Definition = assignment_information.get("Definition")
-    
+
     def to_dict(self) -> dict:
         return {
             "DefinitionId": self.DefinitionId,
@@ -180,7 +182,8 @@ class CodingQuestion(Base):
     Difficulty = Column("Difficulty", String(32), nullable=True)
     AcceptanceRate = Column("AcceptanceRate", Float, nullable=True)
     Tags = Column("Tags", ARRAY(Integer), nullable=True)
-    RequiresSubscription = Column("RequiresSubscription", Boolean, nullable=True)
+    RequiresSubscription = Column(
+        "RequiresSubscription", Boolean, nullable=True)
 
     def __init__(self, question_information: dict) -> None:
         self.QuestionId = question_information.get("QuestionId")
@@ -189,7 +192,8 @@ class CodingQuestion(Base):
         self.Difficulty = question_information.get("Difficulty")
         self.AcceptanceRate = question_information.get("AcceptanceRate")
         self.Tags = question_information.get("Tags")
-        self.RequiresSubscription = question_information.get("RequiresSubscription")
+        self.RequiresSubscription = question_information.get(
+            "RequiresSubscription")
 
     def to_dict(self) -> dict:
         return {
@@ -201,6 +205,19 @@ class CodingQuestion(Base):
             "Tags": self.Tags,
             "RequiresSubscription": self.RequiresSubscription
         }
+
+
+class EndpointDiagnostics(Base):
+    __tablename__   = "endpoint_"
+
+    DiagnosticId    = Column("DiagnosticId", Integer, autoincrement=True, primary_key=True)
+    Endpoint        = Column("Endpoint", String(1024), nullable=False)
+    Request         = Column("Request", JSON, nullable=False)
+    Response        = Column("Response", JSON, nullable=False)
+    Date            = Column("Date", DateTime(timezone=True), nullable=False)
+    Error           = Column("Error", String(1024), nullable=False)
+    Latency         = Column("Float", Float, nullable=False)
+
 
 def init_db():
     global Base, Engine
