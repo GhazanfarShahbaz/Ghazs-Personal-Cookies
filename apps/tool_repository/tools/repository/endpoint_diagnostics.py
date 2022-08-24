@@ -32,6 +32,8 @@ class EndpointDiagnosticsRepository(object):
         endpoint_diagnostics_list: List[EndpointDiagnostics] = query_diagnostics.all()
         
         # get sum, average of errors and latency
+        
+        return endpoint_diagnostics_list
 
         
         
