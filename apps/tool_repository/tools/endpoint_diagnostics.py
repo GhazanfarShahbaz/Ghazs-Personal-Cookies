@@ -1,8 +1,8 @@
 from repository.endpoint_diagnostics import EndpointDiagnosticsRepository
 from repository.model import EndpointDiagnostics
 
-from typing import Dict 
 from datetime import datetime
+from typing import Dict, List
 
 endpoint_dict: Dict[int, any] = {}
 current_index: int = 0
@@ -19,8 +19,8 @@ def setup_endpoint_diagnostics(endpoint: str, request) -> int:
     current_index += 1
     
     return endpoint_id
-    
-    
+
+
 def commit_endpoint_diagnostics(diagnostic_id: int, response, error = "") -> bool:
     endpoint_diagnostics: Dict[str, any] = endpoint_dict[diagnostic_id]
     
@@ -31,5 +31,7 @@ def commit_endpoint_diagnostics(diagnostic_id: int, response, error = "") -> boo
     EndpointDiagnosticsRepository().insert(EndpointDiagnostics(endpoint_diagnostics))
     del endpoint_dict[diagnostic_id]
     
-    
     return True
+
+def diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list: List[EndpointDiagnostics]):
+    return [diagnostic.to_dict() for diagnostic in diagnostic_list]
