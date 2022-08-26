@@ -57,12 +57,13 @@ def create_event_information(event_data: dict) -> List[Event]:
         reccurance_id = EventRepository().get_reccurance_count()
 
         event_template["ReccuranceId"] = reccurance_id 
+        event_data["RecurranceType"] = event_data["RecurranceType"].lower()
 
-        if event_data["RecurranceType"].lower() not in {"weekly", "monthly", "yearly"}:
+        if event_data["RecurranceType"] not in {"weekly", "monthly", "yearly"}:
             event_list = get_daily_reccurance_event_list(event_template, event_data["StartDate"], event_data["EndDate"], event_data["RecurranceType"],event_data["RecurranceDateTo"])
 
         else:
-            event_template["RecurranceType"] = event_data["RecurranceType"] 
+            event_template["RecurranceType"] = event_data["RecurranceType"]
             event_list = get_other_reccurance_event_list(event_template, event_data["StartDate"], event_data["EndDate"], event_data["RecurranceType"],event_data["RecurranceDateTo"])
 
     return event_dict_list_to_event_type_list(event_list)
@@ -130,6 +131,7 @@ def get_other_reccurance_event_list(event_template: dict, start_date: str, end_d
     
     current_date: datetime = copy(start_date)
     reccurance_end_date: datetime = string_to_date(reccurance_end_date_string)
+    reccurance_type = event_template["RecurranceType"]
 
     time_delta: timedelta or relativedelta = None 
     if reccurance_type == "weekly":
