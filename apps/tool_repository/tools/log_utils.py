@@ -24,4 +24,3 @@ def split_up_log_file() -> Dict[str, List[str]]:
                 previous_app = app
             
         log_dictionary[app].append(line)
-            
