@@ -387,6 +387,7 @@ def get_help():
 
     return get_command(request_form.get("command"))
 
+
 @app.route("/getLogs", methods=["POST"])
 def get_help():
     log_request(request)
