@@ -389,7 +389,7 @@ def get_help():
 
 
 @app.route("/getLogs", methods=["POST"])
-def get_help():
+def get_logs():
     log_request(request)
     request_form = request.json
 
