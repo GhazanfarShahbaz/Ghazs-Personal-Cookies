@@ -19,6 +19,7 @@ from tools.process_help_requests import get_command
 from tools.process_translate_request import process_translate
 from tools.process_file_storage_requests import process_upload_file, process_delete_file
 from tools.process_qr_code_requests import processs_generate_link_qr_code
+from tools.process_log_requests import process_get_logs
 
 from typing import List
 from json import loads 
@@ -385,6 +386,16 @@ def get_help():
         return "Invalid"
 
     return get_command(request_form.get("command"))
+
+@app.route("/getLogs", methods=["POST"])
+def get_help():
+    log_request(request)
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return process_get_logs()
 
 
 @app.route("/setEnvironmentVariable", methods=["POST"])
