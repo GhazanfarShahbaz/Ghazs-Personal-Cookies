@@ -1,11 +1,12 @@
-
 from datetime import datetime
 
 from flask import Flask
-from flask import request, jsonify
+from flask import request, jsonify, send_file
 
 from firebase_admin import credentials, firestore, initialize_app
 from response_processing.event_processing import print_events
+
+from os import environ, getenv
 
 from tools.repository.model import Event
 from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
@@ -17,25 +18,30 @@ from tools.process_gmail_requests import get_emails
 from tools.process_help_requests import get_command
 from tools.process_translate_request import process_translate
 from tools.process_file_storage_requests import process_upload_file, process_delete_file
+from tools.process_qr_code_requests import processs_generate_link_qr_code
+from tools.process_log_requests import process_get_logs
 
 from typing import List
 from json import loads 
 
 import logging
-import os
-
 
 app = Flask(__name__)
 logging.basicConfig(filename='logs/tool_requests.log', level=logging.DEBUG)
+APP_PATH: str = "/tools"
 
-cred = credentials.Certificate(os.getenv("FIRESTORE_TOKEN"))
+cred = credentials.Certificate(environ["FIRESTORE_TOKEN"])
 initialize_app(cred)
+
+
+def log_request(request) -> None:
+    app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path}")
+    app.logger.info(request.json)
 
 
 def get_login(from_server = False) -> dict:
     db = firestore.client()
-    users_ref = db.collection(os.environ["FIRESTORE_SERVER"])
-
+    users_ref = db.collection(environ["FIRESTORE_SERVER"])
     login_allow = users_ref.document('allow')
 
     if not from_server and login_allow.get().to_dict()["allow"] is False:
@@ -45,7 +51,7 @@ def get_login(from_server = False) -> dict:
         u'allow': False
     })
 
-    return users_ref.document(os.environ["FIRESTORE_DOC_ID"]).get().to_dict()
+    return users_ref.document(environ["FIRESTORE_DOC_ID"]).get().to_dict()
 
 
 def validate_user(username: str, password: str) -> bool:
@@ -55,17 +61,15 @@ def validate_user(username: str, password: str) -> bool:
         return True
 
     app.logger.info(
-        f'Invalid Username and Password were supplied {request.remote_addr} on {datetime.now()}'
+        f'Invalid Username and Password were supplied {request.remote_addr} /tools/{request.path} on {datetime.now()}'
     )
     return False
 
 
 @app.route("/createEvent", methods=["POST"])
 def create_event():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint createEvent")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -79,10 +83,8 @@ def create_event():
 @app.route("/getEvent", methods=["POST"])
 def get_events():
     request_form = request.json
+    log_request(request)
     event_list: List[Event] = []
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getEvent")
-    app.logger.info(request.json)
 
     if validate_user(request_form.get("username"), request_form.get("password")):
         if request_form.get("defaultForm"):
@@ -98,10 +100,8 @@ def get_events():
 
 @app.route("/updateEvent", methods=["POST"])
 def update_event():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint updateEvent")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -114,10 +114,8 @@ def update_event():
 
 @app.route("/deleteEvent", methods=["POST"])
 def delete_event():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint deleteEvent")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -130,10 +128,8 @@ def delete_event():
 
 @app.route("/addClass", methods=["POST"])
 def add_class():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint addClass")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -146,10 +142,8 @@ def add_class():
 
 @app.route("/getClass", methods=["POST"])
 def get_class():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getClass")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -162,10 +156,8 @@ def get_class():
 
 @app.route("/updateClass", methods=["POST"])
 def update_class():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint updateClass")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -178,10 +170,8 @@ def update_class():
 
 @app.route("/deleteClass", methods=["POST"])
 def delete_class():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint deleteClass")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -194,10 +184,8 @@ def delete_class():
 
 @app.route("/addSyllabus", methods=["POST"])
 def add_syllabus():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint addSyllabus")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -210,10 +198,8 @@ def add_syllabus():
 
 @app.route("/getSyllabus", methods=["POST"])
 def get_syllabus():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getSyllabus")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -226,10 +212,8 @@ def get_syllabus():
 
 @app.route("/updateSyllabus", methods=["POST"])
 def update_syllabus():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint updateSyllabus")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -242,10 +226,8 @@ def update_syllabus():
 
 @app.route("/deleteSyllabus", methods=["POST"])
 def delete_syllabus():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint deleteSyllabus")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -258,7 +240,9 @@ def delete_syllabus():
 
 @app.route("/addAssignment", methods=["POST"])
 def add_assignment():
+    log_request(request)
     request_form = request.json
+
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -271,10 +255,8 @@ def add_assignment():
 
 @app.route("/getAssignment", methods=["POST"])
 def get_assignment():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getAssignment")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -287,10 +269,8 @@ def get_assignment():
 
 @app.route("/updateAssignment", methods=["POST"])
 def update_assignment():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint updateAssignment")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -303,10 +283,8 @@ def update_assignment():
 
 @app.route("/deleteAssignment", methods=["POST"])
 def delete_assignment():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint deleteAssignment")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -318,10 +296,8 @@ def delete_assignment():
 
 @app.route("/getCurrentWeather", methods=["POST"])
 def get_current_weather():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getWeather")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -331,10 +307,8 @@ def get_current_weather():
 
 @app.route("/getGmailEmails", methods=["POST"])
 def get_gmail_emails():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -344,10 +318,8 @@ def get_gmail_emails():
 
 @app.route("/getTranslation", methods=["POST"])
 def get_translation():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -359,7 +331,7 @@ def get_translation():
 def upload_file():
     request_form = loads(request.form["json"])
     
-    app.logger.info(f"{request.remote_addr} visited endpoint uploadFile")
+    app.logger.info(f"{request.remote_addr} /tools/{request.path}")
     app.logger.info(request_form)
     
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -372,10 +344,8 @@ def upload_file():
 
 @app.route("/deleteFile", methods=["POST"])
 def delete_file():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
@@ -385,27 +355,76 @@ def delete_file():
     
 @app.route("/sendTextMessage", methods=["POST"])
 def send_message():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getEmails")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
 
+@app.route("/generateLinkQRCode", methods=["POST"])
+def generate_qr_code_for_link():
+    log_request(request)
+    request_form = request.json
+    
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+    
+    qr_io = processs_generate_link_qr_code(request_form["qrForm"])
+    
+    app.logger.info(qr_io)
+    
+    return send_file(qr_io, mimetype='image/jpeg')
+    
+
 @app.route("/getHelp", methods=["POST"])
 def get_help():
+    log_request(request)
     request_form = request.json
-
-    app.logger.info(f"{request.remote_addr} visited endpoint getHelp")
-    app.logger.info(request.json)
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return "Invalid"
 
     return get_command(request_form.get("command"))
 
+
+@app.route("/getLogs", methods=["POST"])
+def get_logs():
+    log_request(request)
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    return process_get_logs()
+
+
+@app.route("/setEnvironmentVariable", methods=["POST"])
+def set_environment_variable():
+    log_request(request)
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return "Invalid"
+
+    environment_form = request_form.get("environmentForm")
+    key: str = environment_form["key"]
+    value: str = environment_form["value"]
+    
+    if getenv(key) and not environ[environment_form["overwrite"]]:
+        return {"response": "Needs overwrite permission"} 
+        
+    db = firestore.client()
+    users_ref = db.collection(environ["FIRESTORE_SERVER"])
+    environment_document = users_ref.document(environ["FIRESTORE_ENVIRONMENT_ID"])
+    
+    environment_document.update({
+        key: value
+    })
+    
+    environ[key] = value
+    return {"response": "success"} 
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

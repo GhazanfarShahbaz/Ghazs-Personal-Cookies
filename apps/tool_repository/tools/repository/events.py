@@ -120,5 +120,5 @@ class EventRepository(object):
         self.session.commit()
 
     def get_reccurance_count(self) -> int:
-        query: Query = self.session.query(func.count(distinct(Event.ReccuranceId)))
-        return query.first()[0]
+        query: Query = self.session.query(func.max(distinct(Event.ReccuranceId)))
+        return query.first()[0] + 1 if query.first()[0] else 0 

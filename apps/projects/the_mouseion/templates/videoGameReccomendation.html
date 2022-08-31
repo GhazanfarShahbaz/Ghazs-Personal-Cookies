@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src = "https://ajax.google.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script> 
+        <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/modal.css') }}">
+        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/style.css') }}">
+        <script src = "{{ url_for('static', filename='js/mainScript.js') }}"></script>
+
+        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/bookReccomendation.css') }}">
+        <script src = "{{ url_for('static', filename='js/gameReccomendation.js') }}"></script>
+    </head>
+    <body style="background-color:lightgrey;">
+        <div class = "container" style = "position: absolute;">
+            <div id = "mySidenav" class = "sidenav">
+                <a href = "javascript:void(0)" class = "closebtn" onclick = "closeNav()">&times;</a>
+                <a href = "home">Home</a>
+                <a href = "bookReccomendation">Books</a>
+                <a href = "movieReccomendation">Movies</a>
+                <a href = "" class = "fa fa-sign-out" style = "position: absolute; bottom: 65px;"> Log Out</a>
+            </div>
+        </div>
+        <span style= "font-size:30px;cursor:pointer; margin-left: 30px;" onclick="openNav()">&#9776;</span>
+        <div class="w3-container" >
+            <!-- Search Bar -->
+            <div style="text-align: center;" id = "searchbar">
+                <div style="left: 50%;">
+                    <input id = "search" placeholder="Title" style = "text-align: center;">
+                    <button id = "button" onclick = videoGameSearch() type = "button">Submit</button>
+                </div>
+            </div>
+            <!-- End of Search Bar -->
+
+            <!-- Start of results -->
+            <div id = "results"></div>
+            <!-- End of results -->
+        </div>
+
+        <div style="text-align: center;" class = "w3-container">
+            <h2 id = "someId" style = "left: 50%;">Reccomended Video Games</h2>
+            <div id = "yourList">
+            </div>
+        </div>
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <script src = "{{ url_for('static', filename='js/gameReccomendation.js') }}"></script>
+        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/modal.css') }}">
+        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/bookReccomendation.css') }}">
+
+    </body>
+</html>
+
