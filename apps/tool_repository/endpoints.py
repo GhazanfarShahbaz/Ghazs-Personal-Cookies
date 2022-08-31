@@ -4,6 +4,7 @@ from flask import Flask
 from flask import request, jsonify, send_file
 
 from firebase_admin import credentials, firestore, initialize_app
+from apps.tool_repository.tools.endpoint_diagnostics import setup_endpoint_diagnostics
 from response_processing.event_processing import print_events
 
 from os import environ, getenv
@@ -72,7 +73,7 @@ def create_event():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("eventForm"):
         process_create_event(request_form.get("eventForm"))
@@ -104,7 +105,7 @@ def update_event():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("filterForm"):
         process_update_event(request_form.get("filterForm"))
@@ -118,7 +119,7 @@ def delete_event():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("deleteForm"):
         process_delete_event(request_form.get("deleteForm"))
@@ -132,7 +133,7 @@ def add_class():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("classForm"):
         process_create_class(request_form.get("classForm"))
@@ -146,7 +147,7 @@ def get_class():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("filterForm"):
         process_get_class_request(request_form.get("filterForm"))
@@ -160,7 +161,7 @@ def update_class():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("updateForm"):
         process_update_class(request_form.get("updateForm"))
@@ -174,7 +175,7 @@ def delete_class():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("deleteForm"):
         process_delete_class_request(request_form.get("deleteForm"))
@@ -188,7 +189,7 @@ def add_syllabus():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("syllabusForm"):
         process_create_syllabus(request_form.get("syllabusForm"))
@@ -202,7 +203,7 @@ def get_syllabus():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("filterForm"):
         process_get_syllabus_request(request_form.get("filterForm"))
@@ -216,7 +217,7 @@ def update_syllabus():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("updateForm"):
         process_update_syllabus(request_form.get("updateForm"))
@@ -230,7 +231,7 @@ def delete_syllabus():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("deleteForm"):
         process_delete_syllabus_request(request_form.get("deleteForm"))
@@ -245,7 +246,7 @@ def add_assignment():
 
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("assignmentForm"):
         process_create_assignment(request_form.get("assignmentForm"))
@@ -259,7 +260,7 @@ def get_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("filterForm"):
         process_get_assignment_request(request_form.get("filterForm"))
@@ -273,7 +274,7 @@ def update_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("updateForm"):
         process_update_assignment(request_form.get("updateForm"))
@@ -287,7 +288,7 @@ def delete_assignment():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     if request_form.get("deleteForm"):
         process_delete_assignment_request(request_form.get("deleteForm"))
@@ -300,7 +301,7 @@ def get_current_weather():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     return get_weather()
 
@@ -311,7 +312,7 @@ def get_gmail_emails():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     return get_emails(request_form.get("authorizationFile"), request_form.get("labelFilters"), request_form.get("maxResults"), request_form.get("snippet"))
 
@@ -322,7 +323,7 @@ def get_translation():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     return process_translate(request_form.get("translationForm"))
 
@@ -335,7 +336,7 @@ def upload_file():
     app.logger.info(request_form)
     
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
     
     file = request.files["file"]
     
@@ -348,7 +349,7 @@ def delete_file():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
     
     return process_delete_file(request_form.get("deleteForm"))
     
@@ -359,7 +360,7 @@ def send_message():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
 
 @app.route("/generateLinkQRCode", methods=["POST"])
@@ -368,7 +369,7 @@ def generate_qr_code_for_link():
     request_form = request.json
     
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
     
     qr_io = processs_generate_link_qr_code(request_form["qrForm"])
     
@@ -383,7 +384,7 @@ def get_help():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     return get_command(request_form.get("command"))
 
@@ -394,7 +395,7 @@ def get_logs():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     return process_get_logs()
 
@@ -405,14 +406,14 @@ def set_environment_variable():
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
-        return "Invalid"
+        return {"Status": "Invalid Request"}
 
     environment_form = request_form.get("environmentForm")
     key: str = environment_form["key"]
     value: str = environment_form["value"]
     
     if getenv(key) and not environ[environment_form["overwrite"]]:
-        return {"response": "Needs overwrite permission"} 
+        return {"Status": "Needs overwrite permission"} 
         
     db = firestore.client()
     users_ref = db.collection(environ["FIRESTORE_SERVER"])
