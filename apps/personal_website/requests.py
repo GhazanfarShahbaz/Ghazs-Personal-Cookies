@@ -37,6 +37,11 @@ def education_route():
     app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')
     return send_from_directory(app.static_folder, 'index.html')
 
+@app.route("/resume")
+def resume_route():
+    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')
+    return send_from_directory(app.static_folder, 'index.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
