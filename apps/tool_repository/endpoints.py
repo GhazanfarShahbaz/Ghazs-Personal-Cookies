@@ -424,8 +424,7 @@ def set_environment_variable():
     })
     
     environ[key] = value
-    return {"response": "success"} 
+    return {"Status": "Success"} 
     
-
 if __name__ == "__main__":
     app.run(debug=True)

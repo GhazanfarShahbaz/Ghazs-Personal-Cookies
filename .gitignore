@@ -4,6 +4,7 @@ __pycache__/
 env
 .env
 test/.env
+apps/farmbot
 
 # C extensions
 *.so
@@ -33,7 +34,7 @@ pip-delete-this-directory.txt
 .cache
 nosetests.xml
 coverage.xml
-
+s
 # Translations
 *.mo
 
