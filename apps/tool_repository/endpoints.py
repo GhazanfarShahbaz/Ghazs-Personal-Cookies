@@ -36,7 +36,7 @@ initialize_app(cred)
 
 
 def log_request(request) -> None:
-    app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path}")
+    app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path} on {datetime.now()}")
     app.logger.info(request.json)
 
 

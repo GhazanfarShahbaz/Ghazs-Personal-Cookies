@@ -1,5 +1,6 @@
 import logging
 
+from datetime import datetime
 from flask import Flask
 from flask import request, send_from_directory
 
@@ -17,30 +18,30 @@ logging.basicConfig(
 
 @app.route("/")
 def home_route():
-    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')
+    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path} on {datetime.now()}')
     return send_from_directory(app.static_folder, 'index.html')
 
 
 @app.route("/projects")
 def projects_route():
-    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')
+    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path} on {datetime.now()}')
     return send_from_directory(app.static_folder, 'index.html')
 
 
 @app.route("/skills")
 def skills_route():
-    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')
+    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path} on {datetime.now()}')
     return send_from_directory(app.static_folder, 'index.html')
 
 
 @app.route("/education")
 def education_route():
-    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')
+    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path} on {datetime.now()}')
     return send_from_directory(app.static_folder, 'index.html')
 
 @app.route("/resume")
 def resume_route():
-    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')
+    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path} on {datetime.now()}')
     return send_from_directory(app.static_folder, 'index.html')
 
 
