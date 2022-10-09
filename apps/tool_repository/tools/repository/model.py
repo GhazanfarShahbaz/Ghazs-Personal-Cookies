@@ -287,8 +287,7 @@ class SoilSensor(Base):
 def init_db():
     global Base, Engine
 
-
     Base.metadata.create_all(bind=Engine)
     print("Created Model")
 
-init_db()
+# init_db(
