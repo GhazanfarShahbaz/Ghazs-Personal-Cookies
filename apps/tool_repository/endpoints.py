@@ -4,7 +4,6 @@ from flask import Flask
 from flask import request, jsonify, send_file
 
 from firebase_admin import credentials, firestore, initialize_app
-from apps.tool_repository.tools.endpoint_diagnostics import setup_endpoint_diagnostics
 from response_processing.event_processing import print_events
 
 from os import environ, getenv

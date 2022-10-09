@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from sqlalchemy import (ARRAY, Boolean, Column, DateTime, JSON, 
                         Float, Integer,String, Text, ForeignKey)
 from sqlalchemy.engine.base import Engine
@@ -222,7 +223,7 @@ class EndpointDiagnostics(Base):
 class Plant(Base):
     __tablename__   = "plants"
     
-    ID         = Column("ID", Integer, primary_key=True, autoincrement=True)
+    ID              = Column("ID", Integer, primary_key=True, autoincrement=True)
     PlantId         = Column("PlantId", Integer)
 
     PlantType       = Column("PlantType", String(256), nullable=False)
@@ -254,6 +255,32 @@ class Plant(Base):
             "YCoordinate"   : self.YCoordinate,
             "ZCoordinate"   : self.ZCoordinate,
             "Radius"        : self.Radius   
+        }
+
+
+class SoilSensor(Base):
+    __tablename__ = "soil_sensors"
+    
+    StampId         = Column("StampId", Integer, primary_key=True, autoincrement=True)
+    XCoordinate     = Column("XCoordinate", Integer, nullable=False)
+    YCoordinate     = Column("YCoordinate", Integer, nullable=False)
+    Timestamp       = Column("Timestamp", DateTime(timezone=True), nullable=False)
+    Value           = Column("Value", Float, nullable=False)
+    
+    def __init__(self, sensor_data: dict) -> None:
+        self.StampId        = sensor_data.get("StampId")
+        self.XCoordinate    = sensor_data.get("XCoordinate")
+        self.YCoordinate    = sensor_data.get("YCoordinate")
+        self.Timestamp      = sensor_data.get("Timestamp")
+        self.Value          = sensor_data.get("Value")
+        
+    def to_dict(self) -> dict:
+        return {
+            "StampId"       : self.StampId,
+            "XCoordinate"   : self.XCoordinate,
+            "YCoordinate"   : self.YCoordinate,
+            "Timestamp"     : self.Timestamp,
+            "Value"         : self.Value,
         }
 
 
