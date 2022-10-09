@@ -14,5 +14,31 @@ def test_gethome():
     response = app.test_client().get("/")
     
     assert response.status_code == 200
-    assert response.data.decode('UTF-8') == "This site is under maintenance"
     
+    
+def test_getprojects():
+    response = app.test_client().get("/projects")
+    
+    assert response.status_code == 200
+    
+    
+def test_getskills():
+    response = app.test_client().get("/skills")
+    
+    assert response.status_code == 200
+    
+def test_getskills():
+    response = app.test_client().get("/skills")
+    
+    assert response.status_code == 200
+    
+def test_geteducation():
+    response = app.test_client().get("/education")
+    
+    assert response.status_code == 200
+    
+    
+def test_getresume():
+    response = app.test_client().get("/resume")
+    
+    assert response.status_code == 200
