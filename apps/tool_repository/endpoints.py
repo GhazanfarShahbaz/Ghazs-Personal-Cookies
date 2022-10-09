@@ -24,10 +24,18 @@ from tools.process_log_requests import process_get_logs
 from typing import List
 from json import loads 
 
-import logging
+import logging.config
 
 app = Flask(__name__)
-logging.basicConfig(filename='logs/tool_requests.log', level=logging.DEBUG)
+
+logging.config.fileConfig('/home/ghaz/flask_gateway/logging.conf')
+app.logger = logging.getLogger('MainLogger')
+
+fh = logging.FileHandler('logs/{:%Y-%m-%d}.log'.format(datetime.now()))
+formatter = logging.Formatter('%(asctime)s | %(levelname)-8s | %(lineno)04d | %(message)s')
+fh.setFormatter(formatter)
+app.logger.addHandler(fh)
+
 APP_PATH: str = "/tools"
 
 cred = credentials.Certificate(environ["FIRESTORE_TOKEN"])
@@ -35,7 +43,7 @@ initialize_app(cred)
 
 
 def log_request(request) -> None:
-    app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path} on {datetime.now()}")
+    app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path}")
     app.logger.info(request.json)
 
 
