@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
 from apps.farmbot.utils.repository.get_db_engine import get_engine
+from datetime import datetime
 
 Engine: Engine = get_engine()
 Session = sessionmaker(Engine)
@@ -271,7 +272,7 @@ class SoilSensor(Base):
         self.StampId        = sensor_data.get("StampId")
         self.XCoordinate    = sensor_data.get("XCoordinate")
         self.YCoordinate    = sensor_data.get("YCoordinate")
-        self.Timestamp      = sensor_data.get("Timestamp")
+        self.Timestamp      = datetime.now()
         self.Value          = sensor_data.get("Value")
         
     def to_dict(self) -> dict:
@@ -290,4 +291,4 @@ def init_db():
     Base.metadata.create_all(bind=Engine)
     print("Created Model")
 
-# init_db(
+# init_db()
