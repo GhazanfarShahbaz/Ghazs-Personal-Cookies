@@ -1,4 +1,5 @@
-from apps.personal_website.requests import app # pylint: disable=import-error, useless-option-value, nknown-option-value, unrecognized-option
+from apps.personal_website.requests import app  # pylint: disable=import-error, useless-option-value, nknown-option-value, unrecognized-option
+
 
 def test_get_home():
     response = app.test_client().get("/")
