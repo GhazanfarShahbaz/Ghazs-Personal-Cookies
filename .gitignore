@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 env
 .env
+.vscode/
 test/.env
 apps/farmbot
 
