@@ -4,9 +4,10 @@ from flask import Flask
 from flask import request, jsonify, send_file
 
 from firebase_admin import credentials, firestore, initialize_app
-from response_processing.event_processing import print_events
 
 from os import environ, getenv
+
+from response_processing.event_processing import print_events
 
 from tools.repository.model import Event
 from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
@@ -22,9 +23,9 @@ from tools.process_qr_code_requests import processs_generate_link_qr_code
 from tools.process_log_requests import process_get_logs
 
 from typing import List
-from json import loads 
+from json import loads
 
-import logging.config
+import logging
 
 app = Flask(__name__)
 
@@ -32,7 +33,8 @@ logging.config.fileConfig('/home/ghaz/flask_gateway/logging.conf')
 app.logger = logging.getLogger('MainLogger')
 
 fh = logging.FileHandler('logs/{:%Y-%m-%d}.log'.format(datetime.now()))
-formatter = logging.Formatter('%(asctime)s | %(levelname)-8s | %(lineno)04d | %(message)s')
+formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)-8s | %(lineno)04d | %(message)s')
 fh.setFormatter(formatter)
 app.logger.addHandler(fh)
 
@@ -47,14 +49,14 @@ def log_request(request) -> None:
     app.logger.info(request.json)
 
 
-def get_login(from_server = False) -> dict:
+def get_login(from_server=False) -> dict:
     db = firestore.client()
     users_ref = db.collection(environ["FIRESTORE_SERVER"])
     login_allow = users_ref.document('allow')
 
     if not from_server and login_allow.get().to_dict()["allow"] is False:
         return None
-    
+
     login_allow.update({
         u'allow': False
     })
@@ -251,7 +253,6 @@ def add_assignment():
     log_request(request)
     request_form = request.json
 
-
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return {"Status": "Invalid Request"}
 
@@ -302,6 +303,7 @@ def delete_assignment():
 
     return {}
 
+
 @app.route("/getCurrentWeather", methods=["POST"])
 def get_current_weather():
     log_request(request)
@@ -338,15 +340,15 @@ def get_translation():
 @app.route("/uploadFile", methods=["POST"])
 def upload_file():
     request_form = loads(request.form["json"])
-    
+
     app.logger.info(f"{request.remote_addr} /tools/{request.path}")
     app.logger.info(request_form)
-    
+
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return {"Status": "Invalid Request"}
-    
+
     file = request.files["file"]
-    
+
     return process_upload_file(file, request.mimetype)
 
 
@@ -357,10 +359,10 @@ def delete_file():
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return {"Status": "Invalid Request"}
-    
+
     return process_delete_file(request_form.get("deleteForm"))
-    
-    
+
+
 @app.route("/sendTextMessage", methods=["POST"])
 def send_message():
     log_request(request)
@@ -374,16 +376,16 @@ def send_message():
 def generate_qr_code_for_link():
     log_request(request)
     request_form = request.json
-    
+
     if not validate_user(request_form.get("username"), request_form.get("password")):
         return {"Status": "Invalid Request"}
-    
+
     qr_io = processs_generate_link_qr_code(request_form["qrForm"])
-    
+
     app.logger.info(qr_io)
-    
+
     return send_file(qr_io, mimetype='image/jpeg')
-    
+
 
 @app.route("/getHelp", methods=["POST"])
 def get_help():
@@ -418,20 +420,22 @@ def set_environment_variable():
     environment_form = request_form.get("environmentForm")
     key: str = environment_form["key"]
     value: str = environment_form["value"]
-    
+
     if getenv(key) and not environ[environment_form["overwrite"]]:
-        return {"Status": "Needs overwrite permission"} 
-        
+        return {"Status": "Needs overwrite permission"}
+
     db = firestore.client()
     users_ref = db.collection(environ["FIRESTORE_SERVER"])
-    environment_document = users_ref.document(environ["FIRESTORE_ENVIRONMENT_ID"])
-    
+    environment_document = users_ref.document(
+        environ["FIRESTORE_ENVIRONMENT_ID"])
+
     environment_document.update({
         key: value
     })
-    
+
     environ[key] = value
-    return {"Status": "Success"} 
-    
+    return {"Status": "Success"}
+
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -9,7 +9,7 @@ class SyllabusRepository(object):
 
     def __enter__(self):
         pass
-    
+
     def __exit__(self, type, value, traceback):
         self.session.close()
 

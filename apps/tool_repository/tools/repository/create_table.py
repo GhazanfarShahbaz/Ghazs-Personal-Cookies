@@ -59,10 +59,11 @@ def table_request_to_string(table_request: dict) -> str:
         get_column_string(table_request["keyColumn"])
 
     for additional_column in table_request["additionalColumns"]:
-        table_string += get_tab_string(tab) + get_column_string(additional_column)
+        table_string += get_tab_string(tab) + \
+            get_column_string(additional_column)
 
     # init logic here
-    
+
     # to dict logic here
-    
+
 # logic to create create, delete and update file for table here

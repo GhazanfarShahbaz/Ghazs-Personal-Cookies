@@ -5,6 +5,7 @@ from os import system
 
 # activate /env/bin/source
 
+
 def check_database_status() -> bool:
     try:
         connection = mysql.connector.connect(
@@ -15,9 +16,10 @@ def check_database_status() -> bool:
             auth_plugin='mysql_native_password'
         )
         connection.close()
-        return True 
+        return True
     except:
         return False
+
 
 def start_myql() -> None:
     system("brew services start mysql")
