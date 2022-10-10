@@ -6,9 +6,6 @@ from firebase_admin import credentials, firestore
 import json
 import pytest
 
-from generate_env import load_environment
-load_environment()
-
 from apps.tool_repository.endpoints import app
 from apps.tool_repository.endpoints import get_login, validate_user
 
