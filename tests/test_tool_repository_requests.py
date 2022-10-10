@@ -1,8 +1,5 @@
 import sys
 
-ROOT_DIRECTORY: str = "/home/ghaz/flask_gateway/"
-sys.path.append(ROOT_DIRECTORY)
-
 from os import environ
 from firebase_admin import credentials, firestore
 
@@ -14,9 +11,6 @@ load_environment()
 
 from apps.tool_repository.endpoints import app
 from apps.tool_repository.endpoints import get_login, validate_user
-
-
-# print(environ)
 
 
 db = firestore.client()
