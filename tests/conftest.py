@@ -7,5 +7,3 @@ def pytest_configure():
 
     from generate_env import load_environment  # pylint: disable=import-error, import-outside-toplevel
     load_environment()
-
-    # load_environment()
