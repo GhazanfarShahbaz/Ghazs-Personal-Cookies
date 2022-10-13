@@ -15,11 +15,13 @@ app = Flask(
 logging.config.fileConfig('/home/ghaz/flask_gateway/logging.conf')
 app.logger = logging.getLogger('MainLogger')
 
-fh = logging.FileHandler('logs/{:%Y-%m-%d}.log'.format(datetime.now()))
-formatter = logging.Formatter(
-    '%(asctime)s | %(levelname)-8s | %(lineno)04d | %(message)s')
-fh.setFormatter(formatter)
-app.logger.addHandler(fh)
+
+handler = logging.handlers.TimedRotatingFileHandler('logs/{:%Y-%m-%d}.log'.format(datetime.now()), when="midnight", interval=1)
+
+# fh = logging.FileHandler('logs/{:%Y-%m-%d}.log'.format(datetime.now()))
+formatter = logging.Formatter('%(asctime)s | %(levelname)-8s | %(lineno)04d | %(message)s')
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
 
 
 @app.route("/")
