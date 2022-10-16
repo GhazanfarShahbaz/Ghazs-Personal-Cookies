@@ -5,8 +5,7 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
-from apps.farmbot.utils.repository.get_db_engine import get_engine
-from datetime import datetime
+from get_db_engine import get_engine
 
 Engine: Engine = get_engine()
 Session = sessionmaker(Engine)
@@ -229,72 +228,6 @@ class EndpointDiagnostics(Base):
             "Error": self.Error,
             "Latency": self.Latency
         }
-
-
-class Plant(Base):
-    __tablename__ = "plants"
-
-    ID = Column("ID", Integer, primary_key=True, autoincrement=True)
-    PlantId = Column("PlantId", Integer)
-
-    PlantType = Column("PlantType", String(256), nullable=False)
-    PlantedDate = Column("PlantedDate", DateTime(
-        timezone=True), nullable=False)
-    DiscardedAt = Column("DiscardedAt", Float, nullable=True)
-
-    XCoordinate = Column("XCoordinate", Integer, nullable=False)
-    YCoordinate = Column("YCoordinate", Integer, nullable=False)
-    ZCoordinate = Column("ZCoordinate", Integer, nullable=False)
-    Radius = Column("Radius", Float, nullable=False)
-
-    def __init__(self, plant_data: dict) -> None:
-        self.PlantId = plant_data.get("PlantId")
-        self.PlantType = plant_data.get("PlantType")
-        self.PlantedDate = plant_data.get("PlantedDate")
-        self.DiscardedAt = plant_data.get("DiscardedAt")
-        self.XCoordinate = plant_data.get("XCoordinate")
-        self.YCoordinate = plant_data.get("YCoordinate")
-        self.ZCoordinate = plant_data.get("ZCoordinate")
-        self.Radius = plant_data.get("Radius")
-
-    def to_dict(self) -> dict:
-        return {
-            "PlantId": self.PlantId,
-            "PlantType": self.PlantType,
-            "PlantedDate": self.PlantedDate,
-            "DiscardedAt": self.DiscardedAt,
-            "XCoordinate": self.XCoordinate,
-            "YCoordinate": self.YCoordinate,
-            "ZCoordinate": self.ZCoordinate,
-            "Radius": self.Radius
-        }
-
-
-class SoilSensor(Base):
-    __tablename__ = "soil_sensors"
-
-    StampId = Column("StampId", Integer, primary_key=True, autoincrement=True)
-    XCoordinate = Column("XCoordinate", Integer, nullable=False)
-    YCoordinate = Column("YCoordinate", Integer, nullable=False)
-    Timestamp = Column("Timestamp", DateTime(timezone=True), nullable=False)
-    Value = Column("Value", Float, nullable=False)
-
-    def __init__(self, sensor_data: dict) -> None:
-        self.StampId = sensor_data.get("StampId")
-        self.XCoordinate = sensor_data.get("XCoordinate")
-        self.YCoordinate = sensor_data.get("YCoordinate")
-        self.Timestamp = datetime.now()
-        self.Value = sensor_data.get("Value")
-
-    def to_dict(self) -> dict:
-        return {
-            "StampId": self.StampId,
-            "XCoordinate": self.XCoordinate,
-            "YCoordinate": self.YCoordinate,
-            "Timestamp": self.Timestamp,
-            "Value": self.Value,
-        }
-
 
 def init_db():
     global Base, Engine
