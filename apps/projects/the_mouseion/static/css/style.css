@@ -2,7 +2,8 @@
 body {
     font-family: 'Abril Fatface', cursive;
 }
-.sidenav{
+
+.sidenav {
     display: none;
     height: 100%;
     width: 200px;
@@ -22,21 +23,31 @@ body {
     color: #818181;
     display: block;
 }
+
 .sidenav a:hover {
     color: #f1f1f1;
 }
-.sidenav a:hover{
+
+.sidenav a:hover {
     color: #f1f1f1;
 }
+
 .sidenav .closebtn {
-    position:  absolute;
+    position: absolute;
     top: 0;
     /* left: 25px; */
     font-size: 36px;
     /* margin-left: 50px; */
 }
+
 @media screen and (max-height: 450px) {
-     .sidenav {padding-top: 15px;}
-     .sidenav a {font-size: 10px;}
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 10px;
+    }
 }
+
 /* End Nav bar */

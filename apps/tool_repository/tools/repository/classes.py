@@ -7,13 +7,13 @@ from typing import List
 class ClassRepository(object):
     def __init__(self):
         self.session: Session = Sess()
-    
+
     def __enter__(self):
         pass
-    
+
     def __exit__(self, type, value, traceback):
         self.session.close()
-        
+
     def insert(self, _class_: Class) -> int:
         self.session.add(_class_)
         self.session.commit()
@@ -28,7 +28,7 @@ class ClassRepository(object):
 
         if update_dictionary.get("CourseNumber"):
             _class_.CourseNumber = update_dictionary["Course Number"]
-        
+
         if update_dictionary.get("Professor"):
             _class_.Professor = update_dictionary["Professor"]
 
@@ -54,7 +54,6 @@ class ClassRepository(object):
 
         if filters.get("Professor"):
             query = query.filter(Class.Professor == filters["Professor"])
-
 
         if filters.get("Name"):
             if filters.get("NameExact") is None or filters["NameExact"] is True:

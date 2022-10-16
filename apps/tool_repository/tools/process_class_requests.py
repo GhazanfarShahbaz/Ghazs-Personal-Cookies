@@ -1,10 +1,10 @@
-from typing import List 
+from typing import List
 from class_utils import class_type_list_to_event_dict_list
 from repository.model import Class
 from repository.classes import ClassRepository
 
 
-def process_create_class(class_data: dict) -> None: 
+def process_create_class(class_data: dict) -> None:
     ClassRepository().insert(class_data)
 
 
@@ -18,5 +18,5 @@ def process_get_class_request(filter_form: dict) -> List[dict]:
     return class_type_list_to_event_dict_list(class_list)
 
 
-def process_delete_class_request(delete_form: dict) -> None: 
+def process_delete_class_request(delete_form: dict) -> None:
     ClassRepository().delete(delete_form)

@@ -1,7 +1,7 @@
 import boto3
 
 from os import environ
-from typing import Dict, List 
+from typing import Dict, List
 
 function_mapper: Dict[str, callable] = {
     "client": boto3.client,
@@ -28,7 +28,7 @@ def get_aws_client_or_resource(aws_type: str):
         aws_secret_access_key=credentials["AWS_ACCESS_KEY"],
         region_name=credentials["AWS_REGION_NAME"],
     )
-    
+
     return client_or_resource
 
 
@@ -59,23 +59,25 @@ def delete_file(bucket_name: str, file_path: str) -> str:
 
     return "Success"
 
+
 def list_bucket_files(bucket_name: str, prefix: str) -> Dict[Dict, List[str]]:
     client = get_aws_client_or_resource("resource")
     bucket = client.Bucket(bucket_name)
     prefix = prefix.strip()
-    
-    bucket_data: list = bucket.objects.all() if not prefix else bucket.objects.filter(Prefix=prefix)
-    
+
+    bucket_data: list = bucket.objects.all(
+    ) if not prefix else bucket.objects.filter(Prefix=prefix)
+
     data: Dict[Dict, List[str]] = {
         "files": [],
         "folders": []
     }
-    
+
     for file in bucket_data:
         bucket_entry_name: str = file.key
-        entry_type: str = "files" if not bucket_entry_name.endswith("/") else "folders"
-        
-        
+        entry_type: str = "files" if not bucket_entry_name.endswith(
+            "/") else "folders"
+
         data[entry_type].append(file.key)
-        
+
     return data

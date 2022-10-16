@@ -1,27 +1,18 @@
-import sys
-
-ROOT_DIRECTORY: str = "/home/ghaz/flask_gateway/"
-sys.path.append(ROOT_DIRECTORY)
-
-from os import environ
-from firebase_admin import credentials, firestore
-
 import json
 import pytest
 
-from generate_env import load_environment
-load_environment()
+from os import environ
+
+from firebase_admin import credentials, firestore
 
 from apps.tool_repository.endpoints import app
 from apps.tool_repository.endpoints import get_login, validate_user
 
 
-# print(environ)
-
-
 db = firestore.client()
 users_ref = db.collection(environ["FIRESTORE_SERVER"])
 credentials = users_ref.document(environ["FIRESTORE_DOC_ID"]).get().to_dict()
+
 
 def test_get_login_one():
     response = get_login(False)
@@ -96,7 +87,8 @@ def test_validate_get_help_one():
             }
         }
     }
-    
+
+
 def test_validate_get_help_two():
     login_allow = users_ref.document('allow')
 
@@ -162,8 +154,8 @@ def test_create_event():
                 "ReccuranceType": ""
             }
         }
-    )    
-    
+    )
+
     assert response.status_code == 200
     assert response.data == b"Success"
 
@@ -184,10 +176,10 @@ def test_get_event():
                 "Name": "TEST",
             }
         }
-    )   
-    
+    )
+
     response_dict = json.loads(response.data.decode('UTF-8'))
- 
+
     print(response_dict)
     assert response.status_code == 200
     assert response_dict != {}
@@ -209,8 +201,8 @@ def test_delete_event():
                 "Name": "TEST",
             }
         }
-    )    
-    
+    )
+
     assert response.status_code == 200
     assert response.data == b"Success"
 
@@ -221,25 +213,23 @@ def test_delete_event():
 #     login_allow.update({
 #         u'allow': True
 #     })
-    
+
 #     base_request = {
 #         "username": credentials["username"],
 #         "password": credentials["password"]
 #     }
-    
-    
+
+
 #     response = app.test_client().post(
 #         "uploadFile",
 #         data={
 #             "file": open("/home/ghaz/flask_gateway/tests/test_file.txt", "rb"),
 #             "json": (None, json.dumps(base_request), 'application/json')
 #         }
-#     )  
-    
-    # response_dict = json.loads(response.data.decode('UTF-8'))
-    
-    # assert response.status_code == 200
-    # assert response.data != "Invalid"
-    # assert response_dict == {"status": "success"}
-    
-    
+#     )
+
+#     response_dict = json.loads(response.data.decode('UTF-8'))
+
+#     assert response.status_code == 200
+#     assert response.data != "Invalid"
+#     assert response_dict == {"status": "success"}

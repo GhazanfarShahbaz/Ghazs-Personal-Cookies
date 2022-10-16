@@ -9,7 +9,7 @@ class AssignmentRepository(object):
 
     def __enter__(self):
         pass
-    
+
     def __exit__(self, type, value, traceback):
         self.session.close()
 
@@ -53,7 +53,8 @@ class AssignmentRepository(object):
                 query = query.filter(Class.Name.like(filters["ClassName"]))
 
         if filters.get("DateAssigned"):
-            query = query.filter(Assignment.DateAssigned == filters["DateAssigned"])
+            query = query.filter(Assignment.DateAssigned ==
+                                 filters["DateAssigned"])
 
         if filters.get("DateDue"):
             query = query.filter(Assignment.DateDue == filters["DateDue"])
@@ -99,7 +100,7 @@ class AssignmentRepository(object):
                 query = query.filter(Syllabus.Section == filters["Section"])
             else:
                 query = query.filter(Syllabus.Section.like(filters["Section"]))
-        
+
         if filters.get("DateDue"):
             query = query.filter(Assignment.DateDue == filters["DateDue"])
 
@@ -108,7 +109,7 @@ class AssignmentRepository(object):
 
         if filters.get("SectionIds"):
             query = query.filter(Syllabus.SectionId.in_(filters["SectionIds"]))
-            
+
         if filters.get("Name"):
             if filters.get("NameExact") is None or filters["NameExact"] is True:
                 query = query.filter(Assignment.Name == filters["Name"])

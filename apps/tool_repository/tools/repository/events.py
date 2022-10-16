@@ -10,7 +10,7 @@ class EventRepository(object):
 
     def __enter__(self):
         pass
-    
+
     def __exit__(self, type, value, traceback):
         self.session.close()
 
@@ -120,5 +120,6 @@ class EventRepository(object):
         self.session.commit()
 
     def get_reccurance_count(self) -> int:
-        query: Query = self.session.query(func.max(distinct(Event.ReccuranceId)))
-        return query.first()[0] + 1 if query.first()[0] else 0 
+        query: Query = self.session.query(
+            func.max(distinct(Event.ReccuranceId)))
+        return query.first()[0] + 1 if query.first()[0] else 0
