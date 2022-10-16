@@ -20,9 +20,11 @@ def split_up_log_file() -> Dict[str, List[str]]:
         app: str = previous_app
 
         if len(split_colon) >= 2:
-            if "tool_repository" in split_colon[1]:
+            path_to_file: str = split_colon[1]
+            
+            if "tool_repository" in path_to_file:
                 app = "tools"
-            elif "personal_webnsite" in split_colon[1]:
+            elif "personal_webnsite" in path_to_file:
                 app = "personal_website"
                 
             if not app in log_dictionary.keys():
