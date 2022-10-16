@@ -1,5 +1,5 @@
-from typing import Dict, List
 from datetime import datetime
+from typing import Dict, List
 
 PATH_TO_LOG_FILE: str = "/home/ghaz/flask_gateway/logs/"
 
@@ -27,7 +27,7 @@ def split_up_log_file() -> Dict[str, List[str]]:
             elif "personal_webnsite" in path_to_file:
                 app = "personal_website"
                 
-            if not app in log_dictionary.keys():
+            if not app in log_dictionary:
                 log_dictionary[app] = []
 
             previous_app = app
