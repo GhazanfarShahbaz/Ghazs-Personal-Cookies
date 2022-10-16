@@ -37,6 +37,7 @@ handler = logging.handlers.TimedRotatingFileHandler(
 
 handler.prefix = "%Y%m%d"
 
+# fh = logging.FileHandler('logs/{:%Y-%m-%d}.log'.format(datetime.now()))
 formatter = logging.Formatter('%(asctime)s | %(pathname)s | %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | %(message)s')
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
