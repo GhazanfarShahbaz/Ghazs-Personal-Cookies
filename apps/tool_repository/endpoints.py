@@ -32,10 +32,12 @@ app = Flask(__name__)
 logging.config.fileConfig('/home/ghaz/flask_gateway/logging.conf')
 app.logger = logging.getLogger('MainLogger')
 
-handler = logging.handlers.TimedRotatingFileHandler('logs/{:%Y-%m-%d}.log'.format(datetime.now()), when="midnight", interval=1)
+handler = logging.handlers.TimedRotatingFileHandler(
+'logs/app.log', when="midnight", interval=1)
 
-# fh = logging.FileHandler('logs/{:%Y-%m-%d}.log'.format(datetime.now()))
-formatter = logging.Formatter('%(asctime)s | %(levelname)-8s | %(lineno)04d | %(message)s')
+handler.prefix = "%Y%m%d"
+
+formatter = logging.Formatter('%(asctime)s | %(pathname)s | %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | %(message)s')
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 
