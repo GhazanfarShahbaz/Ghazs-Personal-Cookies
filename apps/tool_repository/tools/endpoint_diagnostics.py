@@ -15,6 +15,7 @@ def setup_endpoint_diagnostics(endpoint: str, request) -> int:
         "Date": datetime.now(),
     }
 
+    global current_index, endpoint_dict
     endpoint_id: int = current_index
     endpoint_dict[endpoint_id] = endpoint_diagnostics
     current_index += 1
@@ -23,6 +24,7 @@ def setup_endpoint_diagnostics(endpoint: str, request) -> int:
 
 
 def commit_endpoint_diagnostics(diagnostic_id: int, response, error="") -> bool:
+    global endpoint_dict
     endpoint_diagnostics: Dict[str, any] = endpoint_dict[diagnostic_id]
 
     endpoint_diagnostics["Response"] = response
@@ -30,8 +32,9 @@ def commit_endpoint_diagnostics(diagnostic_id: int, response, error="") -> bool:
     endpoint_diagnostics["Latency"] = datetime.now() - \
         endpoint_diagnostics["Date"]
 
-    EndpointDiagnosticsRepository().insert(
-        EndpointDiagnostics(endpoint_diagnostics))
+    with EndpointDiagnosticsRepository() as repository:
+        repository.insert(EndpointDiagnostics(endpoint_diagnostics))
+    
     del endpoint_dict[diagnostic_id]
 
     return True
