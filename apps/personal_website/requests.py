@@ -1,10 +1,7 @@
 import logging.config
 
-from datetime import datetime
 from flask import Flask
 from flask import request, send_from_directory
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
-
 
 app = Flask(
     __name__,
@@ -13,14 +10,12 @@ app = Flask(
     template_folder='/home/ghaz/personal_website/build'
 )
 
-FlaskInstrumentor().instrument_app(app)
-
 logging.config.fileConfig('/home/ghaz/flask_gateway/logging.conf')
 app.logger = logging.getLogger('MainLogger')
 
 
 handler = logging.handlers.TimedRotatingFileHandler(
-'logs/app.log', when="midnight", interval=1)
+'logs/app.log', when="midnight")
 
 handler.prefix = "%Y%m%d"
 
