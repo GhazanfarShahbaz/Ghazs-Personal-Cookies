@@ -64,7 +64,6 @@ class Class(Base):
                             cascade="all, delete-orphan", passive_deletes=True)
 
     def __init__(self, class_inforamtion: dict) -> None:
-        self.ClassId = class_inforamtion.get("ClassId")
         self.Department = class_inforamtion.get("Department")
         self.Professor = class_inforamtion.get("Professor")
         self.Name = class_inforamtion.get("Name")
@@ -130,7 +129,6 @@ class Assignment(Base):
 
     def __init__(self, assignment_information: dict) -> None:
         self.SectionId = assignment_information.get("ClassId")
-        self.AssignmentId = assignment_information.get("AssignmentId")
         self.Grade = assignment_information.get("Grade")
         self.DateAssigned = assignment_information.get("DateAssigned")
         self.DateDue = assignment_information.get("DateDue")
@@ -138,7 +136,7 @@ class Assignment(Base):
 
     def to_dict(self) -> dict:
         return {
-            "ClassId": self.ClassId,
+            "ClassId": self.SectionId,
             "AssignmentId": self.AssignmentId,
             "Grade": self.Grade,
             "DateAssigned": self.DateAssigned,
