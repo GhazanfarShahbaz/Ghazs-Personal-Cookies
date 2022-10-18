@@ -65,19 +65,19 @@ class Class(Base):
 
     def __init__(self, class_inforamtion: dict) -> None:
         self.Department = class_inforamtion.get("Department")
+        self.CourseNumber = class_inforamtion.get("CourseNumber")
         self.Professor = class_inforamtion.get("Professor")
         self.Name = class_inforamtion.get("Name")
         self.Semester = class_inforamtion.get("Semester")
-        self.Syllabus = class_inforamtion.get("Syllabus")
 
     def to_dict(self) -> dict:
         return {
             "ClassId": self.ClassId,
             "Department": self.Department,
+            "CourseNumber": self.CourseNumber,
             "Professor": self.Professor,
             "Name": self.Name,
             "Semester": self.Semester,
-            "Syllabus": self.Syllabus,
         }
 
 
