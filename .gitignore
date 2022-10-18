@@ -6,6 +6,7 @@ env
 .vscode/
 test/.env
 apps/farmbot
+logs/
 
 # C extensions
 *.so
