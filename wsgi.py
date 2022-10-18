@@ -2,8 +2,6 @@ from generate_env import load_environment
 
 load_environment()
 
-import logging.config
-
 from apps.personal_website.requests import app as personal_website_app
 from apps.tool_repository.endpoints import app as tool_app
 from apps.projects.the_mouseion.app import app as mouseion_app
