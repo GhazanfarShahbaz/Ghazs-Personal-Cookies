@@ -39,14 +39,16 @@ def home_route():
     log_endpoint(request)
     return send_from_directory(app.static_folder, 'index.html')
 
+
 @app.route('/<path>')
 def render_path(path: str):
     log_endpoint(request)
     
-    if path in {"/", "projects", "skills", "education", "resume"}:
+    if path in {"projects", "skills", "education", "resume"}:
         return send_from_directory(app.static_folder, 'index.html')
     else:
         abort(404)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
