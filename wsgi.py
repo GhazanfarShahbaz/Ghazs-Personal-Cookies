@@ -1,5 +1,6 @@
 from generate_env import load_environment
 
+# load environment variables into machine
 load_environment()
 
 from apps.personal_website.requests import app as personal_website_app
@@ -10,7 +11,14 @@ from apps.projects.the_mouseion.app import app as mouseion_app
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 
-def set_up_application():
+def set_up_application() -> DispatcherMiddleware:
+    """
+    Creates a dispatcher middleware that combines multiple flask applications
+
+    Returns:
+        DispatcherMiddleware: A middleware that can be run like a flask app
+    """
+    
     application: DispatcherMiddleware = DispatcherMiddleware(
         personal_website_app, 
             {
