@@ -6,8 +6,8 @@ from flask import request, send_from_directory
 app = Flask(
     __name__,
     static_url_path='',
-    static_folder='/home/ghaz/personal_website/build',
-    template_folder='/home/ghaz/personal_website/build'
+    static_folder='./personal_website/build',
+    template_folder='./personal_website/build'
 )
 
 logging.config.fileConfig('/home/ghaz/flask_gateway/logging.conf')
