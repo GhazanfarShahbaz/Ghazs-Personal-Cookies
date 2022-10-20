@@ -16,16 +16,16 @@ logging.config.fileConfig('/home/ghaz/flask_gateway/logging.conf')
 app.logger = logging.getLogger('MainLogger')
 
 # Handler for log file. So log files are rotated everyday
-# handler = logging.handlers.TimedRotatingFileHandler(
-# 'logs/app.log', when="midnight")
-# handler.prefix = "%Y%m%d"
+handler = logging.handlers.TimedRotatingFileHandler(
+'logs/app.log', when="midnight")
+handler.prefix = "%Y%m%d"
 
-# # Formatter for log file. Log files will be formatted in the format specified below
-# formatter = logging.Formatter('%(asctime)s | %(pathname)s | %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | %(message)s')
-# handler.setFormatter(formatter)
+# Formatter for log file. Log files will be formatted in the format specified below
+formatter = logging.Formatter('%(asctime)s | %(pathname)s | %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | %(message)s')
+handler.setFormatter(formatter)
 
-# # Add handler to the app logger
-# app.logger.addHandler(handler)
+# Add handler to the app logger
+app.logger.addHandler(handler)
 
 def log_endpoint(request: dict):
     """
