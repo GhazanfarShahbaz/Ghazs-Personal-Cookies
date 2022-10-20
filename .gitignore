@@ -10,8 +10,7 @@ logs/
 
 # personal website build files 
 ./apps/personal_website/personal_website/build
-
-# C extensions
+./apps/personal_website/personal_website_files/node_modules/.cache# C extensions
 *.so
 
 # Distribution / packaging
