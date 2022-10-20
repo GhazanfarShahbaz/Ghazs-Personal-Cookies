@@ -8,6 +8,9 @@ test/.env
 apps/farmbot
 logs/
 
+# personal website build files 
+./apps/personal_website/personal_website/build
+
 # C extensions
 *.so
 

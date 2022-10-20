@@ -1,9 +1,3 @@
-[submodule "apps/personal_website/PersonalWebsite"]
-	path = apps/personal_website/PersonalWebsite
-	url = git@github.com:GhazanfarShahbaz/PersonalWebsite.git
-[submodule "apps/personal_website/apps/personal_website/personal_website"]
-	path = apps/personal_website/apps/personal_website/personal_website
-	url = git@github.com:GhazanfarShahbaz/PersonalWebsite.git
 [submodule "apps/personal_website/personal_website_files"]
 	path = apps/personal_website/personal_website_files
 	url = git@github.com:GhazanfarShahbaz/PersonalWebsite.git
