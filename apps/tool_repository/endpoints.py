@@ -46,8 +46,8 @@ APP_PATH: str = "/tools"
 cred = credentials.Certificate(environ["FIRESTORE_TOKEN"])
 initialize_app(cred)
 
-
-def log_request(request) -> None:
+@app.before_request   
+def log_request() -> None:
     app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path}")
     app.logger.info(request.json)
 
@@ -81,7 +81,6 @@ def validate_user(username: str, password: str) -> bool:
 
 @app.route("/createEvent", methods=["POST"])
 def create_event():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -96,7 +95,6 @@ def create_event():
 @app.route("/getEvent", methods=["POST"])
 def get_events():
     request_form = request.json
-    log_request(request)
     event_list: List[Event] = []
 
     if validate_user(request_form.get("username"), request_form.get("password")):
@@ -113,7 +111,6 @@ def get_events():
 
 @app.route("/updateEvent", methods=["POST"])
 def update_event():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -127,7 +124,6 @@ def update_event():
 
 @app.route("/deleteEvent", methods=["POST"])
 def delete_event():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -141,7 +137,6 @@ def delete_event():
 
 @app.route("/addClass", methods=["POST"])
 def add_class():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -155,7 +150,6 @@ def add_class():
 
 @app.route("/getClass", methods=["POST"])
 def get_class():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -169,7 +163,6 @@ def get_class():
 
 @app.route("/updateClass", methods=["POST"])
 def update_class():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -183,7 +176,6 @@ def update_class():
 
 @app.route("/deleteClass", methods=["POST"])
 def delete_class():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -197,7 +189,6 @@ def delete_class():
 
 @app.route("/addSyllabus", methods=["POST"])
 def add_syllabus():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -211,7 +202,6 @@ def add_syllabus():
 
 @app.route("/getSyllabus", methods=["POST"])
 def get_syllabus():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -225,7 +215,6 @@ def get_syllabus():
 
 @app.route("/updateSyllabus", methods=["POST"])
 def update_syllabus():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -239,7 +228,6 @@ def update_syllabus():
 
 @app.route("/deleteSyllabus", methods=["POST"])
 def delete_syllabus():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -253,7 +241,6 @@ def delete_syllabus():
 
 @app.route("/addAssignment", methods=["POST"])
 def add_assignment():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -267,7 +254,6 @@ def add_assignment():
 
 @app.route("/getAssignment", methods=["POST"])
 def get_assignment():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -281,7 +267,6 @@ def get_assignment():
 
 @app.route("/updateAssignment", methods=["POST"])
 def update_assignment():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -295,7 +280,6 @@ def update_assignment():
 
 @app.route("/deleteAssignment", methods=["POST"])
 def delete_assignment():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -309,7 +293,6 @@ def delete_assignment():
 
 @app.route("/getCurrentWeather", methods=["POST"])
 def get_current_weather():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -320,7 +303,6 @@ def get_current_weather():
 
 @app.route("/getGmailEmails", methods=["POST"])
 def get_gmail_emails():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -331,7 +313,6 @@ def get_gmail_emails():
 
 @app.route("/getTranslation", methods=["POST"])
 def get_translation():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -357,7 +338,6 @@ def upload_file():
 
 @app.route("/deleteFile", methods=["POST"])
 def delete_file():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -368,7 +348,6 @@ def delete_file():
 
 @app.route("/sendTextMessage", methods=["POST"])
 def send_message():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -377,7 +356,6 @@ def send_message():
 
 @app.route("/generateLinkQRCode", methods=["POST"])
 def generate_qr_code_for_link():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -392,7 +370,6 @@ def generate_qr_code_for_link():
 
 @app.route("/getHelp", methods=["POST"])
 def get_help():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -403,7 +380,6 @@ def get_help():
 
 @app.route("/getLogs", methods=["POST"])
 def get_logs():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
@@ -414,7 +390,6 @@ def get_logs():
 
 @app.route("/setEnvironmentVariable", methods=["POST"])
 def set_environment_variable():
-    log_request(request)
     request_form = request.json
 
     if not validate_user(request_form.get("username"), request_form.get("password")):
