@@ -27,7 +27,8 @@ handler.setFormatter(formatter)
 # Add handler to the app logger
 app.logger.addHandler(handler)
 
-def log_endpoint(request: dict):
+@app.before_request   
+def log_endpoint():
     """
         Log endpoint with ip address and path accessed
     """
@@ -36,14 +37,11 @@ def log_endpoint(request: dict):
 
 @app.route("/")
 def home_route():
-    log_endpoint(request)
     return send_from_directory(app.static_folder, 'index.html')
 
 
 @app.route('/<path>')
 def render_path(path: str):
-    log_endpoint(request)
-    
     # accept paths which we have files for
     if path in {"projects", "skills", "education", "resume"}:
         return send_from_directory(app.static_folder, 'index.html')
