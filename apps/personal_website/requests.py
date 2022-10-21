@@ -47,8 +47,8 @@ def render_path(path: str):
     # accept paths which we have files for
     if path in {"projects", "skills", "education", "resume"}:
         return send_from_directory(app.static_folder, 'index.html')
-    elif path == "robots.txt":
-        return send_from_directory(app.root_path + "/static/", 'robots.txt')
+    elif path in {"robots.txt", "sitemap.xml"}:
+        return send_from_directory(app.root_path + "/static/", path)
     else:
         abort(404)
 

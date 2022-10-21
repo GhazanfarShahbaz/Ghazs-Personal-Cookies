@@ -35,3 +35,8 @@ def test_get_robots_txt():
     response = app.test_client().get("/robots.txt")
 
     assert response.status_code == 200
+    
+def test_get_sitemap():
+    response = app.test_client().get("/sitemap.xml")
+
+    assert response.status_code == 200
