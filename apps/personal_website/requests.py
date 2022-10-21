@@ -40,12 +40,6 @@ def home_route():
     return send_from_directory(app.static_folder, 'index.html')
 
 
-@app.route('/robots.txt')
-def get_robots_file():
-    log_endpoint(request)
-    return send_from_directory(app.root_path + "/static/", 'robots.txt')
-
-
 @app.route('/<path>')
 def render_path(path: str):
     log_endpoint(request)
@@ -53,6 +47,8 @@ def render_path(path: str):
     # accept paths which we have files for
     if path in {"projects", "skills", "education", "resume"}:
         return send_from_directory(app.static_folder, 'index.html')
+    elif path == "robots.txt":
+        return send_from_directory(app.root_path + "/static/", 'robots.txt')
     else:
         abort(404)
 
