@@ -80,7 +80,7 @@ class CodingQuestionRepository(object):
 
         return query.all()
 
-    def delete(self, filter: dict) -> None:
+    def delete(self, filters: dict) -> None:
         query: Query = self.session.query(CodingQuestion)
 
         if filters.get("QuestionIds"):
