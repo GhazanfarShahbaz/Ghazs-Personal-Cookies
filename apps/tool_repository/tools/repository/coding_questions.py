@@ -30,10 +30,10 @@ class CodingQuestionRepository(object):
             coding_question.QuestionLink = update_dictionary["QuestionLink"]
 
         if update_dictionary.get("Difficulty"):
-            coding_question.QuestionId = update_dictionary["Difficulty"]
+            coding_question.Difficulty = update_dictionary["Difficulty"]
 
         if update_dictionary.get("AcceptanceRate"):
-            coding_question.QuestionId = update_dictionary["AcceptanceRate"]
+            coding_question.AcceptanceRate = update_dictionary["AcceptanceRate"]
 
         if update_dictionary.get("Tags"):
             coding_question.Tags = update_dictionary["Tags"]
