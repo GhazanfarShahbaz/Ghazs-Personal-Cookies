@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from repository.events import EventRepository
 from repository.model import Event
 
-
+# Timezone for dates
 NEWYORK_TZ: timezone = timezone('America/New_York')
 
 WEEKDAY: Dict[str, int] = {
@@ -31,11 +31,19 @@ WEEKNUM: Dict[int, str] = {
     6: "sun"
 }
 
+# Accepted request date formats
 DATE_FORMATS: Tuple[str] = ('%m/%d/%y %H:%M', '%m-%d-%y %H:%M',  '%m.%d.%y %H:%M', '%m/%d/%y %I:%M %p', '%m-%d-%y %I:%M %p', '%m.%d.%y %I:%M %p', '%m/%d/%y %I:%M%p', '%m-%d-%y %I:%M%p', '%m.%d.%y %I:%M%p',
                             '%m/%d/%Y %H:%M', '%m-%d-%Y %H:%M',  '%m.%d.%Y %H:%M', '%m/%d/%Y %I:%M %p', '%m-%d-%Y %I:%M %p', '%m.%d.%Y %I:%M %p', '%m/%d/%Y %I:%M%p', '%m-%d-%Y %I:%M%p', '%m.%d.%Y %I:%M%p')
 
 
 def create_event_information(event_data: dict) -> List[Event]:
+    """
+        Take in event data from request to create a list of events
+        
+        Returns:
+        List[Event]: A list of events created from event parameters
+    """
+    
     event_list: List[dict] = []
 
     event_template = {
@@ -46,6 +54,7 @@ def create_event_information(event_data: dict) -> List[Event]:
     }
 
     if not event_data.get("RecurranceType"):
+        # no reccurance so one event
         start_date: datetime = string_to_date(event_data.get("StartDate"))
         end_date: datetime = string_to_date(event_data.get("EndDate"))
 
@@ -56,6 +65,7 @@ def create_event_information(event_data: dict) -> List[Event]:
         event_template["EndDate"] = end_date
         event_list.append(event_template)
     else:
+        # reccurance so we create  new list
         reccurance_id: int = None
         reccurance_id = EventRepository().get_reccurance_count()
 
@@ -63,6 +73,7 @@ def create_event_information(event_data: dict) -> List[Event]:
         event_data["RecurranceType"] = event_data["RecurranceType"].lower()
 
         if event_data["RecurranceType"] not in {"weekly", "monthly", "yearly"}:
+            "daily reccurance"
             event_list = get_daily_reccurance_event_list(
                 event_template, event_data["StartDate"], event_data["EndDate"], event_data["RecurranceType"], event_data["RecurranceDateTo"])
 
@@ -75,11 +86,19 @@ def create_event_information(event_data: dict) -> List[Event]:
 
 
 def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_date: str, reccurance_type: str, reccurance_end_date_string: str) -> List[dict]:
+    """
+    Creates a list of events from one start date to another for daily events
+
+    Returns:
+        List[dict]: A list containing dictionaries which represent events
+    """
+    
     reccurance_nums: Set[int] = set()
 
     if reccurance_type == "daily":
         reccurance_nums = {0, 1, 2, 3, 4, 5, 6}
     else:
+        "Example:  m/t/th"
         for reccurance_str in reccurance_type.split("/"):
             reccurance_str = reccurance_str.strip().lower()
             global WEEKDAY
@@ -126,6 +145,13 @@ def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_d
 
 
 def get_other_reccurance_event_list(event_template: dict, start_date: str, end_date: str, reccurance_type: str, reccurance_end_date_string: str) -> List[Dict[datetime, datetime]]:
+    """
+    Creates a list of events from one start date to another for weekly, monthly, or yearly
+
+    Returns:
+        List[dict]: A list containing dictionaries which represent events
+    """
+    
     start_date: datetime = string_to_date(start_date)
     end_date: datetime = string_to_date(end_date)
     start_date_hour: int = start_date.hour
@@ -168,6 +194,12 @@ def get_other_reccurance_event_list(event_template: dict, start_date: str, end_d
 
 
 def string_to_date(date_string: str) -> datetime:
+    """
+        Converts a date string to a date
+        
+        Returns:
+            datetime: datetime from a string
+    """
     date_string = date_string.strip()
 
     global DATE_FORMATS
@@ -182,6 +214,12 @@ def string_to_date(date_string: str) -> datetime:
 
 
 def default_form_get_date_to_and_date_from(default_option: str) -> tuple:
+    """
+        Obtains s a user request form and returns a typle containing start and end date
+        
+        Returns:
+            tuple: A size 2 tuple which has a start date and end date
+    """
     current_date: datetime = datetime.now(timezone('America/New_York'))
     date_to: datetime = None
 
@@ -216,8 +254,22 @@ def default_form_get_date_to_and_date_from(default_option: str) -> tuple:
 
 
 def event_dict_list_to_event_type_list(event_list: List[dict]) -> List[Event]:
+    """
+    Converts event dictg list to an event list 
+
+    Returns:
+        List[Event]: A list of events
+    """
+    
     return [Event(event) for event in event_list]
 
 
 def event_type_list_to_event_type_list(event_list: List[Event]) -> List[dict]:
+    """
+    Converts events type list to an event dictionary for responses
+
+    Returns:
+        List[dict]: A list of Events in dictionary form
+    """
+    
     return [event.to_dict() for event in event_list]
