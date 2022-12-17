@@ -5,6 +5,13 @@ PATH_TO_LOG_FILE: str = "/home/ghaz/flask_gateway/logs/"
 
 
 def split_up_log_file() -> Dict[str, List[str]]:
+    """
+        Splits up the logfile by different applications 
+        
+        Returns:
+            Dict[str, List[str]]: A dictionary with keys as applifations and lines as values
+    """
+    
     # current_log_file: str = '{:%Y-%m-%d}.log'.format(datetime.now())
 
     log_file = open(
