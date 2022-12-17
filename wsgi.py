@@ -1,7 +1,3 @@
-from generate_env import load_environment
-
-load_environment()
-
 from apps.personal_website.requests import app as personal_website_app
 from apps.tool_repository.endpoints import app as tool_app
 from apps.projects.the_mouseion.app import app as mouseion_app
@@ -9,8 +5,14 @@ from apps.projects.the_mouseion.app import app as mouseion_app
 # use to combine each Flask app into a larger one that is dispatched based on prefix
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
+def set_up_application() -> DispatcherMiddleware:
+    """
+    Creates a dispatcher middleware that combines multiple flask applications
 
-def set_up_application():
+    Returns:
+        DispatcherMiddleware: A middleware that can be run like a flask app
+    """
+    
     application: DispatcherMiddleware = DispatcherMiddleware(
         personal_website_app, 
             {

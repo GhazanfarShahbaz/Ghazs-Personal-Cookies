@@ -1,3 +1,4 @@
+# No longer used. Was used to conglomerate requirements from different applications into one
 from os import getcwd, listdir, path
 
 def create_requirements_file(requirements: dict) -> None:

@@ -3,13 +3,18 @@ import boto3
 from os import environ
 from typing import Dict, List
 
-function_mapper: Dict[str, callable] = {
+FUNCTION_MAPPER: Dict[str, callable] = {
     "client": boto3.client,
     "resource": boto3.resource
 }
 
 
 def get_aws_credentials() -> Dict[str, str]:
+    """
+    Returns: 
+        Dict[str, str]: Creates a dictionary of aws credentials 
+    """
+    
     return {
         "AWS_FILE_SERVICE":  environ["AWS_FILE_SERVICE"],
         "AWS_ACCESS_KEY_ID": environ["AWS_ACCESS_KEY_ID"],
@@ -19,10 +24,18 @@ def get_aws_credentials() -> Dict[str, str]:
     }
 
 
-def get_aws_client_or_resource(aws_type: str):
+def get_aws_client_or_resource(aws_type: str) -> any:
+    """
+    Creates an aws client or resource
+
+    Returns:
+        any: A boto3 client or resource
+    """
+    
+    
     credentials: Dict[str, str] = get_aws_credentials()
 
-    client_or_resource = function_mapper[aws_type](
+    client_or_resource = FUNCTION_MAPPER[aws_type](
         credentials["AWS_FILE_SERVICE"],
         aws_access_key_id=credentials["AWS_ACCESS_KEY_ID"],
         aws_secret_access_key=credentials["AWS_ACCESS_KEY"],
@@ -33,6 +46,13 @@ def get_aws_client_or_resource(aws_type: str):
 
 
 def upload_file(file, content_type) -> str:
+    """
+        Uploads a file to aws OP_NO_SSLv3
+        
+        Returns:
+            str: A string representing success or fail
+    """
+    
     client = get_aws_client_or_resource("client")
     bucket_name: str = environ["AWS_BUCKET_NAME"]
 
@@ -50,6 +70,13 @@ def upload_file(file, content_type) -> str:
 
 
 def delete_file(bucket_name: str, file_path: str) -> str:
+    """
+    Deletes a file from s3 given the bucket name and file path
+    
+    Returns:
+        str: A string representing success or fail
+    """
+    
     client = get_aws_client_or_resource("client")
 
     client.delete_object(
@@ -61,6 +88,13 @@ def delete_file(bucket_name: str, file_path: str) -> str:
 
 
 def list_bucket_files(bucket_name: str, prefix: str) -> Dict[Dict, List[str]]:
+    """
+    Lists files in a bucket given an optional prefix
+    
+    Returns:
+        Dict[Dict, List[str]]: Creates a dict which contains a list of files
+    """
+    
     client = get_aws_client_or_resource("resource")
     bucket = client.Bucket(bucket_name)
     prefix = prefix.strip()
