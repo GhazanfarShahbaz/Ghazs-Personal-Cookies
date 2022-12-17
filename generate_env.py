@@ -5,10 +5,19 @@ from firebase_admin import credentials, firestore, initialize_app, delete_app
 # load local environment containing firebase credentials
 load_dotenv()
 
+LOADED: bool = False
+
 def load_environment() -> None:
     """
     Loads environment into machine from firebase store 
     """
+    
+    global LOADED
+
+    if LOADED:
+        return
+    
+    LOADED = True
     
     cred = credentials.Certificate(getenv("FIRESTORE_TOKEN"))
     application = initialize_app(cred) 

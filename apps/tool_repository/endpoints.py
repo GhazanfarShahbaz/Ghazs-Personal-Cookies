@@ -25,7 +25,7 @@ from tools.process_log_requests import process_get_logs
 from typing import List
 from json import loads
 
-import logging
+import logging.config
 
 app = Flask(__name__)
 
