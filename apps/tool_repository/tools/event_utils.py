@@ -8,9 +8,10 @@ from dateutil.relativedelta import relativedelta
 from repository.events import EventRepository
 from repository.model import Event
 
-newyork_tz = timezone('America/New_York')
 
-weekday: Dict[str, int] = {
+NEWYORK_TZ: timezone = timezone('America/New_York')
+
+WEEKDAY: Dict[str, int] = {
     "m": 0,
     "t": 1,
     "w": 2,
@@ -20,7 +21,7 @@ weekday: Dict[str, int] = {
     "sun": 6
 }
 
-weeknum: Dict[int, str] = {
+WEEKNUM: Dict[int, str] = {
     0: "m",
     1: "t",
     2: "w",
@@ -30,7 +31,7 @@ weeknum: Dict[int, str] = {
     6: "sun"
 }
 
-date_formats: Tuple[str] = ('%m/%d/%y %H:%M', '%m-%d-%y %H:%M',  '%m.%d.%y %H:%M', '%m/%d/%y %I:%M %p', '%m-%d-%y %I:%M %p', '%m.%d.%y %I:%M %p', '%m/%d/%y %I:%M%p', '%m-%d-%y %I:%M%p', '%m.%d.%y %I:%M%p',
+DATE_FORMATS: Tuple[str] = ('%m/%d/%y %H:%M', '%m-%d-%y %H:%M',  '%m.%d.%y %H:%M', '%m/%d/%y %I:%M %p', '%m-%d-%y %I:%M %p', '%m.%d.%y %I:%M %p', '%m/%d/%y %I:%M%p', '%m-%d-%y %I:%M%p', '%m.%d.%y %I:%M%p',
                             '%m/%d/%Y %H:%M', '%m-%d-%Y %H:%M',  '%m.%d.%Y %H:%M', '%m/%d/%Y %I:%M %p', '%m-%d-%Y %I:%M %p', '%m.%d.%Y %I:%M %p', '%m/%d/%Y %I:%M%p', '%m-%d-%Y %I:%M%p', '%m.%d.%Y %I:%M%p')
 
 
@@ -81,15 +82,15 @@ def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_d
     else:
         for reccurance_str in reccurance_type.split("/"):
             reccurance_str = reccurance_str.strip().lower()
-            global weekday
+            global WEEKDAY
 
-            if weekday.get(reccurance_str):
-                reccurance_nums.add(weekday[reccurance_str])
+            if WEEKDAY.get(reccurance_str):
+                reccurance_nums.add(WEEKDAY[reccurance_str])
 
     if reccurance_type != "daily":
         reccurance_type = ""
         for day in sorted(reccurance_nums):
-            reccurance_type += f"/{weeknum[day]}" if reccurance_type else f"{weeknum[day]}"
+            reccurance_type += f"/{WEEKNUM[day]}" if reccurance_type else f"{WEEKNUM[day]}"
 
     event_template["ReccuranceType"] = reccurance_type
 
@@ -110,7 +111,7 @@ def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_d
     time_delta: timedelta = timedelta(days=1)
 
     while current_date <= reccurance_end_date:
-        if current_date.weekday() in reccurance_nums:
+        if current_date.WEEKDAY() in reccurance_nums:
             insertion_start_date: datetime = datetime(
                 current_date.year, current_date.month, current_date.day, start_date_hour, start_date_minute)
             insertion_end_date: datetime = datetime(
@@ -169,8 +170,8 @@ def get_other_reccurance_event_list(event_template: dict, start_date: str, end_d
 def string_to_date(date_string: str) -> datetime:
     date_string = date_string.strip()
 
-    global date_formats
-    for date_format in date_formats:
+    global DATE_FORMATS
+    for date_format in DATE_FORMATS:
         try:
             date: datetime = datetime.strptime(date_string, date_format)
             return date
@@ -193,8 +194,8 @@ def default_form_get_date_to_and_date_from(default_option: str) -> tuple:
     elif default_option == "week":
         end_date: datetime = None
 
-        if current_date.weekday() != 0:
-            current_date -= timedelta(days=current_date.weekday())
+        if current_date.WEEKDAY() != 0:
+            current_date -= timedelta(days=current_date.WEEKDAY())
             end_date = current_date + timedelta(days=6)
 
         date_from = datetime(
