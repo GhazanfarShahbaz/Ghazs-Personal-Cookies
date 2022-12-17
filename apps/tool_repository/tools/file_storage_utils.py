@@ -3,7 +3,7 @@ import boto3
 from os import environ
 from typing import Dict, List
 
-function_mapper: Dict[str, callable] = {
+FUNCTION_MAPPER: Dict[str, callable] = {
     "client": boto3.client,
     "resource": boto3.resource
 }
@@ -22,7 +22,7 @@ def get_aws_credentials() -> Dict[str, str]:
 def get_aws_client_or_resource(aws_type: str):
     credentials: Dict[str, str] = get_aws_credentials()
 
-    client_or_resource = function_mapper[aws_type](
+    client_or_resource = FUNCTION_MAPPER[aws_type](
         credentials["AWS_FILE_SERVICE"],
         aws_access_key_id=credentials["AWS_ACCESS_KEY_ID"],
         aws_secret_access_key=credentials["AWS_ACCESS_KEY"],
