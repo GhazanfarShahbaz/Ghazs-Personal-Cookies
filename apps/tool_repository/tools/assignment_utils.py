@@ -3,7 +3,7 @@ from typing import List
 from repository.model import Assignment
 
 
-def assignment_type_list_to_event_dict_list(assignment_list: List[dict]) -> List[Assignment]:
+def assignment_type_list_to_event_dict_list(assignment_list: List[Assignment]) -> List[dict]:
     """
     Turns assignment type lists into an event dictionary list
     Returns:
