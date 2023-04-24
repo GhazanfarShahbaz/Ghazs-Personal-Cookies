@@ -91,6 +91,10 @@ def create_event():
 
     return "Success"
 
+@app.route("/addEventsFromCSV", methods=["POST"])
+def add_events_from_csv():
+    request_form = request.json
+
 
 @app.route("/getEvent", methods=["POST"])
 def get_events():

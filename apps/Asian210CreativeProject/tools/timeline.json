@@ -1,0 +1,42 @@
+[
+	{
+		"name": "Asian Mass Migration - California Gold Rush",
+		"description": "Due to the abundance of gold discovered in California. Chinese miners begin to arrive to California. This is the first mass migration of Asians to the United States.",
+		"date": "1848",
+		"links": [],
+		"dateToSortOn": "12/31/1848",
+		"onlyYear": true
+	},
+	{
+		"name": "Foreigner Miner's Tax",
+		"description": "California begins to impose the miner's tax on Chinese miners. This made it so that Chinese miners paid tax more than once.",
+		"date": "1850",
+		"links": [],
+		"dateToSortOn": "12/31/1850",
+		"onlyYear": true
+	},
+	{
+		"name": "Chinese Exclusion Act",
+		"description": "This law put a 10-year ban on Chinese laborers. Due to this chinese laborers could no longer immigrate to the United States.",
+		"date": "1882",
+		"links": [],
+		"dateToSortOn": "04/11/1882",
+		"onlyYear": true
+	},
+	{
+		"name": "test 2",
+		"description": "test 2",
+		"date": "2023",
+		"links": [],
+		"dateToSortOn": "12/31/2023",
+		"onlyYear": true
+	},
+	{
+		"name": "Test 1",
+		"description": "test fdsjakldsfj",
+		"date": "2062",
+		"links": [],
+		"dateToSortOn": "12/31/2062",
+		"onlyYear": true
+	}
+]
