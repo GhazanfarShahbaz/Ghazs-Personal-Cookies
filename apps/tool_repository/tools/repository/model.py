@@ -215,6 +215,14 @@ class EndpointDiagnostics(Base):
     Date = Column("Date", DateTime(timezone=True), nullable=False)
     Error = Column("Error", String(1024), nullable=False)
     Latency = Column("Float", Float, nullable=False)
+    
+    def __init__(self, diagnostics_information: dict) -> None:
+        self.Endpoint = diagnostics_information.get("Endpoint")
+        self.Request = diagnostics_information.get("Request")
+        self.Response = diagnostics_information.get("Response")
+        self.Date = diagnostics_information.get("Date")
+        self.Error = diagnostics_information.get("Error")
+        self.Latency = diagnostics_information.get("Latency")
 
     def to_dict(self) -> dict:
         return {
