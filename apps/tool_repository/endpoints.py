@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask import Flask
 from flask import request, jsonify, send_file
+from flask import g as flask_globals
 
 from firebase_admin import credentials, firestore, initialize_app
 
@@ -21,6 +22,7 @@ from tools.process_translate_request import process_translate
 from tools.process_file_storage_requests import process_upload_file, process_delete_file
 from tools.process_qr_code_requests import processs_generate_link_qr_code
 from tools.process_log_requests import process_get_logs
+from tools.endpoint_diagnostics import setup_request, commit_endpoint_diagnostics
 
 from typing import List
 from json import loads
@@ -50,6 +52,16 @@ initialize_app(cred)
 def log_request() -> None:
     app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path}")
     app.logger.info(request.json)
+    setup_request(request)
+
+
+@app.after_request
+def commit_diagnostics(response):
+    if request.args.get("endpoint_id"):
+        app.logger.info("Commiting endpoint diagonstic")
+        commit_endpoint_diagnostics(request.args.get("endpoint_id"), f"Html associated with  {request.remote_addr}", "")
+        
+    return response
 
 
 def get_login(from_server=False) -> dict:
@@ -328,6 +340,7 @@ def get_translation():
 @app.route("/uploadFile", methods=["POST"])
 def upload_file():
     request_form = loads(request.form["json"])
+    request.json = request_form
 
     app.logger.info(f"{request.remote_addr} /tools/{request.path}")
     app.logger.info(request_form)

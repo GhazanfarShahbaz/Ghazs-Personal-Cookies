@@ -3,10 +3,19 @@ from repository.model import EndpointDiagnostics
 
 from datetime import datetime
 from typing import Dict, List
+from werkzeug.datastructures import ImmutableMultiDict
+
 
 ENDPOINT_DICT: Dict[int, any] = {}
 CURRENT_INDEX: int = 0
 
+
+def setup_request(request: dict) -> None:
+    request_copy = request.args.to_dict()
+    request_copy["endpoint_id"] = setup_endpoint_diagnostics(request.remote_addr, request)
+    
+    request.args = ImmutableMultiDict(request_copy)
+    
 
 def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:
     """
@@ -18,7 +27,7 @@ def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:
     
     endpoint_diagnostics: Dict[str, any] = {
         "Endpoint": endpoint,
-        "Request": request,
+        "Request": {},
         "Date": datetime.now(),
     }
 
@@ -41,13 +50,11 @@ def commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") ->
     global ENDPOINT_DICT
     endpoint_diagnostics: Dict[str, any] = ENDPOINT_DICT[diagnostic_id]
 
-    endpoint_diagnostics["Response"] = response
+    endpoint_diagnostics["Response"] = {}
     endpoint_diagnostics["Error"] = error
-    endpoint_diagnostics["Latency"] = datetime.now() - \
-        endpoint_diagnostics["Date"]
+    endpoint_diagnostics["Latency"] = datetime.now().timestamp() - endpoint_diagnostics["Date"].timestamp()
 
-    with EndpointDiagnosticsRepository() as repository:
-        repository.insert(EndpointDiagnostics(endpoint_diagnostics))
+    EndpointDiagnosticsRepository().insert(EndpointDiagnostics(endpoint_diagnostics))
     
     del ENDPOINT_DICT[diagnostic_id]
 
