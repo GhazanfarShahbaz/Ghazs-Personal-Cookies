@@ -3,6 +3,10 @@ import logging.config
 from flask import Flask, abort
 from flask import request, send_from_directory
 
+import json
+
+from apps.tool_repository.tools.endpoint_diagnostics import setup_request, commit_endpoint_diagnostics
+
 # Create flask app. Static and template folder point to personal website react build files
 app = Flask(
     __name__,
@@ -32,7 +36,19 @@ def log_endpoint():
     """
         Log endpoint with ip address and path accessed
     """
-    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')
+    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')    
+    
+    if request.path in {"/", "/projects", "/skills", "/education", "/resume"}:
+        setup_request(request)
+
+
+@app.after_request
+def commit_diagnostics(response):
+    if request.args.get("endpoint_id"):
+        app.logger.info("Commiting endpoint diagonstic")
+        commit_endpoint_diagnostics(request.args.get("endpoint_id"), f"Html associated with  {request.remote_addr}", "")
+        
+    return response
 
 
 @app.route("/")
