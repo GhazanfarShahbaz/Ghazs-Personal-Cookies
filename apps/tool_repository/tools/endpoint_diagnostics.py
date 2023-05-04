@@ -12,7 +12,7 @@ CURRENT_INDEX: int = 0
 
 def setup_request(request: dict) -> None:
     request_copy = request.args.to_dict()
-    request_copy["endpoint_id"] = setup_endpoint_diagnostics(request.remote_addr, request)
+    request_copy["endpoint_id"] = setup_endpoint_diagnostics(request.path, request)
     
     request.args = ImmutableMultiDict(request_copy)
     
@@ -61,11 +61,14 @@ def commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") ->
     return True
 
 
-def diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list: List[EndpointDiagnostics]) -> List[dict]:
+def diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list: List[EndpointDiagnostics or any], endpoint_counter = False) -> List[dict]:
     """
     Converts diagnostics type list to an diagnostics dictionary for responses
 
     Returns:
         List[dict]: A list of diagnostics in dictionary form
     """
-    return [diagnostic.to_dict() for diagnostic in diagnostic_list]
+    if not endpoint_counter:
+        return [diagnostic.to_dict() for diagnostic in diagnostic_list]
+    
+    return [{row[0]: row[1]} for row in diagnostic_list]
