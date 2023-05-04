@@ -54,6 +54,19 @@ initialize_app(cred)
 def log_request() -> None:
     app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path}")
     app.logger.info(request.json)
+    
+    content_type: str = request.content_type
+    request_form = None 
+    
+    if content_type == "multipart/form-data":
+        request_form = loads(request.form["json"])
+        request.json = request_form
+    else:
+        request_form = request.json
+    
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return {"Status": "Invalid Request"}
+    
     setup_request(request, f"tools{request.path}")
 
 
@@ -97,9 +110,6 @@ def validate_user(username: str, password: str) -> bool:
 def create_event():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     if request_form.get("eventForm"):
         process_create_event(request_form.get("eventForm"))
 
@@ -115,14 +125,13 @@ def get_events():
     request_form = request.json
     event_list: List[Event] = []
 
-    if validate_user(request_form.get("username"), request_form.get("password")):
-        if request_form.get("defaultForm"):
-            event_list = process_get_default_event(
-                request_form.get("defaultForm"))
-        elif request_form.get("filterForm"):
-            event_list = process_get_event(request_form.get("filterForm"))
-        else:
-            event_list = process_get_event({})
+    if request_form.get("defaultForm"):
+        event_list = process_get_default_event(
+            request_form.get("defaultForm"))
+    elif request_form.get("filterForm"):
+        event_list = process_get_event(request_form.get("filterForm"))
+    else:
+        event_list = process_get_event({})
 
     return jsonify(event_list) if request_form.get("stringifyResult") is None else jsonify(print_events(event_list, set()))
 
@@ -130,9 +139,6 @@ def get_events():
 @app.route("/updateEvent", methods=["POST"])
 def update_event():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     if request_form.get("filterForm"):
         process_update_event(request_form.get("filterForm"))
@@ -144,9 +150,6 @@ def update_event():
 def delete_event():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     if request_form.get("deleteForm"):
         process_delete_event(request_form.get("deleteForm"))
 
@@ -156,9 +159,6 @@ def delete_event():
 @app.route("/addClass", methods=["POST"])
 def add_class():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     if request_form.get("classForm"):
         process_create_class(request_form.get("classForm"))
@@ -170,9 +170,6 @@ def add_class():
 def get_class():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     if request_form.get("filterForm"):
         process_get_class_request(request_form.get("filterForm"))
 
@@ -182,9 +179,6 @@ def get_class():
 @app.route("/updateClass", methods=["POST"])
 def update_class():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     if request_form.get("updateForm"):
         process_update_class(request_form.get("updateForm"))
@@ -196,9 +190,6 @@ def update_class():
 def delete_class():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     if request_form.get("deleteForm"):
         process_delete_class_request(request_form.get("deleteForm"))
 
@@ -208,9 +199,6 @@ def delete_class():
 @app.route("/addSyllabus", methods=["POST"])
 def add_syllabus():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     if request_form.get("syllabusForm"):
         process_create_syllabus(request_form.get("syllabusForm"))
@@ -222,9 +210,6 @@ def add_syllabus():
 def get_syllabus():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     if request_form.get("filterForm"):
         process_get_syllabus_request(request_form.get("filterForm"))
 
@@ -234,10 +219,7 @@ def get_syllabus():
 @app.route("/updateSyllabus", methods=["POST"])
 def update_syllabus():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
+    
     if request_form.get("updateForm"):
         process_update_syllabus(request_form.get("updateForm"))
 
@@ -247,9 +229,6 @@ def update_syllabus():
 @app.route("/deleteSyllabus", methods=["POST"])
 def delete_syllabus():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     if request_form.get("deleteForm"):
         process_delete_syllabus_request(request_form.get("deleteForm"))
@@ -261,9 +240,6 @@ def delete_syllabus():
 def add_assignment():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     if request_form.get("assignmentForm"):
         process_create_assignment(request_form.get("assignmentForm"))
 
@@ -273,9 +249,6 @@ def add_assignment():
 @app.route("/getAssignment", methods=["POST"])
 def get_assignment():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     if request_form.get("filterForm"):
         process_get_assignment_request(request_form.get("filterForm"))
@@ -287,9 +260,6 @@ def get_assignment():
 def update_assignment():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     if request_form.get("updateForm"):
         process_update_assignment(request_form.get("updateForm"))
 
@@ -299,9 +269,6 @@ def update_assignment():
 @app.route("/deleteAssignment", methods=["POST"])
 def delete_assignment():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     if request_form.get("deleteForm"):
         process_delete_assignment_request(request_form.get("deleteForm"))
@@ -313,18 +280,12 @@ def delete_assignment():
 def get_current_weather():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     return get_weather()
 
 
 @app.route("/getGmailEmails", methods=["POST"])
 def get_gmail_emails():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     return get_emails(request_form.get("authorizationFile"), request_form.get("labelFilters"), request_form.get("maxResults"), request_form.get("snippet"))
 
@@ -333,23 +294,11 @@ def get_gmail_emails():
 def get_translation():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     return process_translate(request_form.get("translationForm"))
 
 
 @app.route("/uploadFile", methods=["POST"])
 def upload_file():
-    request_form = loads(request.form["json"])
-    request.json = request_form
-
-    app.logger.info(f"{request.remote_addr} /tools/{request.path}")
-    app.logger.info(request_form)
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     file = request.files["file"]
 
     return process_upload_file(file, request.mimetype)
@@ -359,9 +308,6 @@ def upload_file():
 def delete_file():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     return process_delete_file(request_form.get("deleteForm"))
 
 
@@ -369,16 +315,10 @@ def delete_file():
 def send_message():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
 
 @app.route("/generateLinkQRCode", methods=["POST"])
 def generate_qr_code_for_link():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     qr_io = processs_generate_link_qr_code(request_form["qrForm"])
 
@@ -389,9 +329,6 @@ def generate_qr_code_for_link():
 @app.route("/getEndpointDiagnostics", methods=["POST"])
 def get_endpoints_data():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
     
     return process_get_diagnostics(request_form.get("filterForm"))
 
@@ -400,9 +337,6 @@ def get_endpoints_data():
 def get_help():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     return get_command(request_form.get("command"))
 
 
@@ -410,18 +344,12 @@ def get_help():
 def get_logs():
     request_form = request.json
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
     return process_get_logs()
 
 
 @app.route("/setEnvironmentVariable", methods=["POST"])
 def set_environment_variable():
     request_form = request.json
-
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
 
     environment_form = request_form.get("environmentForm")
     key: str = environment_form["key"]
