@@ -1,5 +1,6 @@
 from model import Session as Sess, EndpointDiagnostics
 from sqlalchemy.orm import Session, Query
+from sqlalchemy.sql import func
 from typing import List
 
 
@@ -19,22 +20,23 @@ class EndpointDiagnosticsRepository(object):
         return endpoint_diagnostic.DiagnosticId
 
     def get(self, filters: dict) -> List[EndpointDiagnostics]:
-        query_diagnostics: Query = self.session.query(EndpointDiagnostics)
+        query_diagnostics: Query = None 
+        if not filters.get("EndpointCounter"):
+            query_diagnostics =  self.session.query(EndpointDiagnostics)
+        else:
+            query_diagnostics = self.session.query(EndpointDiagnostics.Endpoint, func.count(EndpointDiagnostics.Endpoint)).group_by(EndpointDiagnostics.Endpoint)
 
         if filters.get("Endpoint"):
             query_diagnostics = query_diagnostics.filter(
                 EndpointDiagnostics.Endpoint.like(filters["Endpoint"]))
 
         if filters.get("DateFrom"):
-            query_diagnostics = query_diagnostics.filter(
-                EndpointDiagnostics.Date >= filters["DateFrom"])
+            query_diagnostics = query_diagnostics.filter(EndpointDiagnostics.Date >= filters["DateFrom"])
 
         if filters.get("DateTo"):
-            query_diagnostics = query_diagnostics.filter(
-                EndpointDiagnostics.Date <= filters["DateTo"])
+            query_diagnostics = query_diagnostics.filter(EndpointDiagnostics.Date <= filters["DateTo"])
 
-        endpoint_diagnostics_list: List[EndpointDiagnostics] = query_diagnostics.all(
-        )
+        endpoint_diagnostics_list: List[EndpointDiagnostics] = query_diagnostics.all()
 
         # get sum, average of errors and latency
 

@@ -237,8 +237,15 @@ class EndpointDiagnostics(Base):
 
 def init_db():
     global Base, Engine
+    
+    # Base.session.query(EndpointDiagnostics).delete()
+    
+    # Base.metadata.drop_all(bind=Engine, tables=[EndpointDiagnostics.__table__])
+
 
     Base.metadata.create_all(bind=Engine)
     print("Created Model")
+    
 
+# EndpointDiagnostics.__table__.drop()
 # init_db()
