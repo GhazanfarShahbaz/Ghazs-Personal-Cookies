@@ -18,4 +18,4 @@ def process_get_diagnostics(diagnostic_filter_form: Dict[str, str]) -> List[Dict
     endpoint_diagnostics: Dict[EndpointDiagnostics] = EndpointDiagnosticsRepository(
     ).get(filters=diagnostic_filter_form)
 
-    return diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list=endpoint_diagnostics)
+    return diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list=endpoint_diagnostics, endpoint_counter=diagnostic_filter_form.get("EndpointCounter"))
