@@ -11,18 +11,20 @@ from os import environ, getenv
 from response_processing.event_processing import print_events
 
 from tools.repository.model import Event
-from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
-from tools.process_class_requests import process_create_class, process_get_class_request, process_update_class, process_delete_class_request
-from tools.process_syllabus_requests import process_get_syllabus_request, process_create_syllabus, process_update_syllabus, process_delete_syllabus_request
+from tools.endpoint_diagnostics import setup_request, commit_endpoint_diagnostics
 from tools.process_assignment_requests import process_get_assignment_request, process_create_assignment, process_update_assignment, process_delete_assignment_request
-from tools.process_weather_requests import get_weather
+from tools.process_class_requests import process_create_class, process_get_class_request, process_update_class, process_delete_class_request
+from tools.process_event_requests import process_create_event, process_get_event, process_get_default_event, process_update_event, process_delete_event
+from tools.process_endpoint_diagnostics import process_get_diagnostics
+from tools.process_file_storage_requests import process_upload_file, process_delete_file
 from tools.process_gmail_requests import get_emails
 from tools.process_help_requests import get_command
-from tools.process_translate_request import process_translate
-from tools.process_file_storage_requests import process_upload_file, process_delete_file
-from tools.process_qr_code_requests import processs_generate_link_qr_code
 from tools.process_log_requests import process_get_logs
-from tools.endpoint_diagnostics import setup_request, commit_endpoint_diagnostics
+from tools.process_syllabus_requests import process_get_syllabus_request, process_create_syllabus, process_update_syllabus, process_delete_syllabus_request
+from tools.process_translate_request import process_translate
+from tools.process_qr_code_requests import processs_generate_link_qr_code
+from tools.process_weather_requests import get_weather
+
 
 from typing import List
 from json import loads
@@ -383,6 +385,15 @@ def generate_qr_code_for_link():
     app.logger.info(qr_io)
 
     return send_file(qr_io, mimetype='image/jpeg')
+
+@app.route("/getEndpointDiagnostics", methods=["POST"])
+def get_endpoints_data():
+    request_form = request.json
+
+    if not validate_user(request_form.get("username"), request_form.get("password")):
+        return {"Status": "Invalid Request"}
+    
+    return process_get_diagnostics(request_form.get("filterForm"))
 
 
 @app.route("/getHelp", methods=["POST"])
