@@ -10,9 +10,9 @@ ENDPOINT_DICT: Dict[int, any] = {}
 CURRENT_INDEX: int = 0
 
 
-def setup_request(request: dict) -> None:
+def setup_request(request: dict, path: str) -> None:
     request_copy = request.args.to_dict()
-    request_copy["endpoint_id"] = setup_endpoint_diagnostics(request.path, request)
+    request_copy["endpoint_id"] = setup_endpoint_diagnostics(path, request)
     
     request.args = ImmutableMultiDict(request_copy)
     

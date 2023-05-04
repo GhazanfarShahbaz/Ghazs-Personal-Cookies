@@ -54,7 +54,7 @@ initialize_app(cred)
 def log_request() -> None:
     app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path}")
     app.logger.info(request.json)
-    setup_request(request)
+    setup_request(request, f"tools{request.path}")
 
 
 @app.after_request

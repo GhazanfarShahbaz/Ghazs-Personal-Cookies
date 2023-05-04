@@ -39,7 +39,7 @@ def log_endpoint():
     app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')    
     
     if request.path in {"/", "/projects", "/skills", "/education", "/resume"}:
-        setup_request(request)
+        setup_request(request, request.path)
 
 
 @app.after_request
