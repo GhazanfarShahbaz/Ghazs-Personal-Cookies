@@ -71,4 +71,4 @@ def diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list: List[Endpoint
     if not endpoint_counter:
         return [diagnostic.to_dict() for diagnostic in diagnostic_list]
     
-    return [{row[0]: row[1]} for row in diagnostic_list]
+    return {row[0]: row[1] for row in diagnostic_list}
