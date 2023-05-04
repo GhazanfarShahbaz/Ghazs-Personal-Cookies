@@ -243,4 +243,4 @@ def init_db():
     print("Created Model")
     
 
-init_db()
+# init_db()
