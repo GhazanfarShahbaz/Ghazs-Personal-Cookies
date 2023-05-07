@@ -5,8 +5,8 @@ from pytz import timezone
 
 from dateutil.relativedelta import relativedelta
 
-from repository.events import EventRepository
-from repository.model import Event
+from apps.tool_repository.tools.repository.events import EventRepository
+from apps.tool_repository.tools.repository.models.event_model import Event
 
 # Timezone for dates
 NEWYORK_TZ: timezone = timezone('America/New_York')
