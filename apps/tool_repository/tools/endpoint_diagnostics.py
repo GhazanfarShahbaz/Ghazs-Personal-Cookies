@@ -1,5 +1,5 @@
-from repository.endpoint_diagnostics import EndpointDiagnosticsRepository
-from repository.model import EndpointDiagnostics
+from apps.tool_repository.tools.repository.endpoint_diagnostics import EndpointDiagnosticsRepository
+from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import EndpointDiagnostics
 
 from datetime import datetime
 from typing import Dict, List

@@ -1,6 +1,6 @@
 from endpoint_diagnostics import setup_endpoint_diagnostics, commit_endpoint_diagnostics, diagnostics_type_list_to_diagnostic_dict_list
-from repository.model import EndpointDiagnostics
-from repository.endpoint_diagnostics import EndpointDiagnosticsRepository
+from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import EndpointDiagnostics
+from apps.tool_repository.tools.repository.endpoint_diagnostics import EndpointDiagnosticsRepository
 from event_utils import string_to_date
 
 from typing import Dict, List
