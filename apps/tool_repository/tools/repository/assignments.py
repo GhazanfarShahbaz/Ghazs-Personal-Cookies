@@ -1,7 +1,10 @@
-from model import Session as Sess, Assignment, Syllabus, Class
 from sqlalchemy.orm import Session, Query
 from typing import List
 
+from apps.tool_repository.tools.repository.models.model import Session as Sess
+from apps.tool_repository.tools.repository.models.assignment_model import Assignment
+from apps.tool_repository.tools.repository.models.class_model import Class
+from apps.tool_repository.tools.repository.models.syllabus_model import Syllabus
 
 class AssignmentRepository(object):
     def __init__(self):
