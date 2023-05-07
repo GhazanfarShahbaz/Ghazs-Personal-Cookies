@@ -1,7 +1,8 @@
 from typing import List
 from syllabus_utils import syllabus_type_list_to_event_dict_list
-from repository.syllabi import SyllabusRepository
-from repository.model import Syllabus
+
+from apps.tool_repository.tools.repository.syllabi import SyllabusRepository
+from apps.tool_repository.tools.repository.models.syllabus_model import Syllabus
 
 
 def process_create_syllabus(syllabus_data: dict) -> None:

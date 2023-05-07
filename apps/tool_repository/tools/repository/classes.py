@@ -1,8 +1,8 @@
-from sqlalchemy.sql.expression import update
-from model import Session as Sess, Class
 from sqlalchemy.orm import Session, Query
 from typing import List
 
+from apps.tool_repository.tools.repository.models.model import Session as Sess
+from apps.tool_repository.tools.repository.models.class_model import Class
 
 class ClassRepository(object):
     def __init__(self):

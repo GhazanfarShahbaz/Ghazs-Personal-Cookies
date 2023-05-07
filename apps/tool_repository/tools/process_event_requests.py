@@ -1,7 +1,7 @@
 from typing import List
 
-from repository.events import EventRepository
-from repository.model import Event
+from apps.tool_repository.tools.repository.events import EventRepository
+from apps.tool_repository.tools.repository.models.event_model import Event
 
 from event_utils import create_event_information, default_form_get_date_to_and_date_from, event_type_list_to_event_type_list
 

@@ -1,8 +1,9 @@
-from model import Session as Sess, Event
 from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, distinct
 from typing import List
 
+from apps.tool_repository.tools.repository.models.model import Session as Sess
+from apps.tool_repository.tools.repository.models.event_model import Event
 
 class EventRepository(object):
     def __init__(self) -> None:
