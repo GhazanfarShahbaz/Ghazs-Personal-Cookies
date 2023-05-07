@@ -10,7 +10,7 @@ from os import environ, getenv
 
 from response_processing.event_processing import print_events
 
-from tools.repository.model import Event
+from tools.repository.models.event_model import Event
 from tools.endpoint_diagnostics import setup_request, commit_endpoint_diagnostics
 from tools.process_assignment_requests import process_get_assignment_request, process_create_assignment, process_update_assignment, process_delete_assignment_request
 from tools.process_class_requests import process_create_class, process_get_class_request, process_update_class, process_delete_class_request
