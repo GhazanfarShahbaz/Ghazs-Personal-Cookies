@@ -1,8 +1,9 @@
-from model import Session as Sess, EndpointDiagnostics
 from sqlalchemy.orm import Session, Query
 from sqlalchemy.sql import func
 from typing import List
 
+from apps.tool_repository.tools.repository.models.model import Session as Sess
+from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import EndpointDiagnostics
 
 class EndpointDiagnosticsRepository(object):
     def __init__(self):
