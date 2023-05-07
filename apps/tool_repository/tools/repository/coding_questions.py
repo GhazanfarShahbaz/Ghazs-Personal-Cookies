@@ -1,7 +1,8 @@
-from model import Session as Sess, CodingQuestion
-from sqlalchemy.orm import Session, Query
 from typing import List
+from sqlalchemy.orm import Session, Query
 
+from apps.tool_repository.tools.repository.models.model import Session as Sess
+from apps.tool_repository.tools.repository.models.coding_question_model import CodingQuestion
 
 class CodingQuestionRepository(object):
     def __init__(self):
