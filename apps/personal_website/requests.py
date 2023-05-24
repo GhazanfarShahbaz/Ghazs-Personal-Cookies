@@ -50,6 +50,18 @@ def log_endpoint():
 
 @app.after_request
 def commit_diagnostics(response):
+    """
+    Commits diagnostic information about the endpoint accessed and the client that accessed it.
+
+    This function is triggered every time a response is returned by the Flask application,
+    after the response has been generated and before it is returned to the client.
+
+    Args:
+        response: The Flask response object to be returned to the client.
+
+    Returns:
+        The Flask response object.
+    """
     if request.args.get("endpoint_id"):
         app.logger.info("Commiting endpoint diagonstic")
         commit_endpoint_diagnostics(request.args.get("endpoint_id"), f"Html associated with  {request.remote_addr}", "")
