@@ -1,3 +1,5 @@
+from typing import Optional
+
 commands = {
     "createEvent": {
         "Description": "Creates an event based on parameters",
@@ -125,7 +127,20 @@ commands = {
 }
 
 
-def get_command(command: str or None) -> dict:
+def get_command(command: Optional[str]) -> dict:
+    """
+    Returns information about a command.
+
+    This function takes a string `command` and returns a dictionary containing information about the specified command.
+    If `command` is not provided or is not a recognized command, the function returns an empty dictionary.
+
+    Args:
+        command: A string representing the command to retrieve information about.
+
+    Returns:
+        A dictionary containing information about the specified command.
+    """
+    
     if command:
         if command in commands:
             return commands[command]
