@@ -9,7 +9,17 @@ LOADED: bool = False
 
 def load_environment() -> None:
     """
-    Loads environment into machine from firebase store 
+    Loads the environment variables from Firebase.
+
+    This function loads the environment variables from Firebase by initializing an application with the
+    provided credentials and retrieving the environment variables from the specified document in the
+    specified collection. The environment variables are then set in the server's environment.
+
+    Returns:
+        None.
+
+    Raises:
+        None.
     """
     
     global LOADED
@@ -30,4 +40,5 @@ def load_environment() -> None:
     
     # place each key into environment
     for key, value in environment_vars.items():
+        print(key, value)
         environ[key] = value
