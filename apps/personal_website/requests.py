@@ -34,7 +34,13 @@ app.logger.addHandler(handler)
 @app.before_request   
 def log_endpoint():
     """
-        Log endpoint with ip address and path accessed
+    Logs information about the endpoint accessed and the client that accessed it.
+
+    This function is triggered every time a request is received by the Flask application,
+    before the request is processed by any view function.
+
+    Returns:
+        None
     """
     app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')    
     
