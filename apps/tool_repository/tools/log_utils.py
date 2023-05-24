@@ -6,10 +6,14 @@ PATH_TO_LOG_FILE: str = "/home/ghaz/flask_gateway/logs/"
 
 def split_up_log_file() -> Dict[str, List[str]]:
     """
-        Splits up the logfile by different applications 
-        
-        Returns:
-            Dict[str, List[str]]: A dictionary with keys as applifations and lines as values
+    Splits up a log file by application.
+
+    This function reads a log file from `PATH_TO_LOG_FILE` and splits it up into separate lists of log entries by application.
+    The log entries are identified as belonging to a particular application by the path to the log file contained in the entry.
+    The function returns a dictionary with application names as keys and lists of log entries as values.
+
+    Returns:
+        A dictionary with application names as keys and lists of log entries as values.
     """
     
     # current_log_file: str = '{:%Y-%m-%d}.log'.format(datetime.now())
