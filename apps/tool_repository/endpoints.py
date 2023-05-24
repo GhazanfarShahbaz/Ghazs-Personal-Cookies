@@ -52,6 +52,18 @@ initialize_app(cred)
 
 @app.before_request   
 def log_request() -> None:
+    """
+    Logs the incoming request.
+
+    This function logs the incoming request, including the IP address of the request and the path of the request.
+    If the request includes JSON data, the function logs this as well. The function then validates the request
+    user using the `validate_user` function. If the user is invalid, the function returns a status dictionary with
+    "Status": "Invalid Request". The function then sets up the request with `setup_request`.
+
+    Returns:
+        None.
+    """
+    
     app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path}")
     app.logger.info(request.json)
     
@@ -72,6 +84,23 @@ def log_request() -> None:
 
 @app.after_request
 def commit_diagnostics(response):
+    """
+    Commits endpoint diagonstic information after handling a request.
+
+    This function takes a response object and checks if the request includes an "endpoint_id" parameter.
+    If the parameter is present, the function logs a message and commits endpoint diagnostic information
+    using the `commit_endpoint_diagnostics` function. The function then returns the original response.
+
+    Args:
+        response: A Flask response object representing the response to a request.
+
+    Returns:
+        The original Flask response object.
+
+    Raises:
+        None.
+    """
+    
     if request.args.get("endpoint_id"):
         app.logger.info("Commiting endpoint diagonstic")
         commit_endpoint_diagnostics(request.args.get("endpoint_id"), f"Html associated with  {request.remote_addr}", "")
@@ -80,6 +109,25 @@ def commit_diagnostics(response):
 
 
 def get_login(from_server=False) -> dict:
+    """
+    Retrieves login information from Firebase.
+
+    This function retrieves login information from Firebase Firestore. If the `from_server` argument is
+    False (default), the function checks if the server is currently allowing login by checking if the "allow"
+    field of the "allow" document in the collection named in `FIRESTORE_SERVER` is True. If the field is False,
+    the function returns None. If the field is True or the `from_server` argument is True, the function sets
+    the "allow" field to False and retrieves the login information from the document specified in `FIRESTORE_DOC_ID`.
+
+    Args:
+        from_server: A boolean indicating whether the request is coming from a server.
+
+    Returns:
+        A dictionary containing the login information.
+
+    Raises:
+        None
+    """    
+        
     db = firestore.client()
     users_ref = db.collection(environ["FIRESTORE_SERVER"])
     login_allow = users_ref.document('allow')
@@ -95,6 +143,26 @@ def get_login(from_server=False) -> dict:
 
 
 def validate_user(username: str, password: str) -> bool:
+    """
+    Validates the user login credentials.
+
+    This function takes a string `username` representing the user's login username and a string `password`
+    representing the user's login password. The function retrieves the login information using the `get_login`
+    function and checks whether the provided `username` and `password` match the login information. If the
+    login information matches, the function returns True. Otherwise, the function logs a message and returns
+    False.
+
+    Args:
+        username: A string representing the user's login username.
+        password: A string representing the user's login password.
+
+    Returns:
+        A boolean indicating whether or not the user's login credentials are valid.
+
+    Raises:
+        None.
+    """
+    
     token = get_login()
 
     if token and (username and username == token["username"]) and (password and password == token["password"]):
