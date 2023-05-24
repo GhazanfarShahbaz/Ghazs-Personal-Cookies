@@ -7,10 +7,17 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 def set_up_application() -> DispatcherMiddleware:
     """
-    Creates a dispatcher middleware that combines multiple flask applications
+    Creates a dispatcher middleware that combines multiple Flask applications.
+
+    This function creates a Flask dispatcher middleware that combines multiple Flask applications,
+    including `personal_website_app`, `tool_app`, and `mouseion_app`, and returns the resulting middleware.
+    The resulting middleware can be run like a Flask application.
 
     Returns:
-        DispatcherMiddleware: A middleware that can be run like a flask app
+        A DispatcherMiddleware object.
+
+    Raises:
+        None.
     """
     
     application: DispatcherMiddleware = DispatcherMiddleware(
