@@ -4,6 +4,16 @@ from os import environ
 
 
 def get_engine() -> Engine:
+    """
+    Creates and returns an SQLAlchemy engine object.
+
+    This function reads environment variables for the connection details to the database and uses
+    them to create an SQLAlchemy engine object.
+
+    Returns:
+        An SQLAlchemy engine object that can be used to connect to a database.
+    """
+    
     sql_type: str = environ["SQL_TYPE"]
     sql_host: str = environ["SQL_HOST"]
     sql_password: str = environ["SQL_PASSWORD"]

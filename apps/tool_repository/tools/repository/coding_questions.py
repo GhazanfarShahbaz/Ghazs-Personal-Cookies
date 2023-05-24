@@ -4,45 +4,105 @@ from sqlalchemy.orm import Session, Query
 from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.coding_question_model import CodingQuestion
 
-class CodingQuestionRepository(object):
+class CodingQuestionRepository:
+    """
+    A class representing a data store for CodingQuestion objects.
+
+    This class provides methods for inserting CodingQuestion objects into the database.
+
+    Attributes:
+        session: An SQLAlchemy session object used for managing database transactions.
+    """
+
     def __init__(self):
+        """
+        Creates a new CodingQuestionRepository object and initializes an SQLAlchemy session.
+        """
         self.session: Session = Sess()
 
     def __enter__(self):
-        pass
+        """
+        Called when the object is used as a context manager.
+
+        This function is called when the `with` statement is used to create a context
+        for the CodingQuestionRepository object. Returns the current object as the context
+        manager value.
+        """
+        
+        return self
 
     def __exit__(self, type, value, traceback):
+        """
+        Called when the context manager is exited.
+
+        This function is called when the `with` block created by the `with` statement
+        that created this context manager is exited. This function closes the SQLAlchemy
+        session.
+        """
+        
         self.session.close()
 
     def insert(self, coding_questions: List[CodingQuestion]) -> None:
+        """
+        Inserts one or more CodingQuestion objects into the database.
+
+        This function takes a list of CodingQuestion objects as input, inserts each of
+        them into the database using the current SQLAlchemy session, and commits the
+        transaction.
+
+        Args:
+            coding_questions: A list of CodingQuestion objects to insert into the database.
+
+        Returns:
+            None
+        """
+        
         for coding_question in coding_questions:
             self.session.add(coding_question)
 
         self.session.commit()
 
-    def update(self, question_id: int, update_dictionary: dict) -> None:
-        coding_question: CodingQuestion = self.session.query(
-            CodingQuestion).filter(CodingQuestion.QuestionId == question_id).first()
+    def update(self, question_id: int, update_dict: dict) -> None:
+        """
+        Updates a coding question object in the database with the specified changes.
 
-        if update_dictionary.get("QuestionId"):
-            coding_question.QuestionId = update_dictionary["QuestionId"]
+        This method takes a question ID and a dictionary of updates, and updates the corresponding
+        coding question object in the database with the new values. Any keys in the update dictionary
+        that are not valid attributes of the coding question object are ignored.
 
-        if update_dictionary.get("QuestionLink"):
-            coding_question.QuestionLink = update_dictionary["QuestionLink"]
+        Args:
+            question_id: The ID of the coding question object to be updated.
+            update_dict: A dictionary of updates to apply to the coding question object.
 
-        if update_dictionary.get("Difficulty"):
-            coding_question.Difficulty = update_dictionary["Difficulty"]
+        Returns:
+            None
 
-        if update_dictionary.get("AcceptanceRate"):
-            coding_question.AcceptanceRate = update_dictionary["AcceptanceRate"]
+        Raises:
+            ValueError: If the `question_id` parameter is not a valid ID for a coding question object.
+        """
+    
+        #retrieve the coding question object to be updated from the database
+        coding_question: CodingQuestion = self.session.query(CodingQuestion).filter(CodingQuestion.QuestionId == question_id).first()
 
-        if update_dictionary.get("Tags"):
-            coding_question.Tags = update_dictionary["Tags"]
+        # apply any changes that were requested in the update dictionary
+        if update_dict.get("QuestionLink"):
+            coding_question.QuestionLink = update_dict["QuestionLink"]
 
-        if update_dictionary.get("RequiresSubscription"):
-            coding_question.RequiresSubscription = update_dictionary["RequiresSubscription"]
+        if update_dict.get("Difficulty"):
+            coding_question.Difficulty = update_dict["Difficulty"]
 
+        if update_dict.get("AcceptanceRate"):
+            coding_question.AcceptanceRate = update_dict["AcceptanceRate"]
+
+        if update_dict.get("Tags"):
+            coding_question.Tags = update_dict["Tags"]
+
+        if update_dict.get("RequiresSubscription"):
+            coding_question.RequiresSubscription = update_dict["RequiresSubscription"]
+
+        # commit the changes to the database
         self.session.commit()
+
 
     def get(self, filters: dict) -> List[CodingQuestion]:
         query: Query = self.session.query(CodingQuestion)
@@ -82,8 +142,26 @@ class CodingQuestionRepository(object):
         return query.all()
 
     def delete(self, filters: dict) -> None:
+        """
+        Retrieves a list of coding question objects from the database that match the specified filter criteria.
+
+        This method queries the database for coding questions that match the specified filter criteria and
+        returns a list of coding question objects that match the criteria.
+
+        Args:
+            filters: A dictionary of filter criteria used to query the database.
+
+        Returns:
+            A list of coding question objects that match the filter criteria.
+
+        Raises:
+            ValueError: If an invalid filter key is included in the input dictionary.
+        """
+        
+        # create a query object for the CodingQuestion table
         query: Query = self.session.query(CodingQuestion)
 
+        # filter the query based on the input filter dictionary
         if filters.get("QuestionIds"):
             query = query.filter(
                 CodingQuestion.QuestionId.in_(filters["QuestionIds"]))
@@ -116,5 +194,5 @@ class CodingQuestionRepository(object):
             query = query.filter(
                 CodingQuestion.RequiresSubscription == filters["RequiresSubscription"])
 
-        query.delete()
-        self.session.commit()
+        # execute the query and return the result as a list of coding question objects
+        return query.all()

@@ -12,6 +12,19 @@ import tempfile
 
 
 def create_authorization_file(authorization_dict: Dict) -> tempfile:
+    """
+    Creates a temporary file containing authorization information.
+
+    This function takes a dictionary `authorization_dict` representing authorization information and writes it to a new temporary
+    file. The function returns a handle to the temporary file.
+
+    Args:
+        authorization_dict: A dictionary containing authorization information.
+
+    Returns:
+        A handle to a temporary file containing the authorization information.
+    """
+    
     authorization_file: tempfile = tempfile.NamedTemporaryFile()
 
     authorization_file.write(
@@ -23,6 +36,19 @@ def create_authorization_file(authorization_dict: Dict) -> tempfile:
 
 
 def get_credentials(authorization_dict: Dict) -> Credentials:
+    """
+    Retrieves user credentials from a temporary file.
+
+    This function takes a dictionary `authorization_dict` containing authorization information and creates a temporary file.
+    The function then reads the credentials from the temporary file and returns them as a `Credentials` object.
+
+    Args:
+        authorization_dict: A dictionary containing authorization information.
+
+    Returns:
+        A `Credentials` object containing the user's credentials.
+    """
+    
     authorization_file: tempfile = create_authorization_file(
         authorization_dict)
     creds: Credentials = Credentials.from_authorized_user_file(
@@ -37,6 +63,20 @@ def get_credentials(authorization_dict: Dict) -> Credentials:
 
 
 def extract_full_email(msg) -> dict:
+    """
+    Extracts specific fields from an email message.
+
+    This function takes an email message `msg` and extracts specific fields from it. The fields that are extracted include
+    the email labels, snippet, subject, sender, and message text. The function returns a dictionary containing the extracted
+    fields.
+
+    Args:
+        msg: An email message.
+
+    Returns:
+        A dictionary containing the extracted email fields.
+    """
+    
     try:
         payload = msg["payload"]
         headers = payload['headers']
@@ -72,6 +112,25 @@ def extract_full_email(msg) -> dict:
 
 
 def get_emails(authorization_dict: Dict, label_filters: list, max_results: int, get_snippet: bool) -> dict:
+    """
+    Retrieves a list of email messages from Gmail.
+
+    This function takes a dictionary `authorization_dict` containing authorization information, a list of label filters `label_filters`,
+    an integer `max_results` representing the maximum number of email messages to retrieve, and a boolean `get_snippet` indicating
+    whether to retrieve only the email header or also the full email body. The function then connects to the Gmail API using the
+    provided authorization information, retrieves a list of email messages based on the provided label filters and maximum number
+    of results, and returns a dictionary containing the email labels, subject, sender, snippet and message text for each email.
+
+    Args:
+        authorization_dict: A dictionary containing the authorization information for the Gmail API.
+        label_filters: A list of strings containing label filters to apply when retrieving email messages.
+        max_results: An integer representing the maximum number of email messages to retrieve.
+        get_snippet: A boolean indicating whether to retrieve only the email header or also the full email body.
+
+    Returns:
+        A dictionary containing the email labels, subject, sender, snippet and message text for each email.
+    """
+
     creds: Credentials = get_credentials(authorization_dict)
 
     # Connect to the Gmail API

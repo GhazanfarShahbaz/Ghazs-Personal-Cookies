@@ -11,8 +11,17 @@ FUNCTION_MAPPER: Dict[str, callable] = {
 
 def get_aws_credentials() -> Dict[str, str]:
     """
-    Returns: 
-        Dict[str, str]: Creates a dictionary of aws credentials 
+    Gets the AWS credentials from environment variables and returns them as a dictionary.
+
+    This function extracts the AWS credentials from the following environment variables:
+        - AWS_FILE_SERVICE
+        - AWS_ACCESS_KEY_ID
+        - AWS_ACCESS_KEY
+        - AWS_PASSWORD
+        - AWS_REGION_NAME
+    
+    Returns:
+        A dictionary containing the AWS credentials.
     """
     
     return {
@@ -26,12 +35,20 @@ def get_aws_credentials() -> Dict[str, str]:
 
 def get_aws_client_or_resource(aws_type: str) -> any:
     """
-    Creates an aws client or resource
+    Creates a boto3 client or resource for the specified AWS type.
+
+    This function takes an AWS type (either "client" or "resource") as input and uses it to create either a boto3 client or
+    resource object. It uses the AWS credentials stored in environment variables to create the client/resource object.
+
+    Args:
+        aws_type: A string representing the type of AWS object to create ("client" or "resource").
 
     Returns:
-        any: A boto3 client or resource
+        A boto3 client or resource object for the specified AWS type.
+
+    Raises:
+        KeyError: If the supplied aws_type is not a valid key in the FUNCTION_MAPPER dictionary.
     """
-    
     
     credentials: Dict[str, str] = get_aws_credentials()
 
@@ -47,10 +64,18 @@ def get_aws_client_or_resource(aws_type: str) -> any:
 
 def upload_file(file, content_type) -> str:
     """
-        Uploads a file to aws OP_NO_SSLv3
-        
-        Returns:
-            str: A string representing success or fail
+    Uploads a file to an AWS S3 bucket.
+
+    This function takes a file and a content type as input, and uploads the file to an AWS S3 bucket using the boto3 client
+    associated with the AWS environment variables. 
+
+    Args:
+        file: The file to be uploaded.
+        content_type: The content type of the file.
+
+    Returns:
+        A string representing the success or failure of the upload process.
+
     """
     
     client = get_aws_client_or_resource("client")
@@ -65,16 +90,25 @@ def upload_file(file, content_type) -> str:
         )
     except:
         return "failed to upload file"
+    finally:
+        file.close()
 
     return "success"
 
 
 def delete_file(bucket_name: str, file_path: str) -> str:
     """
-    Deletes a file from s3 given the bucket name and file path
-    
+    Deletes a file from an AWS S3 bucket.
+
+    This function takes a bucket name and a file path as input, and deletes the specified file from the AWS S3 bucket using the
+    boto3 client associated with the AWS environment variables.
+
+    Args:
+        bucket_name: The name of the AWS S3 bucket containing the file to be deleted.
+        file_path: The file path of the file to be deleted.
+
     Returns:
-        str: A string representing success or fail
+        A string representing the success or failure of the file deletion process.
     """
     
     client = get_aws_client_or_resource("client")
@@ -89,10 +123,19 @@ def delete_file(bucket_name: str, file_path: str) -> str:
 
 def list_bucket_files(bucket_name: str, prefix: str) -> Dict[Dict, List[str]]:
     """
-    Lists files in a bucket given an optional prefix
-    
+    Lists files in an AWS S3 bucket with an optional prefix.
+
+    This function takes the name of an AWS S3 bucket and an optional prefix as input, and returns a dictionary with two
+    keys: "files" and "folders". The "files" key contains a list of all the files in the bucket with the specified prefix,
+    while the "folders" key contains a list of all the folders (directories) in the bucket with the specified prefix.
+
+    Args:
+        bucket_name: The name of the AWS S3 bucket.
+        prefix: An optional prefix used to filter the files/folders in the bucket.
+
     Returns:
-        Dict[Dict, List[str]]: Creates a dict which contains a list of files
+        A dictionary with two keys: "files" and "folders". The "files" key contains a list of all the files in the bucket
+        with the specified prefix, while the "folders" key contains a list of all the folders in the bucket with the specified prefix.
     """
     
     client = get_aws_client_or_resource("resource")
