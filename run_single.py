@@ -7,14 +7,7 @@ from apps.projects.the_mouseion.app import app as mouseion_app
 from typing import Dict
 from flask import Flask
 
-# Define a dictionary of Flask apps, where each key is an app name and each value is the corresponding app
-# app_list: Dict[str, Flask] = {
-#     "Personal Website"  : personal_website_app,
-#     "Tools"             : tool_app,
-#     "The Mouseion"      : mouseion_app,
-#     "Knowledge Graphs"  : knowledge_graph_app
-# }
-
+# Define a dictionary of Flask apps, where each key is an app number and each value is the corresponding app dictionary containing the applications name and module
 app_list: Dict[int, dict] = {
     1: {
         "app_name"      : "Personal Website",
