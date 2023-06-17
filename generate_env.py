@@ -40,5 +40,4 @@ def load_environment() -> None:
     
     # place each key into environment
     for key, value in environment_vars.items():
-        print(key, value)
         environ[key] = value
