@@ -8,7 +8,3 @@ load_environment()
 # if this filei s called from a parent directory the tools.... path is needed this allows all modules to be called from this directory
 current = path.dirname(path.realpath(__file__))
 sys.path.append(current)
-
-import tool_repository
-import personal_website
-import projects
