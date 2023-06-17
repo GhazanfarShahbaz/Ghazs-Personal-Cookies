@@ -49,7 +49,7 @@ app_number: int or None = None
 # Try converting app number string to a number
 try:
     app_number = int(app_number_temp)
-except:
+except TypeError:
     print("This is not a number")
     exit()
 
