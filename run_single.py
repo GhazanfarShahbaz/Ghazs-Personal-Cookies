@@ -8,22 +8,10 @@ from stringcolor import cs
 
 # Define a dictionary of Flask apps, where each key is an app number and each value is the corresponding app dictionary containing the applications name and module
 app_list: Dict[int, dict] = {
-    1: {
-        "app_name"      : "Personal Website",
-        "app_module"    : personal_website_app
-    },
-    2: {
-        "app_name"      : "Tools Application",
-        "app_module"    : tool_app
-    },
-    3: {
-        "app_name"      : "Knowledge Graph",
-        "app_module"    : knowledge_graph_app
-    },
-    4: {
-        "app_name"      : "The Mouseion",
-        "app_module"    : mouseion_app 
-    }
+    1: {"app_name": "Personal Website", "app_module": personal_website_app},
+    2: {"app_name": "Tools Application", "app_module": tool_app},
+    3: {"app_name": "Knowledge Graph", "app_module": knowledge_graph_app},
+    4: {"app_name": "The Mouseion", "app_module": mouseion_app},
 }
 
 
@@ -35,8 +23,10 @@ for app_index, app_dict in app_list.items():
 print()
 
 # Get the app number from the user
-app_number_temp: str= input("Please Enter the number of the application you want to run: ")
-app_number: int or None = None 
+app_number_temp: str = input(
+    "Please Enter the number of the application you want to run: "
+)
+app_number: int or None = None
 
 # Try converting app number string to a number
 try:
