@@ -17,5 +17,5 @@ def processs_generate_link_qr_code(qr_form: Dict[str, str]) -> BytesIO:
     Returns:
         A BytesIO object containing the generated QR code.
     """
-    
+
     return generate_qrcode_for_url(qr_form["url"])

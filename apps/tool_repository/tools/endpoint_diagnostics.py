@@ -67,7 +67,7 @@ def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:
     return endpoint_id
 
 
-def commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -> bool:
+def  commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -> bool:
     """
     Commits endpoint diagnostics with the new feature diagnostic values.
 
@@ -126,7 +126,7 @@ def diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list: List[Endpoint
         TypeError: If the input list contains objects that are not of type EndpointDiagnostics.
     """
     
-    if not all(isinstance(diagnostic, EndpointDiagnostics) for diagnostic in diagnostic_list):
+    if not endpoint_counter and not all(isinstance(diagnostic, EndpointDiagnostics) for diagnostic in diagnostic_list):
         raise TypeError("All items in the list must be of type `EndpointDiagnostics`")
     
     if not endpoint_counter:

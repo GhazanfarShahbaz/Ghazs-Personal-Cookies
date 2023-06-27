@@ -3,7 +3,10 @@ from sqlalchemy.sql import func
 from typing import List
 
 from apps.tool_repository.tools.repository.models.model import Session as Sess
-from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import EndpointDiagnostics
+from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import (
+    EndpointDiagnostics,
+)
+
 
 class EndpointDiagnosticsRepository(object):
     """
@@ -56,6 +59,10 @@ class EndpointDiagnosticsRepository(object):
             The ID of the inserted EndpointDiagnostics.
         """
 
+        self.session.add(endpoint_diagnostic)
+        self.session.commit()
+        return endpoint_diagnostic.DiagnosticId
+
     def get(self, filters: dict) -> List[EndpointDiagnostics]:
         """
         Retrieves a list of EndpointDiagnostics objects from the database that match the specified filter criteria.
@@ -72,13 +79,15 @@ class EndpointDiagnosticsRepository(object):
         Raises:
             ValueError: If an invalid filter key is included in the input dictionary.
         """
-        
+
         # Create a query for EndpointDiagnostics
         query = None
         if not filters.get("EndpointCounter"):
             query = self.session.query(EndpointDiagnostics)
         else:
-            query = self.session.query(EndpointDiagnostics.Endpoint, func.count(EndpointDiagnostics.Endpoint)).group_by(EndpointDiagnostics.Endpoint)
+            query = self.session.query(
+                EndpointDiagnostics.Endpoint, func.count(EndpointDiagnostics.Endpoint)
+            ).group_by(EndpointDiagnostics.Endpoint)
 
         # Filter the query according to the input filter dictionary
         if filters.get("Endpoint"):

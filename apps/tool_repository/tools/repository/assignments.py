@@ -6,6 +6,7 @@ from apps.tool_repository.tools.repository.models.assignment_model import Assign
 from apps.tool_repository.tools.repository.models.class_model import Class
 from apps.tool_repository.tools.repository.models.syllabus_model import Syllabus
 
+
 class AssignmentRepository(object):
     """
     A class representing a data store for Assignment objects.
@@ -16,12 +17,12 @@ class AssignmentRepository(object):
     Attributes:
         session: An SQLAlchemy session object used for managing database transactions.
     """
-    
+
     def __init__(self):
         """
         Creates a new AssignmentStore object and initializes an SQLAlchemy session.
         """
-        
+
         self.session: Session = Sess()
 
     def __enter__(self):
@@ -32,7 +33,7 @@ class AssignmentRepository(object):
         for the AssignmentStore object. Returns the current object as the context
         manager value.
         """
-        
+
         pass
 
     def __exit__(self, type, value, traceback):
@@ -43,7 +44,7 @@ class AssignmentRepository(object):
         that created this context manager is exited. This function closes the SQLAlchemy
         session.
         """
-        
+
         self.session.close()
 
     def insert(self, assignment: Assignment) -> int:
@@ -60,7 +61,7 @@ class AssignmentRepository(object):
         Returns:
             The ID of the inserted Assignment.
         """
-        
+
         self.session.add(assignment)
         self.session.commit()
         return assignment.AssignmentId
@@ -83,9 +84,12 @@ class AssignmentRepository(object):
         Raises:
             ValueError: If the `assignment_id` parameter is not a valid ID for an Assignment object.
         """
-    
-        assignment = self.session.query(Assignment).filter(
-            Assignment.AssignmentId == assignment_id).first()
+
+        assignment = (
+            self.session.query(Assignment)
+            .filter(Assignment.AssignmentId == assignment_id)
+            .first()
+        )
 
         if update_dictionary.get("Name"):
             assignment.Name = update_dictionary["Name"]
@@ -120,24 +124,29 @@ class AssignmentRepository(object):
         Raises:
             ValueError: If an invalid filter key is included in the input dictionary.
         """
-        
+
         # Create a query object with joins between Assignment, Syllabus, and Class tables
-        query: Query = self.session.query(Assignment).join(
-            Syllabus, Syllabus.SectionId == Assignment.SectionId).join(Class, Class.ClassId == Syllabus.ClassId)
+        query: Query = (
+            self.session.query(Assignment)
+            .join(Syllabus, Syllabus.SectionId == Assignment.SectionId)
+            .join(Class, Class.ClassId == Syllabus.ClassId)
+        )
 
         # Filter the query based on the input filter dictionary
         if filters.get("ClassIds"):
             query = query.filter(Class.ClassId.in_(filters["ClassIds"]))
 
         if filters.get("ClassName"):
-            if filters.get("ClassNameExact") is None or filters["ClassNameExact"] is True:
+            if (
+                filters.get("ClassNameExact") is None
+                or filters["ClassNameExact"] is True
+            ):
                 query = query.filter(Class.Name == filters["ClassName"])
             else:
                 query = query.filter(Class.Name.like(filters["ClassName"]))
 
         if filters.get("DateAssigned"):
-            query = query.filter(Assignment.DateAssigned ==
-                                 filters["DateAssigned"])
+            query = query.filter(Assignment.DateAssigned == filters["DateAssigned"])
 
         if filters.get("DateDue"):
             query = query.filter(Assignment.DateDue == filters["DateDue"])
@@ -180,16 +189,22 @@ class AssignmentRepository(object):
         Raises:
             ValueError: If an invalid filter key is included in the input dictionary.
         """
-        
+
         # Create a query object with joins between Assignment, Syllabus, and Class tables
-        query: Query = self.session.query(Assignment).join(
-            Syllabus, Syllabus.SectionId == Assignment.SectionId).join(Class, Class.ClassId == Syllabus.ClassId)
+        query: Query = (
+            self.session.query(Assignment)
+            .join(Syllabus, Syllabus.SectionId == Assignment.SectionId)
+            .join(Class, Class.ClassId == Syllabus.ClassId)
+        )
 
         if filters.get("ClassIds"):
             query = query.filter(Class.ClassId.in_(filters["ClassIds"]))
 
         if filters.get("ClassName"):
-            if filters.get("ClassNameExact") is None or filters["ClassNameExact"] is True:
+            if (
+                filters.get("ClassNameExact") is None
+                or filters["ClassNameExact"] is True
+            ):
                 query = query.filter(Class.Name == filters["ClassName"])
             else:
                 query = query.filter(Class.Name.like(filters["ClassName"]))

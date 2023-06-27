@@ -1,6 +1,7 @@
 from sqlalchemy import ARRAY, Column, DateTime, JSON, Integer, String
 
-from . import Base 
+from . import Base
+
 
 class CodingQuestion(Base):
     __tablename__ = "coding_questions"
@@ -11,8 +12,7 @@ class CodingQuestion(Base):
     Difficulty = Column("Difficulty", String(32), nullable=True)
     AcceptanceRate = Column("AcceptanceRate", Float, nullable=True)
     Tags = Column("Tags", ARRAY(Integer), nullable=True)
-    RequiresSubscription = Column(
-        "RequiresSubscription", Boolean, nullable=True)
+    RequiresSubscription = Column("RequiresSubscription", Boolean, nullable=True)
 
     def __init__(self, question_information: dict) -> None:
         self.QuestionId = question_information.get("QuestionId")
@@ -21,8 +21,7 @@ class CodingQuestion(Base):
         self.Difficulty = question_information.get("Difficulty")
         self.AcceptanceRate = question_information.get("AcceptanceRate")
         self.Tags = question_information.get("Tags")
-        self.RequiresSubscription = question_information.get(
-            "RequiresSubscription")
+        self.RequiresSubscription = question_information.get("RequiresSubscription")
 
     def to_dict(self) -> dict:
         return {
@@ -32,5 +31,5 @@ class CodingQuestion(Base):
             "Difficulty": self.Difficulty,
             "AcceptanceRate": self.AcceptanceRate,
             "Tags": self.Tags,
-            "RequiresSubscription": self.RequiresSubscription
+            "RequiresSubscription": self.RequiresSubscription,
         }

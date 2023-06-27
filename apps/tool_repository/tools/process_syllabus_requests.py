@@ -37,8 +37,9 @@ def process_update_syllabus(update_form: dict) -> None:
         None. The function does not return anything.
     """
 
-    SyllabusRepository().insert(update_form.get(
-        "SyllabusId"), update_form.get("UpdateParams"))
+    SyllabusRepository().insert(
+        update_form.get("SyllabusId"), update_form.get("UpdateParams")
+    )
 
 
 def process_get_syllabus_request(filter_form: dict) -> List[dict]:

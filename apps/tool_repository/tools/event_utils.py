@@ -9,31 +9,33 @@ from apps.tool_repository.tools.repository.events import EventRepository
 from apps.tool_repository.tools.repository.models.event_model import Event
 
 # Timezone for dates
-NEWYORK_TZ: timezone = timezone('America/New_York')
+NEWYORK_TZ: timezone = timezone("America/New_York")
 
-WEEKDAY: Dict[str, int] = {
-    "m": 0,
-    "t": 1,
-    "w": 2,
-    "th": 3,
-    "f": 4,
-    "sat": 5,
-    "sun": 6
-}
+WEEKDAY: Dict[str, int] = {"m": 0, "t": 1, "w": 2, "th": 3, "f": 4, "sat": 5, "sun": 6}
 
-WEEKNUM: Dict[int, str] = {
-    0: "m",
-    1: "t",
-    2: "w",
-    3: "th",
-    4: "f",
-    5: "sat",
-    6: "sun"
-}
+WEEKNUM: Dict[int, str] = {0: "m", 1: "t", 2: "w", 3: "th", 4: "f", 5: "sat", 6: "sun"}
 
 # Accepted request date formats
-DATE_FORMATS: Tuple[str] = ('%m/%d/%y %H:%M', '%m-%d-%y %H:%M',  '%m.%d.%y %H:%M', '%m/%d/%y %I:%M %p', '%m-%d-%y %I:%M %p', '%m.%d.%y %I:%M %p', '%m/%d/%y %I:%M%p', '%m-%d-%y %I:%M%p', '%m.%d.%y %I:%M%p',
-                            '%m/%d/%Y %H:%M', '%m-%d-%Y %H:%M',  '%m.%d.%Y %H:%M', '%m/%d/%Y %I:%M %p', '%m-%d-%Y %I:%M %p', '%m.%d.%Y %I:%M %p', '%m/%d/%Y %I:%M%p', '%m-%d-%Y %I:%M%p', '%m.%d.%Y %I:%M%p')
+DATE_FORMATS: Tuple[str] = (
+    "%m/%d/%y %H:%M",
+    "%m-%d-%y %H:%M",
+    "%m.%d.%y %H:%M",
+    "%m/%d/%y %I:%M %p",
+    "%m-%d-%y %I:%M %p",
+    "%m.%d.%y %I:%M %p",
+    "%m/%d/%y %I:%M%p",
+    "%m-%d-%y %I:%M%p",
+    "%m.%d.%y %I:%M%p",
+    "%m/%d/%Y %H:%M",
+    "%m-%d-%Y %H:%M",
+    "%m.%d.%Y %H:%M",
+    "%m/%d/%Y %I:%M %p",
+    "%m-%d-%Y %I:%M %p",
+    "%m.%d.%Y %I:%M %p",
+    "%m/%d/%Y %I:%M%p",
+    "%m-%d-%Y %I:%M%p",
+    "%m.%d.%Y %I:%M%p",
+)
 
 
 def create_event_information(event_data: dict) -> List[Event]:
@@ -53,9 +55,16 @@ def create_event_information(event_data: dict) -> List[Event]:
     Raises:
         ValueError: If the event_data dictionary is missing any required fields.
     """
-    
+
     # Check that required fields are present
-    required_fields = ["Name", "Type", "Location", "Description", "StartDate", "EndDate"]
+    required_fields = [
+        "Name",
+        "Type",
+        "Location",
+        "Description",
+        "StartDate",
+        "EndDate",
+    ]
     if not all(field in event_data for field in required_fields):
         raise ValueError("Missing required field in event_data dictionary")
 
@@ -66,7 +75,7 @@ def create_event_information(event_data: dict) -> List[Event]:
         "Name": event_data.get("Name"),
         "Type": event_data.get("Type"),
         "Location": event_data.get("Location"),
-        "Description": event_data.get("Description")
+        "Description": event_data.get("Description"),
     }
 
     if not event_data.get("RecurranceType"):
@@ -90,17 +99,33 @@ def create_event_information(event_data: dict) -> List[Event]:
         if event_data["RecurranceType"] not in {"weekly", "monthly", "yearly"}:
             # Daily recurrence
             event_list = get_daily_reccurance_event_list(
-                event_template, event_data["StartDate"], event_data["EndDate"], event_data["RecurranceType"], event_data["RecurranceDateTo"])
+                event_template,
+                event_data["StartDate"],
+                event_data["EndDate"],
+                event_data["RecurranceType"],
+                event_data["RecurranceDateTo"],
+            )
         else:
             # Weekly, monthly, or yearly recurrence
             event_template["RecurranceType"] = event_data["RecurranceType"]
             event_list = get_other_reccurance_event_list(
-                event_template, event_data["StartDate"], event_data["EndDate"], event_data["RecurranceType"], event_data["RecurranceDateTo"])
+                event_template,
+                event_data["StartDate"],
+                event_data["EndDate"],
+                event_data["RecurranceType"],
+                event_data["RecurranceDateTo"],
+            )
 
     return event_dict_list_to_event_type_list(event_list)
 
 
-def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_date: str, reccurance_type: str, reccurance_end_date_string: str) -> List[dict]:
+def get_daily_reccurance_event_list(
+    event_template: dict,
+    start_date: str,
+    end_date: str,
+    reccurance_type: str,
+    reccurance_end_date_string: str,
+) -> List[dict]:
     """
     Creates a list of events from one start date to another for daily events.
 
@@ -117,7 +142,7 @@ def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_d
     Returns:
         A list of dictionaries, with each dictionary representing an event.
     """
-    
+
     reccurance_nums: Set[int] = set()
 
     if reccurance_type == "daily":
@@ -134,7 +159,9 @@ def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_d
     if reccurance_type != "daily":
         reccurance_type = ""
         for day in sorted(reccurance_nums):
-            reccurance_type += f"/{WEEKNUM[day]}" if reccurance_type else f"{WEEKNUM[day]}"
+            reccurance_type += (
+                f"/{WEEKNUM[day]}" if reccurance_type else f"{WEEKNUM[day]}"
+            )
 
     event_template["ReccuranceType"] = reccurance_type
 
@@ -157,9 +184,19 @@ def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_d
     while current_date <= reccurance_end_date:
         if current_date.WEEKDAY() in reccurance_nums:
             insertion_start_date: datetime = datetime(
-                current_date.year, current_date.month, current_date.day, start_date_hour, start_date_minute)
+                current_date.year,
+                current_date.month,
+                current_date.day,
+                start_date_hour,
+                start_date_minute,
+            )
             insertion_end_date: datetime = datetime(
-                current_date.year, current_date.month, current_date.day, end_date_hour, end_date_minute)
+                current_date.year,
+                current_date.month,
+                current_date.day,
+                end_date_hour,
+                end_date_minute,
+            )
             event = copy(event_template)
             event["StartDate"] = insertion_start_date
             event["EndDate"] = insertion_end_date
@@ -169,7 +206,13 @@ def get_daily_reccurance_event_list(event_template: dict, start_date: str, end_d
     return event_list
 
 
-def get_other_reccurance_event_list(event_template: dict, start_date: str, end_date: str, reccurance_type: str, reccurance_end_date_string: str) -> List[Dict[datetime, datetime]]:
+def get_other_reccurance_event_list(
+    event_template: dict,
+    start_date: str,
+    end_date: str,
+    reccurance_type: str,
+    reccurance_end_date_string: str,
+) -> List[Dict[datetime, datetime]]:
     """
     Generates a list of recurring events for a specified date range.
 
@@ -187,7 +230,7 @@ def get_other_reccurance_event_list(event_template: dict, start_date: str, end_d
         A list of dictionaries, with each dictionary representing an event.
 
     """
-    
+
     start_date: datetime = string_to_date(start_date)
     end_date: datetime = string_to_date(end_date)
     start_date_hour: int = start_date.hour
@@ -216,9 +259,19 @@ def get_other_reccurance_event_list(event_template: dict, start_date: str, end_d
 
     while current_date <= reccurance_end_date:
         insertion_start_date: datetime = datetime(
-            current_date.year, current_date.month, current_date.day, start_date_hour, start_date_minute)
+            current_date.year,
+            current_date.month,
+            current_date.day,
+            start_date_hour,
+            start_date_minute,
+        )
         insertion_end_date: datetime = datetime(
-            current_date.year, current_date.month, current_date.day, end_date_hour, end_date_minute)
+            current_date.year,
+            current_date.month,
+            current_date.day,
+            end_date_hour,
+            end_date_minute,
+        )
         event = copy(event_template)
         event["StartDate"] = insertion_start_date
         event["EndDate"] = insertion_end_date
@@ -258,7 +311,9 @@ def string_to_date(date_string: str) -> datetime:
     raise ValueError("This is not a valid date format")
 
 
-def default_form_get_date_to_and_date_from(default_option: str) -> Tuple[datetime, datetime]:
+def default_form_get_date_to_and_date_from(
+    default_option: str,
+) -> Tuple[datetime, datetime]:
     """
     Gets start and end dates from a user request form using a default option.
 
@@ -278,14 +333,16 @@ def default_form_get_date_to_and_date_from(default_option: str) -> Tuple[datetim
     Raises:
         ValueError: If the input default option is not one of "today", "week", or "month".
     """
-    current_date: datetime = datetime.now(timezone('America/New_York'))
+    current_date: datetime = datetime.now(timezone("America/New_York"))
     date_to: datetime = None
 
     if default_option == "today":
         date_from = datetime(
-            current_date.year, current_date.month, current_date.day, 0, 0, 0)
-        date_to = datetime(current_date.year, current_date.month,
-                           current_date.day, 23, 59, 59)
+            current_date.year, current_date.month, current_date.day, 0, 0, 0
+        )
+        date_to = datetime(
+            current_date.year, current_date.month, current_date.day, 23, 59, 59
+        )
 
     elif default_option == "week":
         end_date: datetime = None
@@ -295,9 +352,9 @@ def default_form_get_date_to_and_date_from(default_option: str) -> Tuple[datetim
             end_date = current_date + timedelta(days=6)
 
         date_from = datetime(
-            current_date.year, current_date.month, current_date.day, 0, 0, 0)
-        date_to = datetime(end_date.year, end_date.month,
-                           end_date.day, 23, 59, 59)
+            current_date.year, current_date.month, current_date.day, 0, 0, 0
+        )
+        date_to = datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59)
 
     elif default_option == "month":
         date_from = datetime(current_date.year, current_date.month, 1, 0, 0)
@@ -305,10 +362,11 @@ def default_form_get_date_to_and_date_from(default_option: str) -> Tuple[datetim
         end_date: datetime = date_from + relativedelta(months=1)
         end_date -= timedelta(days=1)
 
-        date_to = datetime(end_date.year, end_date.month,
-                           end_date.day, 23, 59, 59)
+        date_to = datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59)
     else:
-        raise ValueError("Invalid default option. Accepted options are 'today', 'week', or 'month'")
+        raise ValueError(
+            "Invalid default option. Accepted options are 'today', 'week', or 'month'"
+        )
 
     return date_from, date_to
 
@@ -328,7 +386,7 @@ def event_dict_list_to_event_type_list(event_list: List[dict]) -> List[Event]:
     Raises:
         ValueError: If the input contains dictionaries that do not have the correct keys.
     """
-    
+
     try:
         return [Event(event) for event in event_list]
     except (KeyError, TypeError) as e:
@@ -354,5 +412,5 @@ def event_type_list_to_event_type_list(event_list: List[Event]) -> List[dict]:
 
     if not all(isinstance(event, Event) for event in event_list):
         raise TypeError("All items in the list must be of type `Event`")
-    
+
     return [event.to_dict() for event in event_list]

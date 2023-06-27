@@ -5,33 +5,38 @@ from flask import request, send_from_directory
 
 import json
 
-from apps.tool_repository.tools.endpoint_diagnostics import setup_request, commit_endpoint_diagnostics
+from apps.tool_repository.tools.endpoint_diagnostics import (
+    setup_request,
+    commit_endpoint_diagnostics,
+)
 
 # Create flask app. Static and template folder point to personal website react build files
 app = Flask(
     __name__,
-    static_url_path='',
-    static_folder='/home/ghaz/PersonalWebsite/build',
-    template_folder='/home/ghaz/PersonalWebsite/build'
+    static_url_path="",
+    static_folder="/home/ghaz/PersonalWebsite/build",
+    template_folder="/home/ghaz/PersonalWebsite/build",
 )
 
 # Set logger config
-logging.config.fileConfig('/home/ghaz/flask_gateway/logging.conf')
-app.logger = logging.getLogger('MainLogger')
+logging.config.fileConfig("/home/ghaz/flask_gateway/logging.conf")
+app.logger = logging.getLogger("MainLogger")
 
 # Handler for log file. So log files are rotated everyday
-handler = logging.handlers.TimedRotatingFileHandler(
-'logs/app.log', when="midnight")
+handler = logging.handlers.TimedRotatingFileHandler("logs/app.log", when="midnight")
 handler.prefix = "%Y%m%d"
 
 # Formatter for log file. Log files will be formatted in the format specified below
-formatter = logging.Formatter('%(asctime)s | %(pathname)s | %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | %(message)s')
+formatter = logging.Formatter(
+    "%(asctime)s | %(pathname)s | %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | %(message)s"
+)
 handler.setFormatter(formatter)
 
 # Add handler to the app logger
 app.logger.addHandler(handler)
 
-@app.before_request   
+
+@app.before_request
 def log_endpoint():
     """
     Logs information about the endpoint accessed and the client that accessed it.
@@ -42,9 +47,11 @@ def log_endpoint():
     Returns:
         None
     """
-    
-    app.logger.info(f'Someone accessed the website {request.remote_addr} {request.path}')    
-    
+
+    app.logger.info(
+        f"Someone accessed the website {request.remote_addr} {request.path}"
+    )
+
     if request.path in {"/", "/projects", "/skills", "/education", "/resume"}:
         setup_request(request, request.path)
 
@@ -63,11 +70,15 @@ def commit_diagnostics(response):
     Returns:
         The Flask response object.
     """
-    
+
     if request.args.get("endpoint_id"):
         app.logger.info("Commiting endpoint diagonstic")
-        commit_endpoint_diagnostics(request.args.get("endpoint_id"), f"Html associated with  {request.remote_addr}", "")
-        
+        commit_endpoint_diagnostics(
+            request.args.get("endpoint_id"),
+            f"Html associated with  {request.remote_addr}",
+            "",
+        )
+
     return response
 
 
@@ -79,11 +90,11 @@ def home_route():
     Returns:
         A Flask response object containing the contents of the 'index.html' file in the app's static directory.
     """
-    
-    return send_from_directory(app.static_folder, 'index.html')
+
+    return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route('/<path>')
+@app.route("/<path>")
 def render_path(path: str):
     """
     A Flask view function that attempts to return a file based on the provided URL path.
@@ -98,10 +109,10 @@ def render_path(path: str):
         A Flask response object containing the contents of the requested file, or a 404 response if the requested
         file does not exist.
     """
-    
+
     # accept paths which we have files for
     if path in {"projects", "skills", "education", "resume"}:
-        return send_from_directory(app.static_folder, 'index.html')
+        return send_from_directory(app.static_folder, "index.html")
     # Serve static files for other paths
     elif path in {"robots.txt", "sitemap.xml"}:
         return send_from_directory(app.root_path + "/static/", path)

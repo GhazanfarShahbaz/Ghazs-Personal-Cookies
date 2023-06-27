@@ -5,6 +5,7 @@ from typing import List
 from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.event_model import Event
 
+
 class EventRepository(object):
     """
     A class representing a data store for Event objects.
@@ -73,9 +74,10 @@ class EventRepository(object):
         Raises:
             ValueError: If the `event_id` parameter is not a valid ID for an event object.
         """
-        
-        event: Event = self.session.query(Event).filter(
-            Event.EventId == event_id).first()
+
+        event: Event = (
+            self.session.query(Event).filter(Event.EventId == event_id).first()
+        )
 
         if update_dictionary.get("Name"):
             event.Name = update_dictionary["Name"]
@@ -94,7 +96,9 @@ class EventRepository(object):
 
         self.session.commit()
 
-    def update_by_recurrance_id(self, recurrance_id: int, update_dictionary: dict) -> None:
+    def update_by_recurrance_id(
+        self, recurrance_id: int, update_dictionary: dict
+    ) -> None:
         """
         Updates one or more Event objects in the database with the specified changes.
 
@@ -112,9 +116,10 @@ class EventRepository(object):
         Raises:
             ValueError: If the `recurrance_id` parameter is not a valid ID for an event recurrence pattern.
         """
-        
-        self.session.query(Event).filter(
-            Event.ReccuranceId == recurrance_id).update(update_dictionary)
+
+        self.session.query(Event).filter(Event.ReccuranceId == recurrance_id).update(
+            update_dictionary
+        )
         self.session.commit()
 
     def get(self, filters: dict) -> List[Event]:
@@ -133,15 +138,14 @@ class EventRepository(object):
         Raises:
             ValueError: If an invalid filter key is included in the input dictionary.
         """
-        
+
         query: Query = self.session.query(Event)
 
         if filters.get("EventIds"):
             query = query.filter(Event.EventId.in_(filters["EventIds"]))
 
         if filters.get("ReccuranceIds"):
-            query = query.filter(
-                Event.ReccuranceId.in_(filters["ReccuranceIds"]))
+            query = query.filter(Event.ReccuranceId.in_(filters["ReccuranceIds"]))
 
         if filters.get("Name"):
             if filters.get("NameExact") is None or filters["NameExact"] is True:
@@ -185,15 +189,14 @@ class EventRepository(object):
         Raises:
             ValueError: If an invalid filter key is included in the input dictionary.
         """
-        
+
         query: Query = self.session.query(Event)
 
         if filters.get("EventIds"):
             query = query.filter(Event.EventId.in_(filters["EventIds"]))
 
         if filters.get("ReccuranceIds"):
-            query = query.filter(
-                Event.ReccuranceId.in_(filters["ReccuranceIds"]))
+            query = query.filter(Event.ReccuranceId.in_(filters["ReccuranceIds"]))
 
         if filters.get("Name"):
             if filters.get("NameExact") is None or filters["NameExact"] is True:
@@ -232,7 +235,6 @@ class EventRepository(object):
         Returns:
             An integer representing the number of unique recurrence IDs in the database.
         """
-        
-        query: Query = self.session.query(
-            func.max(distinct(Event.ReccuranceId)))
+
+        query: Query = self.session.query(func.max(distinct(Event.ReccuranceId)))
         return query.first()[0] + 1 if query.first()[0] else 0

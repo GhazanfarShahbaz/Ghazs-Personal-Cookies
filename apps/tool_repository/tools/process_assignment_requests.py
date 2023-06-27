@@ -18,7 +18,7 @@ def process_create_assignment(assignment_data: dict) -> None:
     Returns:
         None. The function does not return anything.
     """
-    
+
     AssignmentRepository().insert(assignment_data)
 
 
@@ -36,9 +36,10 @@ def process_update_assignment(update_form: dict) -> None:
     Returns:
         None. The function does not return anything.
     """
-    
-    AssignmentRepository().update(update_form.get(
-        "AssignmentId"), update_form.get("UpdateParams"))
+
+    AssignmentRepository().update(
+        update_form.get("AssignmentId"), update_form.get("UpdateParams")
+    )
 
 
 def process_get_assignment_request(filter_form: dict) -> List[dict]:
@@ -56,7 +57,7 @@ def process_get_assignment_request(filter_form: dict) -> List[dict]:
         A list of dictionaries representing the retrieved assignments. Each dictionary contains the fields "AssignmentId",
         "UserId", "ClassId", "StartDate", "EndDate", and "Status".
     """
-    
+
     assignment_list: List[Assignment] = AssignmentRepository().get(filter_form)
 
     return assignment_type_list_to_event_dict_list(assignment_list)
@@ -70,11 +71,11 @@ def process_delete_assignment_request(delete_form: dict) -> None:
     from the AssignmentRepository.
 
     Args:
-        delete_form: A dictionary representing the delete data from a request. The required fields are "AssignmentId", "UserId", 
+        delete_form: A dictionary representing the delete data from a request. The required fields are "AssignmentId", "UserId",
         and "ClassId".
 
     Returns:
         None. The function does not return anything.
     """
-    
+
     AssignmentRepository().delete(delete_form)
