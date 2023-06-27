@@ -5,7 +5,7 @@ from typing import Dict, List
 
 FUNCTION_MAPPER: Dict[str, callable] = {
     "client": boto3.client,
-    "resource": boto3.resource
+    "resource": boto3.resource,
 }
 
 
@@ -19,13 +19,13 @@ def get_aws_credentials() -> Dict[str, str]:
         - AWS_ACCESS_KEY
         - AWS_PASSWORD
         - AWS_REGION_NAME
-    
+
     Returns:
         A dictionary containing the AWS credentials.
     """
-    
+
     return {
-        "AWS_FILE_SERVICE":  environ["AWS_FILE_SERVICE"],
+        "AWS_FILE_SERVICE": environ["AWS_FILE_SERVICE"],
         "AWS_ACCESS_KEY_ID": environ["AWS_ACCESS_KEY_ID"],
         "AWS_ACCESS_KEY": environ["AWS_ACCESS_KEY"],
         "AWS_PASSWORD": environ["AWS_PASSWORD"],
@@ -49,7 +49,7 @@ def get_aws_client_or_resource(aws_type: str) -> any:
     Raises:
         KeyError: If the supplied aws_type is not a valid key in the FUNCTION_MAPPER dictionary.
     """
-    
+
     credentials: Dict[str, str] = get_aws_credentials()
 
     client_or_resource = FUNCTION_MAPPER[aws_type](
@@ -67,7 +67,7 @@ def upload_file(file, content_type) -> str:
     Uploads a file to an AWS S3 bucket.
 
     This function takes a file and a content type as input, and uploads the file to an AWS S3 bucket using the boto3 client
-    associated with the AWS environment variables. 
+    associated with the AWS environment variables.
 
     Args:
         file: The file to be uploaded.
@@ -77,7 +77,7 @@ def upload_file(file, content_type) -> str:
         A string representing the success or failure of the upload process.
 
     """
-    
+
     client = get_aws_client_or_resource("client")
     bucket_name: str = environ["AWS_BUCKET_NAME"]
 
@@ -86,7 +86,7 @@ def upload_file(file, content_type) -> str:
             Body=file,
             Bucket=bucket_name,
             Key=f"server_files/{file.filename}",
-            ContentType=content_type
+            ContentType=content_type,
         )
     except:
         return "failed to upload file"
@@ -110,13 +110,10 @@ def delete_file(bucket_name: str, file_path: str) -> str:
     Returns:
         A string representing the success or failure of the file deletion process.
     """
-    
+
     client = get_aws_client_or_resource("client")
 
-    client.delete_object(
-        Bucket=bucket_name,
-        Key=file_path
-    )
+    client.delete_object(Bucket=bucket_name, Key=file_path)
 
     return "Success"
 
@@ -137,23 +134,20 @@ def list_bucket_files(bucket_name: str, prefix: str) -> Dict[Dict, List[str]]:
         A dictionary with two keys: "files" and "folders". The "files" key contains a list of all the files in the bucket
         with the specified prefix, while the "folders" key contains a list of all the folders in the bucket with the specified prefix.
     """
-    
+
     client = get_aws_client_or_resource("resource")
     bucket = client.Bucket(bucket_name)
     prefix = prefix.strip()
 
-    bucket_data: list = bucket.objects.all(
-    ) if not prefix else bucket.objects.filter(Prefix=prefix)
+    bucket_data: list = (
+        bucket.objects.all() if not prefix else bucket.objects.filter(Prefix=prefix)
+    )
 
-    data: Dict[Dict, List[str]] = {
-        "files": [],
-        "folders": []
-    }
+    data: Dict[Dict, List[str]] = {"files": [], "folders": []}
 
     for file in bucket_data:
         bucket_entry_name: str = file.key
-        entry_type: str = "files" if not bucket_entry_name.endswith(
-            "/") else "folders"
+        entry_type: str = "files" if not bucket_entry_name.endswith("/") else "folders"
 
         data[entry_type].append(file.key)
 

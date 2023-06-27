@@ -2,11 +2,11 @@ from sqlalchemy import ARRAY, Column, DateTime, JSON, Integer, String, Text
 
 from . import Base
 
+
 class Definition(Base):
     __tablename__ = "definitions"
 
-    DefinitionId = Column("DefinitionId", Integer,
-                          autoincrement=True, primary_key=True)
+    DefinitionId = Column("DefinitionId", Integer, autoincrement=True, primary_key=True)
 
     ClassName = Column("ClassName", String(128), nullable=False)
     FileName = Column("FileName", String(128), nullable=False)
@@ -23,5 +23,5 @@ class Definition(Base):
             "DefinitionId": self.DefinitionId,
             "ClassName": self.ClassName,
             "FileName": self.FileName,
-            "Definition": self.Definition
+            "Definition": self.Definition,
         }

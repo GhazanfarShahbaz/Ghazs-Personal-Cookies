@@ -1,4 +1,6 @@
-from apps.personal_website.requests import app  # pylint: disable=import-error, useless-option-value, nknown-option-value, unrecognized-option
+from apps.personal_website.requests import (
+    app,
+)  # pylint: disable=import-error, useless-option-value, nknown-option-value, unrecognized-option
 
 
 def test_get_home():
@@ -29,13 +31,14 @@ def test_get_resume():
     response = app.test_client().get("/resume")
 
     assert response.status_code == 200
-    
+
 
 def test_get_robots_txt():
     response = app.test_client().get("/robots.txt")
 
     assert response.status_code == 200
-    
+
+
 def test_get_sitemap():
     response = app.test_client().get("/sitemap.xml")
 

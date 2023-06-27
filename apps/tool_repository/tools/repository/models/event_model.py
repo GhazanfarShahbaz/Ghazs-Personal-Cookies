@@ -2,6 +2,7 @@ from sqlalchemy import ARRAY, Column, DateTime, JSON, Integer, String
 
 from . import Base
 
+
 class Event(Base):
     __tablename__ = "events"
 
@@ -35,5 +36,5 @@ class Event(Base):
             "EndDate": self.EndDate,
             "Type": self.Type,
             "Description": self.Description,
-            "ReccuranceType": self.ReccuranceType
+            "ReccuranceType": self.ReccuranceType,
         }

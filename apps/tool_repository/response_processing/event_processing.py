@@ -17,7 +17,7 @@ def print_events(event_list: List[dict], exclude_attributes: Set[str]) -> List[s
     Returns:
         A list of strings representing the events in the input list.
     """
-    
+
     event_string_list: List[str] = []
     for event in event_list:
         event_string_list.append(print_event(event, exclude_attributes))
@@ -62,8 +62,12 @@ def dates_to_string(start_date: datetime, end_date: datetime) -> str:
     Returns:
         A string representing the time interval between the start and end dates.
     """
-    
-    if start_date.day == end_date.day and start_date.month == end_date.month and start_date.year == end_date.year:
+
+    if (
+        start_date.day == end_date.day
+        and start_date.month == end_date.month
+        and start_date.year == end_date.year
+    ):
         return f"{color(start_date.strftime(f'%B %d %Y'), 'grey4')} at {color(start_date.strftime('%I:%M %p'), 'yellow')} - {color(end_date.strftime('%I:%M %p'), 'yellow')} "
 
     return f"{color(start_date.strftime(f'%B %d %Y'), 'grey4')} {color(start_date.strftime('%I:%M %p'), 'yellow')} - {color(end_date.strftime(f'%B %d %Y'), 'grey4')} {color(end_date.strftime('%I:%M %p'), 'yellow')} "

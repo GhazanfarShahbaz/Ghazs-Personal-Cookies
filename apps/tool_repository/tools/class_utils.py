@@ -20,8 +20,8 @@ def class_type_list_to_event_dict_list(class_list: List[Class]) -> List[dict]:
     Raises:
         TypeError: If the input list contains objects that are not of type Class.
     """
-    
+
     if not all(isinstance(_class, Class) for _class in class_list):
         raise TypeError("All items in the list must be of type `Class`")
-    
+
     return [_class.to_dict() for _class in class_list]

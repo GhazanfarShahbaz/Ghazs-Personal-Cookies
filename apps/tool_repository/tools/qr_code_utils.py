@@ -40,7 +40,7 @@ def qr_code_to_io(qr_code) -> BytesIO:
         A BytesIO object containing the QR code image data.
     """
     img_io = BytesIO()
-    qr_code.save(img_io, 'PNG', quality=70)
+    qr_code.save(img_io, "PNG", quality=70)
     img_io.seek(0)
 
     return img_io

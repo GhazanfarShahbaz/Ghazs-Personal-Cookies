@@ -1,19 +1,26 @@
-from . import Base 
+from . import Base
 
-from sqlalchemy import ARRAY, Column, DateTime, JSON, Integer, String, ForeignKey, Boolean
+from sqlalchemy import (
+    ARRAY,
+    Column,
+    DateTime,
+    JSON,
+    Integer,
+    String,
+    ForeignKey,
+    Boolean,
+)
+
 
 class Assignment(Base):
     __tablename__ = "assignments"
 
-    SectionId = Column("SectionId", ForeignKey(
-        "syllabi.SectionId", ondelete="CASCADE"))
-    AssignmentId = Column("AssignmentId", Integer,
-                          autoincrement=True, primary_key=True)
+    SectionId = Column("SectionId", ForeignKey("syllabi.SectionId", ondelete="CASCADE"))
+    AssignmentId = Column("AssignmentId", Integer, autoincrement=True, primary_key=True)
 
     Name = Column("Name", String(64), nullable=False)
     Grade = Column("Grade", Integer, nullable=False)
-    DateAssigned = Column("DateAssigned", DateTime(
-        timezone=True), nullable=True)
+    DateAssigned = Column("DateAssigned", DateTime(timezone=True), nullable=True)
     DateDue = Column("DateDue", DateTime(timezone=True), nullable=True)
     Submitted = Column("Submitted", Boolean, nullable=False, default=False)
 

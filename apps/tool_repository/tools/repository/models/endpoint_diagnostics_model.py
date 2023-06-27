@@ -1,19 +1,19 @@
 from sqlalchemy import ARRAY, Column, DateTime, JSON, Integer, String, Float
 
-from . import Base 
+from . import Base
+
 
 class EndpointDiagnostics(Base):
     __tablename__ = "endpoint_"
 
-    DiagnosticId = Column("DiagnosticId", Integer,
-                          autoincrement=True, primary_key=True)
+    DiagnosticId = Column("DiagnosticId", Integer, autoincrement=True, primary_key=True)
     Endpoint = Column("Endpoint", String(1024), nullable=False)
     Request = Column("Request", JSON, nullable=False)
     Response = Column("Response", JSON, nullable=False)
     Date = Column("Date", DateTime(timezone=True), nullable=False)
     Error = Column("Error", String(1024), nullable=False)
     Latency = Column("Float", Float, nullable=False)
-    
+
     def __init__(self, diagnostics_information: dict) -> None:
         self.Endpoint = diagnostics_information.get("Endpoint")
         self.Request = diagnostics_information.get("Request")
@@ -30,5 +30,5 @@ class EndpointDiagnostics(Base):
             "Response": self.Response,
             "Date": self.Date,
             "Error": self.Error,
-            "Latency": self.Latency
+            "Latency": self.Latency,
         }

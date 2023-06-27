@@ -1,7 +1,19 @@
-from sqlalchemy import ARRAY, Boolean, Column, DateTime, JSON, Float, Integer, String, Text, ForeignKey
-from sqlalchemy.orm import  relationship
+from sqlalchemy import (
+    ARRAY,
+    Boolean,
+    Column,
+    DateTime,
+    JSON,
+    Float,
+    Integer,
+    String,
+    Text,
+    ForeignKey,
+)
+from sqlalchemy.orm import relationship
 
-from . import Base 
+from . import Base
+
 
 class Class(Base):
     __tablename__ = "classes"
@@ -14,8 +26,12 @@ class Class(Base):
     Name = Column("Name", String(128), nullable=False)
     Semester = Column("Semester", String(128), nullable=False)
 
-    Syllabus = relationship("Syllabus", backref="classes",
-                            cascade="all, delete-orphan", passive_deletes=True)
+    Syllabus = relationship(
+        "Syllabus",
+        backref="classes",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
     def __init__(self, class_inforamtion: dict) -> None:
         self.Department = class_inforamtion.get("Department")
