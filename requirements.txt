@@ -19,6 +19,7 @@ dill==0.3.6
 exceptiongroup==1.0.0rc9
 firebase-admin==6.0.1
 Flask==2.2.2
+Flask-Cors==4.0.0
 google-api-core==2.10.2
 google-api-python-client==2.65.0
 google-auth==2.13.0
