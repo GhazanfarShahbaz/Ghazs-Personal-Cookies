@@ -4,6 +4,7 @@ from typing import List
 from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.class_model import Class
 
+
 class ClassRepository(object):
     """
     A class representing a data store for Class objects.
@@ -19,7 +20,7 @@ class ClassRepository(object):
         """
         Creates a new ClassRepository object and initializes an SQLAlchemy session.
         """
-        
+
         self.session: Session = Sess()
 
     def __enter__(self):
@@ -30,7 +31,7 @@ class ClassRepository(object):
         for the ClassRepository object. Returns the current object as the context
         manager value.
         """
-        
+
         return self
 
     def __exit__(self, type, value, traceback):
@@ -41,7 +42,7 @@ class ClassRepository(object):
         that created this context manager is exited. This function closes the SQLAlchemy
         session.
         """
-        
+
         self.session.close()
 
     def insert(self, _class_: Class) -> int:
@@ -58,7 +59,7 @@ class ClassRepository(object):
         Returns:
             The ID of the inserted Class.
         """
-        
+
         self.session.add(_class_)
         self.session.commit()
         return _class_.ClassId
@@ -81,9 +82,10 @@ class ClassRepository(object):
         Raises:
             ValueError: If the `class_id` parameter is not a valid ID for a Class object.
         """
-    
-        _class_: Class = self.session.query(Class).filter(
-            Class.ClassId == class_id).first()
+
+        _class_: Class = (
+            self.session.query(Class).filter(Class.ClassId == class_id).first()
+        )
 
         if update_dictionary.get("Department"):
             _class_.Department = update_dictionary["Department"]
@@ -118,7 +120,7 @@ class ClassRepository(object):
         Raises:
             ValueError: If an invalid filter key is included in the input dictionary.
         """
-        
+
         query: Query = self.session.query(Class)
 
         if filters.get("ClassIds"):
@@ -161,7 +163,7 @@ class ClassRepository(object):
         Raises:
             ValueError: If an invalid filter key is included in the input dictionary.
         """
-        
+
         query: Query = self.session.qeury(Class)
         if filters.get("ClassIds"):
             query = query.filter(Class.ClassId.in_(filters["ClassIds"]))

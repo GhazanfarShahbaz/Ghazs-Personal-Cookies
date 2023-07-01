@@ -29,7 +29,7 @@ class SyllabusRepository(object):
         This function is called when the `with` statement is used to create a context
         for the SyllabusRepository object. Does nothing, and returns None.
         """
-        
+
         pass
 
     def __exit__(self, type, value, traceback):
@@ -40,7 +40,7 @@ class SyllabusRepository(object):
         that created this context manager is exited. This function closes the SQLAlchemy
         session.
         """
-        
+
         self.session.close()
 
     def insert(self, syllabus: Syllabus) -> int:
@@ -55,7 +55,7 @@ class SyllabusRepository(object):
         Returns:
             An integer representing the ID of the new Syllabus object in the database.
         """
-        
+
         self.session.add(syllabus)
         self.session.commit()
         return syllabus.SectionId
@@ -74,9 +74,12 @@ class SyllabusRepository(object):
         Returns:
             None.
         """
-        
-        syllabus: Syllabus = self.session.query(Syllabus).filter(
-            Syllabus.SectionId == section_id).first()
+
+        syllabus: Syllabus = (
+            self.session.query(Syllabus)
+            .filter(Syllabus.SectionId == section_id)
+            .first()
+        )
 
         if update_dictionary.get("Section"):
             syllabus.Section = update_dictionary["Section"]
@@ -106,13 +109,17 @@ class SyllabusRepository(object):
             ValueError: If an invalid filter key is included in the input dictionary.
         """
         query: Query = self.session.query(Syllabus).join(
-            Class, Class.ClassId == Syllabus.ClassId)
+            Class, Class.ClassId == Syllabus.ClassId
+        )
 
         if filters.get("ClassIds"):
             query = query.filter(Class.ClassId.in_(filters["ClassIds"]))
 
         if filters.get("ClassName"):
-            if filters.get("ClassNameExact") is None or filters["ClassNameExact"] is True:
+            if (
+                filters.get("ClassNameExact") is None
+                or filters["ClassNameExact"] is True
+            ):
                 query = query.filter(Class.Name == filters["ClassName"])
             else:
                 query = query.filter(Class.Name.like(filters["ClassName"]))
@@ -147,15 +154,19 @@ class SyllabusRepository(object):
         Raises:
             ValueError: If an invalid filter key is included in the input dictionary.
         """
-        
+
         query: Query = self.session.query(Syllabus).join(
-            Class, Class.ClassId == Syllabus.ClassId)
+            Class, Class.ClassId == Syllabus.ClassId
+        )
 
         if filters.get("ClassIds"):
             query = query.filter(Class.ClassId.in_(filters["ClassIds"]))
 
         if filters.get("ClassName"):
-            if filters.get("ClassNameExact") is None or filters["ClassNameExact"] is True:
+            if (
+                filters.get("ClassNameExact") is None
+                or filters["ClassNameExact"] is True
+            ):
                 query = query.filter(Class.Name == filters["ClassName"])
             else:
                 query = query.filter(Class.Name.like(filters["ClassName"]))

@@ -20,13 +20,15 @@ def setup_browser() -> Chrome:
     chrome_options.add_argument("--no-sandbox")
 
     driver = Chrome(
-        executable_path="/home/dev_tools/chromedriver", options=chrome_options)
+        executable_path="/home/dev_tools/chromedriver", options=chrome_options
+    )
     return driver
 
 
 def update_question_database() -> None:
     question_list: List[CodingQuestion] = CodingQuestionRepository().get(
-        {})  # get all current questions
+        {}
+    )  # get all current questions
     question_count: int = len(question_list)
 
     driver: Chrome = setup_browser()
@@ -34,11 +36,13 @@ def update_question_database() -> None:
         page_source: str = "https://leetcode.com/problemset/all/"
         driver.get(page_source)
         # time.sleep(5)
-        soup: BeautifulSoup = BeautifulSoup(
-            driver.page_source, features="html.parser")
+        soup: BeautifulSoup = BeautifulSoup(driver.page_source, features="html.parser")
         page_count: int = 1
 
-        for page_count_button in soup.find_all("button", class_="flex items-center justify-center w-8 h-8 rounded select-none focus:outline-none bg-fill-3 dark:bg-dark-fill-3 text-label-2 dark:text-dark-label-2 hover:bg-fill-2 dark:hover:bg-dark-fill-2"):
+        for page_count_button in soup.find_all(
+            "button",
+            class_="flex items-center justify-center w-8 h-8 rounded select-none focus:outline-none bg-fill-3 dark:bg-dark-fill-3 text-label-2 dark:text-dark-label-2 hover:bg-fill-2 dark:hover:bg-dark-fill-2",
+        ):
             try:
                 current_page_count: int = int(page_count_button.text.strip())
                 page_count = max(page_count, current_page_count)

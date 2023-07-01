@@ -7,6 +7,7 @@ from . import Base
 Engine: Engine = get_engine()
 Session = sessionmaker(Engine)
 
+
 def init_db():
     """
     Initializes the database by creating any necessary tables.
@@ -18,12 +19,12 @@ def init_db():
     Returns:
         None
     """
-    
+
     global Base, Engine
-    
+
     # Base.metadata.drop_all(bind=Engine, tables=[EndpointDiagnostics.__table__])
     Base.metadata.create_all(bind=Engine)
     print("Created Model")
-    
+
 
 # init_db()

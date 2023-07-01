@@ -5,6 +5,7 @@ from os import system
 
 # activate /env/bin/source
 
+
 def check_database_status() -> bool:
     """
     Checks the status of the MySQL database.
@@ -21,7 +22,7 @@ def check_database_status() -> bool:
             database="Productivity",
             user="root",
             password="Ghaz5134@",
-            auth_plugin='mysql_native_password'
+            auth_plugin="mysql_native_password",
         )
         connection.close()
         return True

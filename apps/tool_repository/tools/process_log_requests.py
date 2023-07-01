@@ -12,5 +12,5 @@ def process_get_logs() -> Dict[str, List[str]]:
     Returns:
         A dictionary containing the file names and their contents as a list of strings.
     """
-    
+
     return split_up_log_file()

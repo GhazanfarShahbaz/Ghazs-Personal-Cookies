@@ -2,7 +2,10 @@ from typing import List
 from sqlalchemy.orm import Session, Query
 
 from apps.tool_repository.tools.repository.models.model import Session as Sess
-from apps.tool_repository.tools.repository.models.coding_question_model import CodingQuestion
+from apps.tool_repository.tools.repository.models.coding_question_model import (
+    CodingQuestion,
+)
+
 
 class CodingQuestionRepository:
     """
@@ -28,7 +31,7 @@ class CodingQuestionRepository:
         for the CodingQuestionRepository object. Returns the current object as the context
         manager value.
         """
-        
+
         return self
 
     def __exit__(self, type, value, traceback):
@@ -39,7 +42,7 @@ class CodingQuestionRepository:
         that created this context manager is exited. This function closes the SQLAlchemy
         session.
         """
-        
+
         self.session.close()
 
     def insert(self, coding_questions: List[CodingQuestion]) -> None:
@@ -56,7 +59,7 @@ class CodingQuestionRepository:
         Returns:
             None
         """
-        
+
         for coding_question in coding_questions:
             self.session.add(coding_question)
 
@@ -80,9 +83,13 @@ class CodingQuestionRepository:
         Raises:
             ValueError: If the `question_id` parameter is not a valid ID for a coding question object.
         """
-    
-        #retrieve the coding question object to be updated from the database
-        coding_question: CodingQuestion = self.session.query(CodingQuestion).filter(CodingQuestion.QuestionId == question_id).first()
+
+        # retrieve the coding question object to be updated from the database
+        coding_question: CodingQuestion = (
+            self.session.query(CodingQuestion)
+            .filter(CodingQuestion.QuestionId == question_id)
+            .first()
+        )
 
         # apply any changes that were requested in the update dictionary
         if update_dict.get("QuestionLink"):
@@ -103,41 +110,45 @@ class CodingQuestionRepository:
         # commit the changes to the database
         self.session.commit()
 
-
     def get(self, filters: dict) -> List[CodingQuestion]:
         query: Query = self.session.query(CodingQuestion)
 
         if filters.get("QuestionIds"):
-            query = query.filter(
-                CodingQuestion.QuestionId.in_(filters["QuestionIds"]))
+            query = query.filter(CodingQuestion.QuestionId.in_(filters["QuestionIds"]))
 
         if filters.get("QuestionName"):
-            if filters.get("QuestionNameExact") is None or filters["QuestionNameExact"] is True:
+            if (
+                filters.get("QuestionNameExact") is None
+                or filters["QuestionNameExact"] is True
+            ):
                 query = query.filter(
-                    CodingQuestion.QuestionName == filters["QuestionName"])
+                    CodingQuestion.QuestionName == filters["QuestionName"]
+                )
             else:
                 query = query.filter(
-                    CodingQuestion.QuestionName.like(filters["QuestionName"]))
+                    CodingQuestion.QuestionName.like(filters["QuestionName"])
+                )
 
         if filters.get("QuestionLink"):
-            query = query.filter(
-                CodingQuestion.QuestionLink == filters["QuestionLink"])
+            query = query.filter(CodingQuestion.QuestionLink == filters["QuestionLink"])
 
         if filters.get("Difficulties"):
-            query = query.filter(
-                CodingQuestion.Difficulty.in_(filters["Difficulties"]))
+            query = query.filter(CodingQuestion.Difficulty.in_(filters["Difficulties"]))
 
         if filters.get("AcceptanceRateFrom"):
             query = query.filter(
-                CodingQuestion.AcceptanceRate >= filters["AcceptanceRateFrom"])
+                CodingQuestion.AcceptanceRate >= filters["AcceptanceRateFrom"]
+            )
 
         if filters.get("AcceptanceRateTo"):
             query = query.filter(
-                CodingQuestion.AcceptanceRate >= filters["AcceptanceRateTo"])
+                CodingQuestion.AcceptanceRate >= filters["AcceptanceRateTo"]
+            )
 
         if filters.get("RequiresSubscription") is not None:
             query = query.filter(
-                CodingQuestion.RequiresSubscription == filters["RequiresSubscription"])
+                CodingQuestion.RequiresSubscription == filters["RequiresSubscription"]
+            )
 
         return query.all()
 
@@ -157,42 +168,47 @@ class CodingQuestionRepository:
         Raises:
             ValueError: If an invalid filter key is included in the input dictionary.
         """
-        
+
         # create a query object for the CodingQuestion table
         query: Query = self.session.query(CodingQuestion)
 
         # filter the query based on the input filter dictionary
         if filters.get("QuestionIds"):
-            query = query.filter(
-                CodingQuestion.QuestionId.in_(filters["QuestionIds"]))
+            query = query.filter(CodingQuestion.QuestionId.in_(filters["QuestionIds"]))
 
         if filters.get("QuestionName"):
-            if filters.get("QuestionNameExact") is None or filters["QuestionNameExact"] is True:
+            if (
+                filters.get("QuestionNameExact") is None
+                or filters["QuestionNameExact"] is True
+            ):
                 query = query.filter(
-                    CodingQuestion.QuestionName == filters["QuestionName"])
+                    CodingQuestion.QuestionName == filters["QuestionName"]
+                )
             else:
                 query = query.filter(
-                    CodingQuestion.QuestionName.like(filters["QuestionName"]))
+                    CodingQuestion.QuestionName.like(filters["QuestionName"])
+                )
 
         if filters.get("QuestionLink"):
-            query = query.filter(
-                CodingQuestion.QuestionLink == filters["QuestionLink"])
+            query = query.filter(CodingQuestion.QuestionLink == filters["QuestionLink"])
 
         if filters.get("Difficulties"):
-            query = query.filter(
-                CodingQuestion.Difficulty.in_(filters["Difficulties"]))
+            query = query.filter(CodingQuestion.Difficulty.in_(filters["Difficulties"]))
 
         if filters.get("AcceptanceRateFrom"):
             query = query.filter(
-                CodingQuestion.AcceptanceRate >= filters["AcceptanceRateFrom"])
+                CodingQuestion.AcceptanceRate >= filters["AcceptanceRateFrom"]
+            )
 
         if filters.get("AcceptanceRateTo"):
             query = query.filter(
-                CodingQuestion.AcceptanceRate >= filters["AcceptanceRateTo"])
+                CodingQuestion.AcceptanceRate >= filters["AcceptanceRateTo"]
+            )
 
         if filters.get("RequiresSubscription") is not None:
             query = query.filter(
-                CodingQuestion.RequiresSubscription == filters["RequiresSubscription"])
+                CodingQuestion.RequiresSubscription == filters["RequiresSubscription"]
+            )
 
         # execute the query and return the result as a list of coding question objects
         return query.all()

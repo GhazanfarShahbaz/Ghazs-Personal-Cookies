@@ -20,11 +20,9 @@ def test_get_login_one():
 
 
 def test_get_login_two():
-    login_allow = users_ref.document('allow')
+    login_allow = users_ref.document("allow")
 
-    login_allow.update({
-        u'allow': True
-    })
+    login_allow.update({u"allow": True})
 
     response = get_login(False)
 
@@ -46,33 +44,29 @@ def test_get_login_three():
 
 
 def test_validate_user():
-    login_allow = users_ref.document('allow')
+    login_allow = users_ref.document("allow")
 
-    login_allow.update({
-        u'allow': True
-    })
+    login_allow.update({u"allow": True})
     response = validate_user(credentials["username"], credentials["password"])
 
     assert response is True
 
 
 def test_validate_get_help_one():
-    login_allow = users_ref.document('allow')
+    login_allow = users_ref.document("allow")
 
-    login_allow.update({
-        u'allow': True
-    })
+    login_allow.update({u"allow": True})
 
     response = app.test_client().post(
         "/getHelp",
         json={
-            "username": credentials['username'],
-            "password": credentials['password'],
-            "command": "getTranslation"
-        }
+            "username": credentials["username"],
+            "password": credentials["password"],
+            "command": "getTranslation",
+        },
     )
 
-    response_dict = json.loads(response.data.decode('UTF-8'))
+    response_dict = json.loads(response.data.decode("UTF-8"))
 
     assert response.status_code == 200
     assert response_dict == {
@@ -83,67 +77,61 @@ def test_validate_get_help_one():
             "translationForm": {
                 "text": "a required parameter, string type",
                 "source": "an optional parameter, string type",
-                "target": "an optional parameter, string type"
-            }
-        }
+                "target": "an optional parameter, string type",
+            },
+        },
     }
 
 
 def test_validate_get_help_two():
-    login_allow = users_ref.document('allow')
+    login_allow = users_ref.document("allow")
 
-    login_allow.update({
-        u'allow': True
-    })
+    login_allow.update({u"allow": True})
 
     response = app.test_client().post(
         "/getHelp",
         json={
-            "username": credentials['username'],
-            "password": credentials['password'],
-            "command": "somethingFake"
-        }
+            "username": credentials["username"],
+            "password": credentials["password"],
+            "command": "somethingFake",
+        },
     )
 
-    response_dict = json.loads(response.data.decode('UTF-8'))
+    response_dict = json.loads(response.data.decode("UTF-8"))
 
     assert response.status_code == 200
     assert response_dict == {}
 
 
 def test_validate_get_current_weather():
-    login_allow = users_ref.document('allow')
+    login_allow = users_ref.document("allow")
 
-    login_allow.update({
-        u'allow': True
-    })
+    login_allow.update({u"allow": True})
 
     response = app.test_client().post(
         "/getCurrentWeather",
         json={
-            "username": credentials['username'],
-            "password": credentials['password'],
-        }
+            "username": credentials["username"],
+            "password": credentials["password"],
+        },
     )
 
-    response_dict = json.loads(response.data.decode('UTF-8'))
+    response_dict = json.loads(response.data.decode("UTF-8"))
 
     assert response.status_code == 200
     assert "weather" in response_dict
 
 
 def test_create_event():
-    login_allow = users_ref.document('allow')
+    login_allow = users_ref.document("allow")
 
-    login_allow.update({
-        u'allow': True
-    })
+    login_allow.update({u"allow": True})
 
     response = app.test_client().post(
         "/createEvent",
         json={
-            "username": credentials['username'],
-            "password": credentials['password'],
+            "username": credentials["username"],
+            "password": credentials["password"],
             "eventForm": {
                 "StartDate": "08/27/2001 12:00 AM",
                 "EndDate": "08/27/2001 12:01 AM",
@@ -151,9 +139,9 @@ def test_create_event():
                 "Location": "TEST",
                 "Type": "TEST",
                 "Description": "TEST",
-                "ReccuranceType": ""
-            }
-        }
+                "ReccuranceType": "",
+            },
+        },
     )
 
     assert response.status_code == 200
@@ -161,24 +149,22 @@ def test_create_event():
 
 
 def test_get_event():
-    login_allow = users_ref.document('allow')
+    login_allow = users_ref.document("allow")
 
-    login_allow.update({
-        u'allow': True
-    })
+    login_allow.update({u"allow": True})
 
     response = app.test_client().post(
         "/getEvent",
         json={
-            "username": credentials['username'],
-            "password": credentials['password'],
+            "username": credentials["username"],
+            "password": credentials["password"],
             "filterForm": {
                 "Name": "TEST",
-            }
-        }
+            },
+        },
     )
 
-    response_dict = json.loads(response.data.decode('UTF-8'))
+    response_dict = json.loads(response.data.decode("UTF-8"))
 
     print(response_dict)
     assert response.status_code == 200
@@ -186,21 +172,19 @@ def test_get_event():
 
 
 def test_delete_event():
-    login_allow = users_ref.document('allow')
+    login_allow = users_ref.document("allow")
 
-    login_allow.update({
-        u'allow': True
-    })
+    login_allow.update({u"allow": True})
 
     response = app.test_client().post(
         "/deleteEvent",
         json={
-            "username": credentials['username'],
-            "password": credentials['password'],
+            "username": credentials["username"],
+            "password": credentials["password"],
             "deleteForm": {
                 "Name": "TEST",
-            }
-        }
+            },
+        },
     )
 
     assert response.status_code == 200

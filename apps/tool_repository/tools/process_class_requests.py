@@ -36,7 +36,9 @@ def process_update_class(update_form: dict) -> None:
         None. The function does not return anything.
     """
 
-    ClassRepository().update(update_form.get("ClassId"), update_form.get("UpdateParams"))
+    ClassRepository().update(
+        update_form.get("ClassId"), update_form.get("UpdateParams")
+    )
 
 
 def process_get_class_request(filter_form: dict) -> List[dict]:

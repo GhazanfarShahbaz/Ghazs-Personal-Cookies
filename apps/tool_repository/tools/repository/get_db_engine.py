@@ -13,7 +13,7 @@ def get_engine() -> Engine:
     Returns:
         An SQLAlchemy engine object that can be used to connect to a database.
     """
-    
+
     sql_type: str = environ["SQL_TYPE"]
     sql_host: str = environ["SQL_HOST"]
     sql_password: str = environ["SQL_PASSWORD"]
@@ -22,5 +22,6 @@ def get_engine() -> Engine:
     sql_username: str = environ["SQL_USERNAME"]
 
     engine: Engine = create_engine(
-        f"{sql_type}://{sql_username}:{sql_password}@{sql_host}:{sql_port}/{sql_database}")
+        f"{sql_type}://{sql_username}:{sql_password}@{sql_host}:{sql_port}/{sql_database}"
+    )
     return engine

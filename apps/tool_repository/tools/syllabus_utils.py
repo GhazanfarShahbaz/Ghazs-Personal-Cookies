@@ -15,5 +15,5 @@ def syllabus_type_list_to_event_dict_list(syllabus_list: List[dict]) -> List[Syl
     Returns:
         A list of Syllabus objects.
     """
-    
+
     return [syllabus.to_dict() for syllabus in syllabus_list]

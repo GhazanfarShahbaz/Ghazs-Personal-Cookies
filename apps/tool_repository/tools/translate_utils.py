@@ -20,7 +20,7 @@ def get_languages_and_abbreviations() -> Tuple[Set[str], Dict[str, str]]:
     client = translate.Client()
 
     for language_dict in client.get_languages():
-        abbreviation: str = language_dict['language']
+        abbreviation: str = language_dict["language"]
 
         abbreviations.add(abbreviation)
         languages_to_abbreviations[language_dict["name"]] = abbreviation
@@ -85,6 +85,7 @@ def translate_line(text: str, source: str, target: str) -> dict:
     client = translate.Client()
 
     response["translationInformation"] = client.translate(
-        text, source_language=source, target_language=target)
+        text, source_language=source, target_language=target
+    )
 
     return response

@@ -17,7 +17,7 @@ def process_upload_file(file, content_type) -> Dict[str, str]:
     Returns:
         A dictionary containing the upload status.
     """
-    
+
     return {"status": upload_file(file, content_type)}
 
 
@@ -34,8 +34,10 @@ def process_delete_file(delete_file_form) -> Dict[str, str]:
     Returns:
         A dictionary containing the deletion status.
     """
-    
-    return {"status": delete_file(delete_file_form["bucket"], delete_file_form["FilePath"])}
+
+    return {
+        "status": delete_file(delete_file_form["bucket"], delete_file_form["FilePath"])
+    }
 
 
 def delete_process_list_bucket_files(list_file_form) -> Dict[Dict, List[str]]:
@@ -52,5 +54,5 @@ def delete_process_list_bucket_files(list_file_form) -> Dict[Dict, List[str]]:
     Returns:
         A dictionary containing the files in the specified bucket.
     """
-    
+
     return list_bucket_files(list_file_form["bucket"], list_file_form["prefix"])

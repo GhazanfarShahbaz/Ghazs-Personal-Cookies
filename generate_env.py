@@ -7,6 +7,7 @@ load_dotenv()
 
 LOADED: bool = False
 
+
 def load_environment() -> None:
     """
     Loads the environment variables from Firebase.
@@ -21,24 +22,28 @@ def load_environment() -> None:
     Raises:
         None.
     """
-    
+
     global LOADED
 
     if LOADED:
         return
-    
+
     LOADED = True
-    
+
     cred = credentials.Certificate(getenv("FIRESTORE_TOKEN"))
-    application = initialize_app(cred) 
-    
+    application = initialize_app(cred)
+
     db = firestore.client()
-    environment_vars = db.collection(getenv("FIRESTORE_SERVER")).document(getenv("FIRESTORE_ENVIRONMENT_ID")).get().to_dict()
-    
+    environment_vars = (
+        db.collection(getenv("FIRESTORE_SERVER"))
+        .document(getenv("FIRESTORE_ENVIRONMENT_ID"))
+        .get()
+        .to_dict()
+    )
+
     # delete app so it doesnt conflict with other applications
     delete_app(application)
-    
+
     # place each key into environment
     for key, value in environment_vars.items():
-        print(key, value)
         environ[key] = value

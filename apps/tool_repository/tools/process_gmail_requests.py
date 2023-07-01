@@ -24,12 +24,10 @@ def create_authorization_file(authorization_dict: Dict) -> tempfile:
     Returns:
         A handle to a temporary file containing the authorization information.
     """
-    
+
     authorization_file: tempfile = tempfile.NamedTemporaryFile()
 
-    authorization_file.write(
-        json.dumps(authorization_dict).encode('utf-8')
-    )
+    authorization_file.write(json.dumps(authorization_dict).encode("utf-8"))
 
     authorization_file.flush()
     return authorization_file
@@ -48,11 +46,9 @@ def get_credentials(authorization_dict: Dict) -> Credentials:
     Returns:
         A `Credentials` object containing the user's credentials.
     """
-    
-    authorization_file: tempfile = create_authorization_file(
-        authorization_dict)
-    creds: Credentials = Credentials.from_authorized_user_file(
-        authorization_file.name)
+
+    authorization_file: tempfile = create_authorization_file(authorization_dict)
+    creds: Credentials = Credentials.from_authorized_user_file(authorization_file.name)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
@@ -76,22 +72,22 @@ def extract_full_email(msg) -> dict:
     Returns:
         A dictionary containing the extracted email fields.
     """
-    
+
     try:
         payload = msg["payload"]
-        headers = payload['headers']
+        headers = payload["headers"]
         subject, sender = None, None
 
         for d in headers:
-            if d['name'] == 'Subject':
-                subject = d['value']
-            if d['name'] == 'From':
-                sender = d['value']
+            if d["name"] == "Subject":
+                subject = d["value"]
+            if d["name"] == "From":
+                sender = d["value"]
 
         # The Body of the message is in Encrypted format. So, we have to decode it.
         # Get the data and decode it with base 64 decoder.
-        parts = payload.get('parts')[0]
-        data = parts['body']['data']
+        parts = payload.get("parts")[0]
+        data = parts["body"]["data"]
         data = data.replace("-", "+").replace("_", "/")
         decoded_data = base64.b64decode(data)
 
@@ -105,13 +101,15 @@ def extract_full_email(msg) -> dict:
             "Snippet": msg["snippet"],
             "Subject": str(subject),
             "Sender": str(sender),
-            "Message": str(body)
+            "Message": str(body),
         }
     except:
         return {"Labels": None}
 
 
-def get_emails(authorization_dict: Dict, label_filters: list, max_results: int, get_snippet: bool) -> dict:
+def get_emails(
+    authorization_dict: Dict, label_filters: list, max_results: int, get_snippet: bool
+) -> dict:
     """
     Retrieves a list of email messages from Gmail.
 
@@ -134,31 +132,34 @@ def get_emails(authorization_dict: Dict, label_filters: list, max_results: int, 
     creds: Credentials = get_credentials(authorization_dict)
 
     # Connect to the Gmail API
-    service = build('gmail', 'v1', credentials=creds)
+    service = build("gmail", "v1", credentials=creds)
 
     # We can also pass maxResults to get any number of emails. Like this:
-    results = service.users().messages().list(
-        userId='me', labelIds=label_filters, maxResults=max_results).execute()
-    messages: list = results.get('messages')
+    results = (
+        service.users()
+        .messages()
+        .list(userId="me", labelIds=label_filters, maxResults=max_results)
+        .execute()
+    )
+    messages: list = results.get("messages")
 
     email_data: Dict = {}
     size: int = 0
 
     for message in messages:
-        msg = service.users().messages().get(
-            userId='me', id=message['id']).execute()
+        msg = service.users().messages().get(userId="me", id=message["id"]).execute()
 
         if get_snippet is True:
             subject, sender = None, None
             try:
                 payload = msg["payload"]
-                headers = payload['headers']
+                headers = payload["headers"]
 
                 for d in headers:
-                    if d['name'] == 'Subject':
-                        subject = d['value']
-                    if d['name'] == 'From':
-                        sender = d['value']
+                    if d["name"] == "Subject":
+                        subject = d["value"]
+                    if d["name"] == "From":
+                        sender = d["value"]
             except:
                 None
 

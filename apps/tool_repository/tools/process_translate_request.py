@@ -17,5 +17,7 @@ def process_translate(translate_form: dict) -> dict:
     Returns:
         A dictionary containing the translated text.
     """
-    
-    return translate_line(translate_form["text"], translate_form["source"], translate_form["target"])
+
+    return translate_line(
+        translate_form["text"], translate_form["source"], translate_form["target"]
+    )

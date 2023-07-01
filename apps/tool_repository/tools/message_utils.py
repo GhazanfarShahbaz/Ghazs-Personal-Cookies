@@ -12,7 +12,5 @@ def send_message(message: str):
     client = get_client()
 
     client.api.account.messages.create(
-        to="XX",
-        from_=environ["TWILIO_PHONE_NUMBER"],
-        body=message
+        to="XX", from_=environ["TWILIO_PHONE_NUMBER"], body=message
     )
