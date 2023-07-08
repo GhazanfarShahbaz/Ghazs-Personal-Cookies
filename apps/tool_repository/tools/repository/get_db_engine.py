@@ -22,6 +22,9 @@ def get_engine() -> Engine:
     sql_username: str = environ["SQL_USERNAME"]
 
     engine: Engine = create_engine(
-        f"{sql_type}://{sql_username}:{sql_password}@{sql_host}:{sql_port}/{sql_database}"
+        f"{sql_type}://{sql_username}:{sql_password}@{sql_host}:{sql_port}/{sql_database}",
+        pool_size=20,
+        max_overflow=20,
+        pool_recycle=3600
     )
     return engine
