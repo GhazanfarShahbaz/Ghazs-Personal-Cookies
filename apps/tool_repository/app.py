@@ -6,17 +6,23 @@ Description: A flask file for the tools application.
 Edit Log:
 07/08/2023
     - Changed file name from endpoints.py to app.py.
+    - Conformed to pylint conventions
 """
+
+import logging.config
 
 from datetime import datetime
 
+from os import environ, getenv
+
+from json import loads
+from typing import List
+
 from flask import Flask
 from flask import request, jsonify, send_file
-from flask import g as flask_globals
 
 from firebase_admin import credentials, firestore, initialize_app
 
-from os import environ, getenv
 
 from apps.tool_repository.response_processing.event_processing import print_events
 
@@ -67,10 +73,7 @@ from apps.tool_repository.tools.process_qr_code_requests import (
 from apps.tool_repository.tools.process_weather_requests import get_weather
 
 
-from typing import List
-from json import loads
 
-import logging.config
 
 app = Flask(__name__)
 
@@ -82,7 +85,9 @@ handler = logging.handlers.TimedRotatingFileHandler("logs/app.log", when="midnig
 handler.prefix = "%Y%m%d"
 
 formatter = logging.Formatter(
-    fmt="%(asctime)s | %(pathname)s | %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | %(message)s"
+    fmt="%(asctime)s | %(pathname)s | \
+        %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | \
+        %(message)s"
 )
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
@@ -94,20 +99,25 @@ initialize_app(cred)
 
 
 @app.before_request
-def log_request() -> None:
+def log_request() -> None: # pylint: disable=inconsistent-return-statements
     """
     Logs the incoming request.
 
-    This function logs the incoming request, including the IP address of the request and the path of the request.
-    If the request includes JSON data, the function logs this as well. The function then validates the request
-    user using the `validate_user` function. If the user is invalid, the function returns a status dictionary with
-    "Status": "Invalid Request". The function then sets up the request with `setup_request`.
+    This function logs the incoming request, including the IP address 
+    of the request and the path of the request.
+    If the request includes JSON data, the function logs this as well. 
+    The function then validates the request
+    user using the `validate_user` function. If the user is invalid, 
+    the function returns a status dictionary with
+    "Status": "Invalid Request". The function then sets up the request
+    with `setup_request`.
 
     Returns:
         None.
     """
 
-    app.logger.info(f" {request.remote_addr} {APP_PATH}{request.path}")
+    app.logger.info(" %s %s%s", request.remote_addr, APP_PATH, request.path)
+
     app.logger.info(request.json)
 
     content_type: str = request.content_type
@@ -130,9 +140,12 @@ def commit_diagnostics(response):
     """
     Commits endpoint diagonstic information after handling a request.
 
-    This function takes a response object and checks if the request includes an "endpoint_id" parameter.
-    If the parameter is present, the function logs a message and commits endpoint diagnostic information
-    using the `commit_endpoint_diagnostics` function. The function then returns the original response.
+    This function takes a response object and checks if the request 
+    includes an "endpoint_id" parameter.
+    If the parameter is present, the function logs a message and 
+    commits endpoint diagnostic information
+    using the `commit_endpoint_diagnostics` function. The function
+    then returns the original response.
 
     Args:
         response: A Flask response object representing the response to a request.
@@ -159,11 +172,14 @@ def get_login(from_server=False) -> dict:
     """
     Retrieves login information from Firebase.
 
-    This function retrieves login information from Firebase Firestore. If the `from_server` argument is
-    False (default), the function checks if the server is currently allowing login by checking if the "allow"
-    field of the "allow" document in the collection named in `FIRESTORE_SERVER` is True. If the field is False,
-    the function returns None. If the field is True or the `from_server` argument is True, the function sets
-    the "allow" field to False and retrieves the login information from the document specified in `FIRESTORE_DOC_ID`.
+    This function retrieves login information from Firebase Firestore.
+    If the `from_server` argument is False (default), the function checks
+    if the server is currently allowing login by checking if the "allow"
+    field of the "allow" document in the collection named in `FIRESTORE_SERVER`
+    is True. If the field is False, the function returns None. If the field is 
+    True or the `from_server` argument is True, the function sets
+    the "allow" field to False and retrieves the login information 
+    from the document specified in `FIRESTORE_DOC_ID`.
 
     Args:
         from_server: A boolean indicating whether the request is coming from a server.
@@ -175,8 +191,8 @@ def get_login(from_server=False) -> dict:
         None
     """
 
-    db = firestore.client()
-    users_ref = db.collection(environ["FIRESTORE_SERVER"])
+    firestore_client = firestore.client()
+    users_ref = firestore_client.collection(environ["FIRESTORE_SERVER"])
     login_allow = users_ref.document("allow")
 
     if not from_server and login_allow.get().to_dict()["allow"] is False:
@@ -191,11 +207,12 @@ def validate_user(username: str, password: str) -> bool:
     """
     Validates the user login credentials.
 
-    This function takes a string `username` representing the user's login username and a string `password`
-    representing the user's login password. The function retrieves the login information using the `get_login`
-    function and checks whether the provided `username` and `password` match the login information. If the
-    login information matches, the function returns True. Otherwise, the function logs a message and returns
-    False.
+    This function takes a string `username` representing the user's 
+    login username and a string `password` representing the user's login
+    password. The function retrieves the login information using the `get_login`
+    function and checks whether the provided `username` and `password` match the
+    login information. If the login information matches, the function returns True.
+    Otherwise, the function logs a message and returns False.
 
     Args:
         username: A string representing the user's login username.
@@ -218,8 +235,12 @@ def validate_user(username: str, password: str) -> bool:
         return True
 
     app.logger.info(
-        f"Invalid Username and Password were supplied {request.remote_addr} /tools/{request.path} on {datetime.now()}"
+        "Invalid Username and password were supplied %s /tools/%s on %s", 
+        request.remote_addr,
+        request.path,
+        datetime.now()
     )
+
     return False
 
 
@@ -262,8 +283,8 @@ def add_events_from_csv():
         None.
     """
 
-    # TODO
-    request_form = request.json
+    # TODO: Finish this function # pylint: disable=fixme
+    ... # pylint: disable=unnecessary-ellipsis
 
 
 @app.route("/getEvent", methods=["POST"])
@@ -351,7 +372,8 @@ def add_class():
     """
     Adds a class.
 
-    This function adds a class to the database by processing a class form included in the POST request.
+    This function adds a class to the database by processing
+    a class form included in the POST request.
 
     Returns:
         An empty dictionary.
@@ -439,7 +461,8 @@ def add_syllabus():
     """
     Adds a syllabus.
 
-    This function adds a syllabus to the database by processing a syllabus form included in the POST request.
+    This function adds a syllabus to the database by processing
+    a syllabus form included in the POST request.
 
     Returns:
         An empty dictionary.
@@ -527,7 +550,8 @@ def add_assignment():
     """
     Adds an assignment.
 
-    This function adds an assignment to the database by processing an assignment form included in the POST request.
+    This function adds an assignment to the database by processing
+    an assignment form included in the POST request.
 
     Returns:
         An empty dictionary.
@@ -624,8 +648,6 @@ def get_current_weather():
         None.
     """
 
-    request_form = request.json
-
     return get_weather()
 
 
@@ -634,8 +656,9 @@ def get_gmail_emails():
     """
     Gets Gmail emails.
 
-    This function gets emails from Gmail by calling the `get_emails` function with the `authorizationFile`,
-    `labelFilters`, `maxResults`, and `snippet` arguments included in the POST request.
+    This function gets emails from Gmail by calling the `get_emails` 
+    function with the `authorizationFile`,`labelFilters`, `maxResults`,
+    and `snippet` arguments included in the POST request.
 
     Returns:
         A JSON object containing the requested emails.
@@ -726,7 +749,7 @@ def send_message():
     Raises:
         None.
     """
-    request_form = request.json
+    ... # pylint: disable=unnecessary-ellipsis
 
 
 @app.route("/generateLinkQRCode", methods=["POST"])
@@ -734,8 +757,9 @@ def generate_qr_code_for_link():
     """
     Generates a QR code for a link.
 
-    This function generates a QR code for a provided link by processing a QR form included
-    in the POST request. The function calls the `process_generate_link_qr_code` function to generate the
+    This function generates a QR code for a provided link by
+    processing a QR form included in the POST request. The 
+    function calls the `process_generate_link_qr_code` function to generate the
     QR code, then returns it as a JPEG image.
 
     Returns:
@@ -759,8 +783,9 @@ def get_endpoints_data():
     """
     Gets endpoint diagnostics.
 
-    This function gets endpoint diagnostics by processing a filter form included in the POST request.
-    The function calls the `process_get_diagnostics` function to get the diagnostics data.
+    This function gets endpoint diagnostics by processing a
+    filter form included in the POST request. The function calls the 
+    `process_get_diagnostics` function to get the diagnostics data.
 
     Returns:
         A JSON object containing the diagnostics data.
@@ -809,8 +834,6 @@ def get_logs():
         None.
     """
 
-    request_form = request.json
-
     return process_get_logs()
 
 
@@ -819,8 +842,10 @@ def set_environment_variable():
     """
     Sets an environment variable.
 
-    This function sets an environment variable in the database by processing an environment form included in the POST request.
-    The function updates the environment variable in the database and in the server's environment variables.
+    This function sets an environment variable in the database
+    by processing an environment form included in the POST request.
+    The function updates the environment variable in the database 
+    and in the server's environment variables.
 
     Returns:
         A JSON object containing the status of the operation.
@@ -838,8 +863,8 @@ def set_environment_variable():
     if getenv(key) and not environ[environment_form["overwrite"]]:
         return {"Status": "Needs overwrite permission"}
 
-    db = firestore.client()
-    users_ref = db.collection(environ["FIRESTORE_SERVER"])
+    firestore_client = firestore.client()
+    users_ref = firestore_client.collection(environ["FIRESTORE_SERVER"])
     environment_document = users_ref.document(environ["FIRESTORE_ENVIRONMENT_ID"])
 
     environment_document.update({key: value})
