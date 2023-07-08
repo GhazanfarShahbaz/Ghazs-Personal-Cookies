@@ -5,8 +5,8 @@ from os import environ
 
 from firebase_admin import credentials, firestore
 
-from apps.tool_repository.endpoints import app
-from apps.tool_repository.endpoints import get_login, validate_user
+from apps.tool_repository.app import app
+from apps.tool_repository.app import get_login, validate_user
 
 
 db = firestore.client()

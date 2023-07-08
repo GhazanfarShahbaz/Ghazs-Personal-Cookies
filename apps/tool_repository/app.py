@@ -1,3 +1,13 @@
+"""
+file_name = app.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/08/2023
+Description: A flask file for the tools application.
+Edit Log:
+07/08/2023
+    - Changed file name from endpoints.py to app.py.
+"""
+
 from datetime import datetime
 
 from flask import Flask

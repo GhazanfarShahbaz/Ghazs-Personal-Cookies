@@ -12,7 +12,7 @@ Edit Log:
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from apps.personal_website.app import app as personal_website_app
-from apps.tool_repository.endpoints import app as tool_app
+from apps.tool_repository.app import app as tool_app
 from apps.knowledge_graph.app import app as knowledge_graph_app
 from apps.projects.the_mouseion.app import app as mouseion_app
 
