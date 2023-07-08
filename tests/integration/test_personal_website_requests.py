@@ -1,4 +1,4 @@
-from apps.personal_website.requests import (
+from apps.personal_website.app import (
     app,
 )  # pylint: disable=import-error, useless-option-value, nknown-option-value, unrecognized-option
 

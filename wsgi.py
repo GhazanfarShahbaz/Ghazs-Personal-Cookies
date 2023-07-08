@@ -1,14 +1,17 @@
 """
 file_name = wsgi.py
 Creator: Ghazanfar Shahbaz
-Last Updated: 07/07/2023
+Last Updated: 07/08/2023
 Description: A file used to combine flask applications and server them as one wsgi application.
+Edit Log: 
+07/08/2023 
+    - Refactored personal_website new flask file name
 """
 
 # use to combine each Flask app into a larger one that is dispatched based on prefix
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
-from apps.personal_website.requests import app as personal_website_app
+from apps.personal_website.app import app as personal_website_app
 from apps.tool_repository.endpoints import app as tool_app
 from apps.knowledge_graph.app import app as knowledge_graph_app
 from apps.projects.the_mouseion.app import app as mouseion_app
