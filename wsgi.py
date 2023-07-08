@@ -2,7 +2,7 @@
 file_name = wsgi.py
 Creator: Ghazanfar Shahbaz
 Last Updated: 07/07/2023
-Description: A file used to combine flask applications and server them as one wsgi applicaton.
+Description: A file used to combine flask applications and server them as one wsgi application.
 """
 
 # use to combine each Flask app into a larger one that is dispatched based on prefix
