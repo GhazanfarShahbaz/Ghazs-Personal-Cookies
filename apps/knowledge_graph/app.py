@@ -1,19 +1,23 @@
 """
 file_name: app.py
 Creator: Ghazanfar Shahbaz
-Last Updated: 07/01/2023
+Last Updated: 07/08/2023
 Description: Flask app for the knowledge_graph application.
+Edit Log:
+07/08/23 - Conformed to pylint conventions
 """
+
+import logging.config
 
 from json import load
 from pathlib import Path
 from os.path import join
 
 from flask import Flask, request
-from flask_apscheduler import APScheduler
+from flask_apscheduler import APScheduler  # pylint: disable=import-error
 from flask_cors import CORS
 
-from apps.knowledge_graph.utils.build_knowledge_graph import (  # pylint: disable=import-error
+from apps.knowledge_graph.utils.build_knowledge_graph import (
     create_and_save_graph,
 )
 
@@ -21,8 +25,6 @@ from apps.tool_repository.tools.endpoint_diagnostics import (
     setup_request,
     commit_endpoint_diagnostics,
 )
-
-import logging.config
 
 
 app: Flask = Flask(
@@ -43,7 +45,9 @@ handler = logging.handlers.TimedRotatingFileHandler("logs/app.log", when="midnig
 handler.prefix = "%Y%m%d"
 
 formatter = logging.Formatter(
-    fmt="%(asctime)s | %(pathname)s | %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | %(message)s"
+    fmt="%(asctime)s | %(pathname)s | \
+        %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | \
+        %(message)s"
 )
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
@@ -55,18 +59,24 @@ scheduler = APScheduler()
 
 @app.before_request
 def log_request() -> None:
-    app.logger.info(f" {request.remote_addr} {app.config['app_path']}{request.path}")
+    app.logger.info(
+        " %s %s%s", request.remote_addr, app.config["app_path"], request.path
+    )
     setup_request(request, f"{app.config['app_path']}{request.path}")
 
 
 @app.after_request
 def commit_diagnostics(response):
     """
-    Commits endpoint diagonstic information after handling a request.
+    Commits endpoint diagonstic information after handling a
+    request.
 
-    This function takes a response object and checks if the request includes an "endpoint_id" parameter.
-    If the parameter is present, the function logs a message and commits endpoint diagnostic information
-    using the `commit_endpoint_diagnostics` function. The function then returns the original response.
+    This function takes a response object and checks if the
+    request includes an "endpoint_id" parameter.
+    If the parameter is present, the function logs a message
+    and commits endpoint diagnostic information
+    using the `commit_endpoint_diagnostics` function.
+    The function then returns the original response.
 
     Args:
         response: A Flask response object representing the response to a request.
@@ -114,8 +124,8 @@ def update_force_graph():
     Returns:
         None
     """
-    
-    app.logger.info(f"Running update_force_graph function")
+
+    app.logger.info("Running update_force_graph function")
     create_and_save_graph(join(app.config["data_directory"], "forceGraph.json"))
 
 
