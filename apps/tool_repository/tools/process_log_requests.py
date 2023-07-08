@@ -1,4 +1,4 @@
-from log_utils import split_up_log_file
+from apps.tool_repository.tools.log_utils import split_up_log_file
 from typing import Dict, List
 
 

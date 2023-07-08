@@ -1,5 +1,7 @@
 from typing import List
-from assignment_utils import assignment_type_list_to_event_dict_list
+from apps.tool_repository.tools.assignment_utils import (
+    assignment_type_list_to_event_dict_list,
+)
 
 from apps.tool_repository.tools.repository.assignments import AssignmentRepository
 from apps.tool_repository.tools.repository.models.assignment_model import Assignment

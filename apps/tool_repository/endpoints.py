@@ -8,43 +8,53 @@ from firebase_admin import credentials, firestore, initialize_app
 
 from os import environ, getenv
 
-from response_processing.event_processing import print_events
+from apps.tool_repository.response_processing.event_processing import print_events
 
-from tools.repository.models.event_model import Event
-from tools.endpoint_diagnostics import setup_request, commit_endpoint_diagnostics
-from tools.process_assignment_requests import (
+from apps.tool_repository.tools.repository.models.event_model import Event
+from apps.tool_repository.tools.endpoint_diagnostics import (
+    setup_request,
+    commit_endpoint_diagnostics,
+)
+from apps.tool_repository.tools.process_assignment_requests import (
     process_get_assignment_request,
     process_create_assignment,
     process_update_assignment,
     process_delete_assignment_request,
 )
-from tools.process_class_requests import (
+from apps.tool_repository.tools.process_class_requests import (
     process_create_class,
     process_get_class_request,
     process_update_class,
     process_delete_class_request,
 )
-from tools.process_event_requests import (
+from apps.tool_repository.tools.process_event_requests import (
     process_create_event,
     process_get_event,
     process_get_default_event,
     process_update_event,
     process_delete_event,
 )
-from tools.process_endpoint_diagnostics import process_get_diagnostics
-from tools.process_file_storage_requests import process_upload_file, process_delete_file
-from tools.process_gmail_requests import get_emails
-from tools.process_help_requests import get_command
-from tools.process_log_requests import process_get_logs
-from tools.process_syllabus_requests import (
+from apps.tool_repository.tools.process_endpoint_diagnostics import (
+    process_get_diagnostics,
+)
+from apps.tool_repository.tools.process_file_storage_requests import (
+    process_upload_file,
+    process_delete_file,
+)
+from apps.tool_repository.tools.process_gmail_requests import get_emails
+from apps.tool_repository.tools.process_help_requests import get_command
+from apps.tool_repository.tools.process_log_requests import process_get_logs
+from apps.tool_repository.tools.process_syllabus_requests import (
     process_get_syllabus_request,
     process_create_syllabus,
     process_update_syllabus,
     process_delete_syllabus_request,
 )
-from tools.process_translate_request import process_translate
-from tools.process_qr_code_requests import processs_generate_link_qr_code
-from tools.process_weather_requests import get_weather
+from apps.tool_repository.tools.process_translate_request import process_translate
+from apps.tool_repository.tools.process_qr_code_requests import (
+    processs_generate_link_qr_code,
+)
+from apps.tool_repository.tools.process_weather_requests import get_weather
 
 
 from typing import List

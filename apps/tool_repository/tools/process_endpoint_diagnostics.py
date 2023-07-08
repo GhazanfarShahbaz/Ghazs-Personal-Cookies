@@ -1,4 +1,4 @@
-from endpoint_diagnostics import (
+from apps.tool_repository.tools.endpoint_diagnostics import (
     setup_endpoint_diagnostics,
     commit_endpoint_diagnostics,
     diagnostics_type_list_to_diagnostic_dict_list,
@@ -9,7 +9,7 @@ from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model imp
 from apps.tool_repository.tools.repository.endpoint_diagnostics import (
     EndpointDiagnosticsRepository,
 )
-from event_utils import string_to_date
+from apps.tool_repository.tools.event_utils import string_to_date
 
 from typing import Dict, List, Optional, Union
 

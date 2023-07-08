@@ -31,8 +31,11 @@ def split_up_log_file() -> Dict[str, List[str]]:
         if len(split_colon) >= 2:
             path_to_file: str = split_colon[1]
 
+            # TODO: Replace this so we don't use if statements
             if "tool_repository" in path_to_file:
                 app = "tools"
+            elif "knowledge_graph" in path_to_file:
+                app = "knowledge_graph"
             elif "personal_webnsite" in path_to_file:
                 app = "personal_website"
 

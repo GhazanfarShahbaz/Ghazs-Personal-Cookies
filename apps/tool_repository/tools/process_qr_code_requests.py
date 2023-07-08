@@ -1,4 +1,4 @@
-from qr_code_utils import generate_qrcode_for_url
+from apps.tool_repository.tools.qr_code_utils import generate_qrcode_for_url
 from typing import Dict
 from io import BytesIO
 

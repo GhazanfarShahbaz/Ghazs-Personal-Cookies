@@ -3,8 +3,6 @@ import logging.config
 from flask import Flask, abort
 from flask import request, send_from_directory
 
-import json
-
 from apps.tool_repository.tools.endpoint_diagnostics import (
     setup_request,
     commit_endpoint_diagnostics,

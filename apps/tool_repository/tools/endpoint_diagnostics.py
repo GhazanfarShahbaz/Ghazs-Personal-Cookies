@@ -1,5 +1,9 @@
-from apps.tool_repository.tools.repository.endpoint_diagnostics import EndpointDiagnosticsRepository
-from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import EndpointDiagnostics
+from apps.tool_repository.tools.repository.endpoint_diagnostics import (
+    EndpointDiagnosticsRepository,
+)
+from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import (
+    EndpointDiagnostics,
+)
 
 from datetime import datetime
 from typing import Dict, List
@@ -19,7 +23,7 @@ def setup_request(request: dict, path: str) -> None:
     """
     Sets up the request for processing.
 
-    This function takes a request dictionary and a string representing the endpoint path, and 
+    This function takes a request dictionary and a string representing the endpoint path, and
     sets up the request for processing by adding an endpoint ID to the request and setting up
     diagnostics for the endpoint.
 
@@ -30,19 +34,19 @@ def setup_request(request: dict, path: str) -> None:
     Returns:
         None.
     """
-    
+
     request_copy = request.args.to_dict()
     request_copy["endpoint_id"] = setup_endpoint_diagnostics(path, request)
-    
+
     request.args = ImmutableMultiDict(request_copy)
-    
+
 
 def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:
     """
     Sets up diagnostics for the endpoint using a string and the user's request data.
 
-    This function takes a string representing the endpoint and a dictionary representing the 
-    user's request data, and sets up diagnostic information for the endpoint in the 
+    This function takes a string representing the endpoint and a dictionary representing the
+    user's request data, and sets up diagnostic information for the endpoint in the
     global `ENDPOINT_DICT`.
 
     Args:
@@ -52,7 +56,7 @@ def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:
     Returns:
         An integer representing the ID of the endpoint.
     """
-    
+
     endpoint_diagnostics: Dict[str, any] = {
         "Endpoint": endpoint,
         "Request": {},
@@ -67,7 +71,7 @@ def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:
     return endpoint_id
 
 
-def  commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -> bool:
+def commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -> bool:
     """
     Commits endpoint diagnostics with the new feature diagnostic values.
 
@@ -86,10 +90,10 @@ def  commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -
     Raises:
         KeyError: If the input diagnostic ID does not exist in the global `ENDPOINT_DICT`.
     """
-    
+
     global ENDPOINT_DICT
     endpoint_diagnostics: Dict[str, any] = {}
-    
+
     try:
         endpoint_diagnostics: Dict[str, any] = ENDPOINT_DICT[diagnostic_id]
     except KeyError:
@@ -97,22 +101,26 @@ def  commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -
 
     endpoint_diagnostics["Response"] = {}
     endpoint_diagnostics["Error"] = error
-    endpoint_diagnostics["Latency"] = datetime.now().timestamp() - endpoint_diagnostics["Date"].timestamp()
+    endpoint_diagnostics["Latency"] = (
+        datetime.now().timestamp() - endpoint_diagnostics["Date"].timestamp()
+    )
 
     EndpointDiagnosticsRepository().insert(EndpointDiagnostics(endpoint_diagnostics))
-    
+
     del ENDPOINT_DICT[diagnostic_id]
 
     return True
 
 
-def diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list: List[EndpointDiagnostics or any], endpoint_counter = False) -> List[dict]:
+def diagnostics_type_list_to_diagnostic_dict_list(
+    diagnostic_list: List[EndpointDiagnostics or any], endpoint_counter=False
+) -> List[dict]:
     """
     Converts a list of EndpointDiagnostics objects to a list of dictionaries or a dictionary.
 
     This function takes a list of EndpointDiagnostics objects and converts them to a list of dictionaries.
     Each dictionary represents a diagnostic and contains the information about the request and response
-    for that diagnostic. 
+    for that diagnostic.
 
     Args:
         diagnostic_list: A list of EndpointDiagnostics objects to be converted.
@@ -125,11 +133,13 @@ def diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list: List[Endpoint
     Raises:
         TypeError: If the input list contains objects that are not of type EndpointDiagnostics.
     """
-    
-    if not endpoint_counter and not all(isinstance(diagnostic, EndpointDiagnostics) for diagnostic in diagnostic_list):
+
+    if not endpoint_counter and not all(
+        isinstance(diagnostic, EndpointDiagnostics) for diagnostic in diagnostic_list
+    ):
         raise TypeError("All items in the list must be of type `EndpointDiagnostics`")
-    
+
     if not endpoint_counter:
         return [diagnostic.to_dict() for diagnostic in diagnostic_list]
-    
+
     return {row[0]: row[1] for row in diagnostic_list}

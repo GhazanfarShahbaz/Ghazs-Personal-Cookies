@@ -1,6 +1,10 @@
 from typing import Dict, List
 
-from file_storage_utils import upload_file, delete_file, list_bucket_files
+from apps.tool_repository.tools.file_storage_utils import (
+    upload_file,
+    delete_file,
+    list_bucket_files,
+)
 
 
 def process_upload_file(file, content_type) -> Dict[str, str]:
