@@ -1,3 +1,13 @@
+"""
+file_name = syllabus_utils.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/09/2023
+Description: A module used for syllabus assignment objects. 
+Edit Log:
+07/09/2023
+-   Conformed to pylint conventions.
+"""
+
 from typing import List
 
 from apps.tool_repository.tools.repository.models.syllabus_model import Syllabus
