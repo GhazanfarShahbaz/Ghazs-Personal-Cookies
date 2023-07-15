@@ -1,4 +1,17 @@
+"""
+file_name = coding_questions.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to work with the coding_question table.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=too-many-branches
+
 from typing import List
+
 from sqlalchemy.orm import Session, Query
 
 from apps.tool_repository.tools.repository.models.model import Session as Sess
@@ -7,7 +20,7 @@ from apps.tool_repository.tools.repository.models.coding_question_model import (
 )
 
 
-class CodingQuestionRepository:
+class CodingQuestionRepository():
     """
     A class representing a data store for CodingQuestion objects.
 
@@ -32,9 +45,9 @@ class CodingQuestionRepository:
         manager value.
         """
 
-        return self
+        return self  # pylint: disable=unnecessary-pass
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback):  # pylint: disable=redefined-builtin
         """
         Called when the context manager is exited.
 
@@ -70,8 +83,8 @@ class CodingQuestionRepository:
         Updates a coding question object in the database with the specified changes.
 
         This method takes a question ID and a dictionary of updates, and updates the corresponding
-        coding question object in the database with the new values. Any keys in the update dictionary
-        that are not valid attributes of the coding question object are ignored.
+        coding question object in the database with the new values. Any keys in the update 
+        dictionarythat are not valid attributes of the coding question object are ignored.
 
         Args:
             question_id: The ID of the coding question object to be updated.
@@ -81,7 +94,8 @@ class CodingQuestionRepository:
             None
 
         Raises:
-            ValueError: If the `question_id` parameter is not a valid ID for a coding question object.
+            ValueError: If the `question_id` parameter is not a valid ID for a coding question
+            object.
         """
 
         # retrieve the coding question object to be updated from the database
@@ -154,10 +168,11 @@ class CodingQuestionRepository:
 
     def delete(self, filters: dict) -> None:
         """
-        Retrieves a list of coding question objects from the database that match the specified filter criteria.
+        Retrieves a list of coding question objects from the database that match the specified 
+        filter criteria.
 
-        This method queries the database for coding questions that match the specified filter criteria and
-        returns a list of coding question objects that match the criteria.
+        This method queries the database for coding questions that match the specified filter 
+        criteria and returns a list of coding question objects that match the criteria.
 
         Args:
             filters: A dictionary of filter criteria used to query the database.

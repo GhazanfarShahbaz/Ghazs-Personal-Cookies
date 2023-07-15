@@ -1,5 +1,18 @@
-from sqlalchemy.orm import Session, Query
+"""
+file_name = assignments.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to work with the assignment table.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=too-many-branches, duplicate-code
+
 from typing import List
+
+from sqlalchemy.orm import Session, Query
 
 from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.assignment_model import Assignment
@@ -7,7 +20,7 @@ from apps.tool_repository.tools.repository.models.class_model import Class
 from apps.tool_repository.tools.repository.models.syllabus_model import Syllabus
 
 
-class AssignmentRepository(object):
+class AssignmentRepository():
     """
     A class representing a data store for Assignment objects.
 
@@ -34,9 +47,9 @@ class AssignmentRepository(object):
         manager value.
         """
 
-        pass
+        pass # pylint: disable=unnecessary-pass
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback):  # pylint: disable=redefined-builtin
         """
         Called when the context manager is exited.
 

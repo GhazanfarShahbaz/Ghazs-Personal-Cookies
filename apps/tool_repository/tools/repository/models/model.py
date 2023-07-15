@@ -1,7 +1,17 @@
+"""
+file_name = model.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module that indirectly combines all models and setups the engine.
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import sessionmaker
 
 from apps.tool_repository.tools.repository.get_db_engine import get_engine
+
 from . import Base
 
 Engine: Engine = get_engine()
@@ -20,9 +30,9 @@ def init_db():
         None
     """
 
+    # pylint: disable=global-variable-not-assigned
     global Base, Engine
 
-    # Base.metadata.drop_all(bind=Engine, tables=[EndpointDiagnostics.__table__])
     Base.metadata.create_all(bind=Engine)
     print("Created Model")
 

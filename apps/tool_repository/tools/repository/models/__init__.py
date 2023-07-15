@@ -1,10 +1,14 @@
-import sys
-from os import path
+"""
+file_name = __init__.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to setup the Base for sqlalchemy.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+
 from sqlalchemy.ext.declarative import declarative_base
-
-
-# if this filei s called from a parent directory the repository.... path is needed this allows all modules to be called from this directory
-current = path.dirname(path.realpath(__file__))
-sys.path.append(current)
 
 Base = declarative_base()

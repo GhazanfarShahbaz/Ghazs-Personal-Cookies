@@ -14,7 +14,7 @@ from re import findall
 
 path_to_vault: str = getenv("PATH_TO_OBSIDIAN_VAULT")
 folders_to_ignore: Set[str] = {".obsidian", ".git"}
-files_to_ignore: Set[str] = {".DS_Store"}
+files_to_ignore: Set[str] = {".DS_Store", "Budgeting Sheet.md", "Todo.md"}
 
 
 def get_all_files(
@@ -24,7 +24,7 @@ def get_all_files(
     Recursively scans a directory for Markdown files and other files.
 
     Args:
-        md_files: A dictionary to store the found Markdown files, where the key is the 
+        md_files: A dictionary to store the found Markdown files, where the key is the
         file path and the value is the file name without the extension.
         other_files: A set to store other files found, where each entry is a tuple containing
         the file path and the file name.
@@ -78,7 +78,7 @@ def create_and_save_graph(save_path: str) -> None:
 
     Args:
         save_path: The path to where the graph file will be saved.
-        
+
     Returns:
         None
     """
@@ -116,7 +116,5 @@ def create_and_save_graph(save_path: str) -> None:
     for data in graph:
         force_graph_data["links"].append(data)
 
-    with open(
-        save_path, "w", encoding="utf-8"
-    ) as output_file:
+    with open(save_path, "w", encoding="utf-8") as output_file:
         dump(force_graph_data, output_file)

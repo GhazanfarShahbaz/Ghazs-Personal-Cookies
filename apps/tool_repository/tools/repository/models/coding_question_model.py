@@ -1,9 +1,41 @@
-from sqlalchemy import ARRAY, Column, DateTime, JSON, Integer, String
+"""
+file_name = coding_question_model.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module representing the CodingQuestion model.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=invalid-name, global-variable-not-assigned, too-few-public-methods, undefined-variable
+
+from sqlalchemy import (
+    ARRAY,
+    Column,
+    Float,
+    Boolean,
+    Integer,
+    String
+)
 
 from . import Base
 
 
 class CodingQuestion(Base):
+    """
+        Represents a coding question for practice or assessment.
+
+        Attributes:
+        - QuestionId: The unique ID of the question.
+        - QuestionLink: The link to the question.
+        - QuestionName: The name of the question.
+        - Difficulty: The difficulty level of the question.
+        - AcceptanceRate: The acceptance rate of the question.
+        - Tags: The tags associated with the question.
+        - RequiresSubscription: A boolean indicating whether the question requires a subscription.
+    """
+
     __tablename__ = "coding_questions"
 
     QuestionId = Column("QuestionId", String(64), primary_key=True)

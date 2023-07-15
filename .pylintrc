@@ -15,7 +15,7 @@ ignore-patterns=
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
-#init-hook=
+init-hook='import sys; import os; from dotenv import load_dotenv; load_dotenv(); sys.path.append(os.environ['PATH_TO_APP'])'
 
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
 # number of processors available to use.
@@ -69,6 +69,7 @@ disable=
         suppressed-message,
         useless-suppression,
         deprecated-pragma,
+        duplicate-code,
         use-symbolic-message-instead,
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

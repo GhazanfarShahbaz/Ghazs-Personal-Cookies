@@ -1,9 +1,18 @@
+"""
+file_name = app.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/08/2023
+Description: A flask file used to server my personal website
+Edit Log:
+07/08/2023 
+    - Changed file name to app.py from requests.py
+    - Conformed to pylint conventions
+"""
+
 import logging.config
 
 from flask import Flask, abort
 from flask import request, send_from_directory
-
-import json
 
 from apps.tool_repository.tools.endpoint_diagnostics import (
     setup_request,
@@ -28,7 +37,9 @@ handler.prefix = "%Y%m%d"
 
 # Formatter for log file. Log files will be formatted in the format specified below
 formatter = logging.Formatter(
-    "%(asctime)s | %(pathname)s | %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | %(message)s"
+    "%(asctime)s | %(pathname)s | \
+    %(levelname)-8s | %(filename)s-%(funcName)s-%(lineno)04d | \
+    %(message)s"
 )
 handler.setFormatter(formatter)
 
@@ -48,9 +59,7 @@ def log_endpoint():
         None
     """
 
-    app.logger.info(
-        f"Someone accessed the website {request.remote_addr} {request.path}"
-    )
+    app.logger.info("Someone accessed the website %s %s", request.remote_addr,request.path)
 
     if request.path in {"/", "/projects", "/skills", "/education", "/resume"}:
         setup_request(request, request.path)
@@ -88,37 +97,40 @@ def home_route():
     A Flask view function that returns the home page of the website.
 
     Returns:
-        A Flask response object containing the contents of the 'index.html' file in the app's static directory.
+        A Flask response object containing the contents of the 'index.html' 
+        file in the app's static directory.
     """
 
     return send_from_directory(app.static_folder, "index.html")
 
 
 @app.route("/<path>")
-def render_path(path: str):
+def render_path(path: str): # pylint: disable=inconsistent-return-statements
     """
     A Flask view function that attempts to return a file based on the provided URL path.
 
-    If the requested path corresponds to a file that should be served, the function returns that file.
+    If the requested path corresponds to a file that should be served, 
+    the function returns that file.
     Otherwise, the function aborts the request with a 404 error.
 
     Args:
-        path: A string representing the path component of the requested URL.
+        path: A string representing the path component of 
+        the requested URL.
 
     Returns:
-        A Flask response object containing the contents of the requested file, or a 404 response if the requested
-        file does not exist.
+        A Flask response object containing the contents of the requested file, 
+        or a 404 response if the requested file does not exist.
     """
 
     # accept paths which we have files for
     if path in {"projects", "skills", "education", "resume"}:
         return send_from_directory(app.static_folder, "index.html")
     # Serve static files for other paths
-    elif path in {"robots.txt", "sitemap.xml"}:
+    if path in {"robots.txt", "sitemap.xml"}:
         return send_from_directory(app.root_path + "/static/", path)
+
     # Return a 404 error for all other paths
-    else:
-        abort(404)
+    abort(404)
 
 
 if __name__ == "__main__":

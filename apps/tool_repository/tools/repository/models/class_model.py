@@ -1,14 +1,19 @@
+"""
+file_name = class_model.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module representing the class model.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=invalid-name, global-variable-not-assigned, too-few-public-methods, undefined-variable
+
 from sqlalchemy import (
-    ARRAY,
-    Boolean,
     Column,
-    DateTime,
-    JSON,
-    Float,
     Integer,
     String,
-    Text,
-    ForeignKey,
 )
 from sqlalchemy.orm import relationship
 
@@ -16,6 +21,18 @@ from . import Base
 
 
 class Class(Base):
+    """
+        Represents a class in a university.
+
+        Attributes:
+        - ClassId: The unique ID of the class.
+        - Department: The department of the class.
+        - CourseNumber: The course number of the class.
+        - Professor: The professor teaching the class.
+        - Name: The name of the class.
+        - Semester: The semester in which the class is being taught.
+    """
+
     __tablename__ = "classes"
 
     ClassId = Column("ClassId", Integer, primary_key=True, autoincrement=True)

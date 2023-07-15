@@ -1,10 +1,38 @@
-from sqlalchemy import ARRAY, Column, DateTime, JSON, Integer, String, ForeignKey
+"""
+file_name = syllabus_model.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module representing the Syllabus model.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=invalid-name, global-variable-not-assigned, too-few-public-methods, undefined-variable, too-many-instance-attributes
+
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    ForeignKey
+)
 from sqlalchemy.orm import relationship
 
 from . import Base
 
 
 class Syllabus(Base):
+    """
+    Represents the syllabus for a specific class section.
+
+    Attributes:
+    - ClassId: The ID of the associated class.
+    - SectionId: The unique ID of the syllabus section.
+    - Section: The section name.
+    - Percentage: The percentage weightage of the section.
+    - Droppable: A flag indicating if the section is droppable.
+    """
+
     __tablename__ = "syllabi"
 
     ClassId = Column("ClassId", ForeignKey("classes.ClassId", ondelete="CASCADE"))

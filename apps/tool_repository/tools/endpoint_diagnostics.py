@@ -1,10 +1,24 @@
-from apps.tool_repository.tools.repository.endpoint_diagnostics import EndpointDiagnosticsRepository
-from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import EndpointDiagnostics
+"""
+file_name = endpoint_diagnostics.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/09/2023
+Description: A module used to handling endpoint diagnostics.
+Edit Log:
+07/09/2023
+-   Conformed to pylint conventions.
+"""
 
 from datetime import datetime
 from typing import Dict, List
+
 from werkzeug.datastructures import ImmutableMultiDict
 
+from apps.tool_repository.tools.repository.endpoint_diagnostics import (
+    EndpointDiagnosticsRepository,
+)
+from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import (
+    EndpointDiagnostics,
+)
 
 # Global dictionary used to store endpoint diagnostics.
 # This dictionary maps endpoint IDs to endpoint diagnostic information.
@@ -19,7 +33,7 @@ def setup_request(request: dict, path: str) -> None:
     """
     Sets up the request for processing.
 
-    This function takes a request dictionary and a string representing the endpoint path, and 
+    This function takes a request dictionary and a string representing the endpoint path, and
     sets up the request for processing by adding an endpoint ID to the request and setting up
     diagnostics for the endpoint.
 
@@ -30,19 +44,19 @@ def setup_request(request: dict, path: str) -> None:
     Returns:
         None.
     """
-    
+
     request_copy = request.args.to_dict()
     request_copy["endpoint_id"] = setup_endpoint_diagnostics(path, request)
-    
-    request.args = ImmutableMultiDict(request_copy)
-    
 
-def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:
+    request.args = ImmutableMultiDict(request_copy)
+
+
+def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:  # pylint: disable=unused-argument
     """
     Sets up diagnostics for the endpoint using a string and the user's request data.
 
-    This function takes a string representing the endpoint and a dictionary representing the 
-    user's request data, and sets up diagnostic information for the endpoint in the 
+    This function takes a string representing the endpoint and a dictionary representing the
+    user's request data, and sets up diagnostic information for the endpoint in the
     global `ENDPOINT_DICT`.
 
     Args:
@@ -52,14 +66,14 @@ def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:
     Returns:
         An integer representing the ID of the endpoint.
     """
-    
+
     endpoint_diagnostics: Dict[str, any] = {
         "Endpoint": endpoint,
         "Request": {},
         "Date": datetime.now(),
     }
 
-    global CURRENT_INDEX, ENDPOINT_DICT
+    global CURRENT_INDEX, ENDPOINT_DICT  # pylint: disable=global-variable-not-assigned
     endpoint_id: int = CURRENT_INDEX
     ENDPOINT_DICT[endpoint_id] = endpoint_diagnostics
     CURRENT_INDEX += 1
@@ -67,13 +81,13 @@ def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:
     return endpoint_id
 
 
-def  commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -> bool:
+def commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -> bool:  # pylint: disable=unused-argument
     """
     Commits endpoint diagnostics with the new feature diagnostic values.
 
-    This function takes an ID of an endpoint diagnostic, a dictionary representing the response to the
-    request, and an optional error message string. It commits the endpoint diagnostics to the database
-    with the new feature diagnostic values.
+    This function takes an ID of an endpoint diagnostic, a dictionary representing the response to
+    therequest, and an optional error message string. It commits the endpoint diagnostics to the
+    database with the new feature diagnostic values.
 
     Args:
         diagnostic_id: An integer representing the ID of the endpoint diagnostic.
@@ -81,55 +95,68 @@ def  commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -
         error: An optional string representing the error message.
 
     Returns:
-        A boolean indicating whether the diagnostics were successfully committed to the database.
+        A boolean indicating whether the diagnostics were successfully committed to the
+        database.
 
     Raises:
         KeyError: If the input diagnostic ID does not exist in the global `ENDPOINT_DICT`.
     """
-    
-    global ENDPOINT_DICT
+
+    global ENDPOINT_DICT  # pylint: disable=global-variable-not-assigned
     endpoint_diagnostics: Dict[str, any] = {}
-    
+
     try:
         endpoint_diagnostics: Dict[str, any] = ENDPOINT_DICT[diagnostic_id]
-    except KeyError:
-        raise KeyError(f"Diagnostic ID {diagnostic_id} does not exist in ENDPOINT_DICT")
+    except KeyError as exc:
+        raise KeyError(
+            f"Diagnostic ID {diagnostic_id} does not exist in ENDPOINT_DICT"
+        ) from exc
 
     endpoint_diagnostics["Response"] = {}
     endpoint_diagnostics["Error"] = error
-    endpoint_diagnostics["Latency"] = datetime.now().timestamp() - endpoint_diagnostics["Date"].timestamp()
+    endpoint_diagnostics["Latency"] = (
+        datetime.now().timestamp() - endpoint_diagnostics["Date"].timestamp()
+    )
 
     EndpointDiagnosticsRepository().insert(EndpointDiagnostics(endpoint_diagnostics))
-    
+
     del ENDPOINT_DICT[diagnostic_id]
 
     return True
 
 
-def diagnostics_type_list_to_diagnostic_dict_list(diagnostic_list: List[EndpointDiagnostics or any], endpoint_counter = False) -> List[dict]:
+def diagnostics_type_list_to_diagnostic_dict_list(
+    diagnostic_list: List[EndpointDiagnostics or any], endpoint_counter=False
+) -> List[dict]:
     """
-    Converts a list of EndpointDiagnostics objects to a list of dictionaries or a dictionary.
+    Converts a list of EndpointDiagnostics objects to a list of dictionaries or
+    a dictionary.
 
-    This function takes a list of EndpointDiagnostics objects and converts them to a list of dictionaries.
-    Each dictionary represents a diagnostic and contains the information about the request and response
-    for that diagnostic. 
+    This function takes a list of EndpointDiagnostics objects and converts them
+    to a list of dictionaries. Each dictionary represents a diagnostic and contains
+    the information about the request and response for that diagnostic.
 
     Args:
         diagnostic_list: A list of EndpointDiagnostics objects to be converted.
-        endpoint_counter: An optional boolean indicating whether to return a dictionary with a list of unique
-                          endpoint names and the number of requests for each endpoint.
+        endpoint_counter: An optional boolean indicating whether to return a
+                          dictionary with a list of unique endpoint names and
+                          the number of requests for each endpoint.
 
     Returns:
-        A list of dictionaries, or a dictionary containing endpoint names and the number of requests for each endpoint.
+        A list of dictionaries, or a dictionary containing endpoint names
+        and the number of requests for each endpoint.
 
     Raises:
-        TypeError: If the input list contains objects that are not of type EndpointDiagnostics.
+        TypeError: If the input list contains objects that are not of type
+        EndpointDiagnostics.
     """
-    
-    if not endpoint_counter and not all(isinstance(diagnostic, EndpointDiagnostics) for diagnostic in diagnostic_list):
+
+    if not endpoint_counter and not all(
+        isinstance(diagnostic, EndpointDiagnostics) for diagnostic in diagnostic_list
+    ):
         raise TypeError("All items in the list must be of type `EndpointDiagnostics`")
-    
+
     if not endpoint_counter:
         return [diagnostic.to_dict() for diagnostic in diagnostic_list]
-    
+
     return {row[0]: row[1] for row in diagnostic_list}

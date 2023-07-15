@@ -1,11 +1,24 @@
-from sqlalchemy.orm import Session, Query
+"""
+file_name = classes.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to work with the class table.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=too-many-branches
+
 from typing import List
+
+from sqlalchemy.orm import Session, Query
 
 from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.class_model import Class
 
 
-class ClassRepository(object):
+class ClassRepository():
     """
     A class representing a data store for Class objects.
 
@@ -32,9 +45,9 @@ class ClassRepository(object):
         manager value.
         """
 
-        return self
+        return self  # pylint: disable=unnecessary-pass
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback):  # pylint: disable=redefined-builtin
         """
         Called when the context manager is exited.
 
@@ -148,7 +161,8 @@ class ClassRepository(object):
 
     def delete(self, filters: dict) -> None:
         """
-        Deletes one or more Class objects from the database that match the specified filter criteria.
+        Deletes one or more Class objects from the database that match the specified filter
+        criteria.
 
         This method takes a dictionary of filters and uses them to search for Class objects
         that match the criteria specified in the filters. It then deletes all matching Class

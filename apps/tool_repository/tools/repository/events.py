@@ -1,12 +1,25 @@
+"""
+file_name = events.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to work with the events table.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=too-many-branches
+
+from typing import List
+
 from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, distinct
-from typing import List
 
 from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.event_model import Event
 
 
-class EventRepository(object):
+class EventRepository():
     """
     A class representing a data store for Event objects.
 
@@ -30,9 +43,9 @@ class EventRepository(object):
         for the CodingQuestionRepository object. Returns the current object as the context
         manager value.
         """
-        return self
+        return self  # pylint: disable=unnecessary-pass
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback): # pylint: disable=redefined-builtin
         """
         Called when the context manager is exited.
 
@@ -60,9 +73,10 @@ class EventRepository(object):
         """
         Updates an Event object in the database with the specified changes.
 
-        This method takes an event ID and a dictionary of updates, and updates the corresponding
-        event object in the database with the new values. Any keys in the update dictionary that
-        are not valid attributes of the event object are ignored.
+        This method takes an event ID and a dictionary of updates, and updates the 
+        corresponding event object in the database with the new values. 
+        Any keys in the update dictionary that are not valid attributes of the event
+        object are ignored.
 
         Args:
             event_id: The ID of the event object to be updated.
@@ -114,7 +128,8 @@ class EventRepository(object):
             None
 
         Raises:
-            ValueError: If the `recurrance_id` parameter is not a valid ID for an event recurrence pattern.
+            ValueError: If the `recurrance_id` parameter is not a valid ID for an event 
+            recurrence pattern.
         """
 
         self.session.query(Event).filter(Event.ReccuranceId == recurrance_id).update(
@@ -124,10 +139,11 @@ class EventRepository(object):
 
     def get(self, filters: dict) -> List[Event]:
         """
-        Retrieves a list of Event objects from the database that match the specified filter criteria.
+        Retrieves a list of Event objects from the database that match the specified filter
+        criteria.
 
-        This method queries the database for Event objects that match the specified filter criteria and
-        returns a list of Event objects that match the criteria.
+        This method queries the database for Event objects that match the specified filter
+        criteria and returns a list of Event objects that match the criteria.
 
         Args:
             filters: A dictionary of filter criteria used to query the database.
@@ -177,8 +193,8 @@ class EventRepository(object):
         """
         Deletes Event objects from the database that match the specified filter criteria.
 
-        This method queries the database for Event objects that match the specified filter criteria and
-        deletes all of them.
+        This method queries the database for Event objects that match the specified filter 
+        criteria and deletes all of them.
 
         Args:
             filters: A dictionary of filter criteria used to select the Event objects to delete.
