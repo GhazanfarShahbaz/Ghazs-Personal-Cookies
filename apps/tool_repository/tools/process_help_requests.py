@@ -1,3 +1,14 @@
+"""
+file_name = process_help_requests.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to handle help requests.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+#pylint: disable=line-too-long
 from typing import Optional
 
 commands = {
@@ -135,7 +146,6 @@ def get_command(command: Optional[str]) -> dict:
     if command:
         if command in commands:
             return commands[command]
-        else:
-            return {}
+        return {}
 
     return commands
