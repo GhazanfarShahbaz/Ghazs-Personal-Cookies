@@ -2,7 +2,7 @@
 file_name = process_assignment_requests.py
 Creator: Ghazanfar Shahbaz
 Last Updated: 07/14/2023
-Description: A module used for storing and retrieving files from s3 buckets. 
+Description: A module used for dealing with assignment requests.
 Edit Log:
 07/09/2023
 -   Conformed to pylint conventions.
