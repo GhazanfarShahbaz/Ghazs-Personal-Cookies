@@ -1,7 +1,15 @@
-import qrcode
+"""
+file_name = qr_code_utils.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to handle qr code generation.
+07/14/2023
+-   Conformed to pylint conventions.
+"""
 
 from io import BytesIO
 
+import qrcode
 
 def get_qr_settings() -> qrcode.main.QRCode:
     """
@@ -16,14 +24,14 @@ def get_qr_settings() -> qrcode.main.QRCode:
     Returns:
         A QR code object.
     """
-    qr: qrcode.main.QRCode = qrcode.QRCode(
+    qr_generator: qrcode.main.QRCode = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=10,
         border=4,
     )
 
-    return qr
+    return qr_generator
 
 
 def qr_code_to_io(qr_code) -> BytesIO:
@@ -59,11 +67,11 @@ def generate_qrcode_for_url(url: str) -> BytesIO:
     Returns:
         A BytesIO object containing the QR code image data.
     """
-    qr: qrcode.main.QRCode = get_qr_settings()
+    qr_generator: qrcode.main.QRCode = get_qr_settings()
 
-    qr.make(fit=True)
-    qr.add_data(data=url)
+    qr_generator.make(fit=True)
+    qr_generator.add_data(data=url)
 
-    img = qr.make_image(back_color=(0, 0, 0), fill_color=(226, 220, 110))
+    img = qr_generator.make_image(back_color=(0, 0, 0), fill_color=(226, 220, 110))
 
     return qr_code_to_io(img)
