@@ -2,8 +2,7 @@
 file_name = process_event_requests.py
 Creator: Ghazanfar Shahbaz
 Last Updated: 07/14/2023
-Description: A module used to commit endpoint diagnostics and process
-             endpoint diagnostic get requests.
+Description: A module used to process event requests.
 Edit Log:
 07/14/2023
 -   Conformed to pylint conventions.
