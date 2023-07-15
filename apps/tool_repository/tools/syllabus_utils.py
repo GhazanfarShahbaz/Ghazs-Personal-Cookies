@@ -17,7 +17,8 @@ def syllabus_type_list_to_event_dict_list(syllabus_list: List[dict]) -> List[Syl
     """
     Converts a list of syllabus dictionaries to a list of Syllabus objects.
 
-    This function takes a list `syllabus_list` of syllabus dictionaries and creates a new list of Syllabus objects.
+    This function takes a list `syllabus_list` of syllabus dictionaries and creates a 
+    new list of Syllabus objects.
 
     Args:
         syllabus_list: A list of dictionaries representing syllabuses.
