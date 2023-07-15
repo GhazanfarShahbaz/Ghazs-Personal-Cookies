@@ -1,9 +1,41 @@
-from sqlalchemy import ARRAY, Column, DateTime, JSON, Integer, String
+"""
+file_name = event_model.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module representing the Event model.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=invalid-name, global-variable-not-assigned, too-few-public-methods, undefined-variable, too-many-instance-attributes
+
+from sqlalchemy import (
+    Column,
+    DateTime,
+    Integer,
+    String
+)
 
 from . import Base
 
 
 class Event(Base):
+    """
+    Represents an event.
+
+    Attributes:
+    - EventId: The unique ID of the event.
+    - RecurranceId: The ID of the recurring event, if applicable.
+    - Name: The name of the event.
+    - StartDate: The start date and time of the event.
+    - EndDate: The end date and time of the event.
+    - Type: The type of the event.
+    - Location: The location of the event.
+    - RecurranceType: The type of recurrence for the event, if applicable.
+    - Description: A description of the event.
+    """
+
     __tablename__ = "events"
 
     EventId = Column("EventId", Integer, primary_key=True, autoincrement=True)

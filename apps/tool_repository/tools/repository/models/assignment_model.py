@@ -1,18 +1,40 @@
-from . import Base
+"""
+file_name = assignment_model.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module representing the Assigment model.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=invalid-name, global-variable-not-assigned, too-few-public-methods, undefined-variable
 
 from sqlalchemy import (
-    ARRAY,
     Column,
     DateTime,
-    JSON,
     Integer,
     String,
     ForeignKey,
     Boolean,
 )
 
+from . import Base
 
 class Assignment(Base):
+    """
+        Represents an assignment in a syllabus section.
+
+        Attributes:
+        - SectionId: The ID of the section the assignment belongs to.
+        - AssignmentId: The unique ID of the assignment.
+        - Name: The name of the assignment.
+        - Grade: The grade of the assignment.
+        - DateAssigned: The date when the assignment was assigned.
+        - DateDue: The due date of the assignment.
+        - Submitted: A boolean indicating whether the assignment has been submitted.
+    """
+
     __tablename__ = "assignments"
 
     SectionId = Column("SectionId", ForeignKey("syllabi.SectionId", ondelete="CASCADE"))
