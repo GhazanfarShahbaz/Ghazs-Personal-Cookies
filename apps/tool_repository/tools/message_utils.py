@@ -4,7 +4,7 @@ Creator: Ghazanfar Shahbaz
 Last Updated: 07/14/2023
 Description: A module used to work send messages using the twilio api.
 Edit Log:
-07/09/2023
+07/14/2023
 -   Conformed to pylint conventions.
 """
 
