@@ -1,6 +1,19 @@
-from sqlalchemy.orm import Session, Query
-from sqlalchemy.sql import func
+"""
+file_name = endpoint_diagnostics.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to work with the endpoint_diagnostics table.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=too-many-branches
+
 from typing import List
+
+from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 
 from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import (
@@ -8,7 +21,7 @@ from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model imp
 )
 
 
-class EndpointDiagnosticsRepository(object):
+class EndpointDiagnosticsRepository():
     """
     A class representing a data store for EndpointDiagnostics objects.
 
@@ -32,9 +45,9 @@ class EndpointDiagnosticsRepository(object):
         for the EndpointDiagnosticsRepository object. Returns the current object as the context
         manager value.
         """
-        return self
+        return self  # pylint: disable=unnecessary-pass
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback):  # pylint: disable=redefined-builtin
         """
         Called when the context manager is exited.
 
@@ -65,10 +78,12 @@ class EndpointDiagnosticsRepository(object):
 
     def get(self, filters: dict) -> List[EndpointDiagnostics]:
         """
-        Retrieves a list of EndpointDiagnostics objects from the database that match the specified filter criteria.
+        Retrieves a list of EndpointDiagnostics objects from the database that match
+        the specified filter criteria.
 
-        This method queries the database for EndpointDiagnostics that match the specified filter criteria and
-        returns a list of EndpointDiagnostics objects that match the criteria.
+        This method queries the database for EndpointDiagnostics that match the specified
+        filter criteria and returns a list of EndpointDiagnostics objects that match the
+        criteria.
 
         Args:
             filters: A dictionary of filter criteria used to query the database.

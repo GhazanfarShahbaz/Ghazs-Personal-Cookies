@@ -1,14 +1,25 @@
-from sqlalchemy import create_engine
-from sqlalchemy.engine.base import Engine
+"""
+file_name = get_db_engine.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to get and create a sqlalchemy engine.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+
 from os import environ
 
+from sqlalchemy import create_engine
+from sqlalchemy.engine.base import Engine
 
 def get_engine() -> Engine:
     """
     Creates and returns an SQLAlchemy engine object.
 
-    This function reads environment variables for the connection details to the database and uses
-    them to create an SQLAlchemy engine object.
+    This function reads environment variables for the connection details to the
+    database and uses them to create an SQLAlchemy engine object.
 
     Returns:
         An SQLAlchemy engine object that can be used to connect to a database.

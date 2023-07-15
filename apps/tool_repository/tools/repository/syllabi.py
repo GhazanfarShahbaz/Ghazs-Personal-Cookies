@@ -1,16 +1,30 @@
-from sqlalchemy.orm import Session, Query
+"""
+file_name = syllabi.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module used to work with the syllabus table.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+"""
+
+# pylint: disable=too-many-branches, duplicate-code
+
 from typing import List
+
+from sqlalchemy.orm import Session, Query
 
 from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.class_model import Class
 from apps.tool_repository.tools.repository.models.syllabus_model import Syllabus
 
 
-class SyllabusRepository(object):
+class SyllabusRepository():
     """
     A class representing a data store for Syllabus objects.
 
-    This class provides methods for inserting, updating, and querying Syllabus objects in the database.
+    This class provides methods for inserting, updating, and querying Syllabus 
+    objects in the database.
 
     Attributes:
         session: An SQLAlchemy session object used for managing database transactions.
@@ -30,9 +44,9 @@ class SyllabusRepository(object):
         for the SyllabusRepository object. Does nothing, and returns None.
         """
 
-        pass
+        pass  # pylint: disable=unnecessary-pass
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback):  # pylint: disable=redefined-builtin
         """
         Called when the context manager is exited.
 
@@ -64,8 +78,8 @@ class SyllabusRepository(object):
         """
         Updates a Syllabus object in the database.
 
-        This method takes the ID of a Syllabus object and a dictionary of updates, and applies the updates
-        to the corresponding Syllabus object in the database.
+        This method takes the ID of a Syllabus object and a dictionary of updates,
+        and applies the updates to the corresponding Syllabus object in the database.
 
         Args:
             section_id: An integer representing the ID of the Syllabus object to be updated.
@@ -94,10 +108,11 @@ class SyllabusRepository(object):
 
     def get(self, filters: dict) -> List[Syllabus]:
         """
-        Retrieves a list of Syllabus objects from the database that match the specified filter criteria.
+        Retrieves a list of Syllabus objects from the database that match the specified
+        filter criteria.
 
-        This method queries the database for Syllabus objects that match the specified filter criteria and
-        returns a list of Syllabus objects that match the criteria.
+        This method queries the database for Syllabus objects that match the specified filter
+        criteria and returns a list of Syllabus objects that match the criteria.
 
         Args:
             filters: A dictionary of filter criteria used to query the database.
@@ -142,8 +157,8 @@ class SyllabusRepository(object):
         """
         Delete Syllabus objects from the database that match the specified filter criteria.
 
-        This method queries the database for Syllabus objects that match the specified filter criteria and
-        deletes all of them.
+        This method queries the database for Syllabus objects that match the specified filter
+        criteria and deletes all of them.
 
         Args:
             filters: A dictionary of filter criteria used to delete Syllabus objects.
