@@ -2,16 +2,18 @@
 file_name = redis_utils.py
 Creator: Ghazanfar Shahbaz
 Created: 07/18/2023
-Last Updated: 07/18/2023
+Last Updated: 07/19/2023
 Description: A module representing the EndpointDiagnostics model.
 Edit Log:
 07/18/2023
--   Created the file
--   Created basic redis client using context manager
+-   Created the file.
+-   Created basic redis client using context manager.
+07/19/2023
+-   Seperated pickle connection from regular redis connection pool.
 """
 
 from os import getenv
-from pickle import load, dump
+from pickle import loads, dumps
 
 from redis import Redis, ConnectionPool # pylint: disable=import-error
 
@@ -20,14 +22,23 @@ class RedisClient:
     """
     A class used as a client for the redis databse.
     This creates a connection using a connnection pool and then allows us to execute functions.
+    The first pool is for non pickle objects such as strings.
+    The second is for nested dictionary objects.
     """
 
-    connection_pool: ConnectionPool = ConnectionPool(
+    connection_pool_native: ConnectionPool = ConnectionPool(
         host=getenv("REDIS_HOST"), port=getenv("REDIS_PORT"), decode_responses=True
     )
 
+    connection_pool_pickle: ConnectionPool = ConnectionPool(
+        host=getenv("REDIS_HOST"), port=getenv("REDIS_PORT"), decode_responses=False
+    )
+    #https://github.com/redis/redis-py/issues/809
+
     def __init__(self):
-        self.connection: Redis = Redis(connection_pool=self.connection_pool)
+        self.connection: Redis = Redis(connection_pool=self.connection_pool_native)
+        self.pickle_connection: Redis = Redis(connection_pool=self.connection_pool_pickle)
+
 
     def __enter__(self) -> Redis:
         """
@@ -62,16 +73,18 @@ class RedisClient:
         save_type: str = "non_pickle"
 
         if isinstance(value, dict):
-            save_value = dump(value)
+            save_value = dumps(value)
             save_type = "pickle"
+            self.pickle_connection.set(key, save_value)
 
-        self.connection.set(key, save_value)
+        else:
+            self.connection.set(key, save_value)
         # used internally to convert to the correct value type
-        self.connection.set(f"__type_{key}__", save_type)
+        self.connection.set(f"__type__{key}__", save_type)
 
         if expiration_time:
             self.connection.expire(key, expiration_time)
-            self.connection.expire(f"__type_{key}__", expiration_time)
+            self.connection.expire(f"__type__{key}__", expiration_time)
 
         return True
 
@@ -89,12 +102,14 @@ class RedisClient:
             any: The value associated with the given key.
         """
 
-        value: any = self.connection.get(key)
+        value: any = None
 
-        if value:
-            if self.connection.set(f"__type_{key}__") == "pickle":
-                value = load(value)
+        if self.connection.get(f"__type__{key}__") == "pickle":
+            value = loads(self.pickle_connection.get(key))
         else:
+            value = self.connection.get(key)
+
+        if not value :
             raise KeyError("The following key may have expired or does not exist")
 
         return value
