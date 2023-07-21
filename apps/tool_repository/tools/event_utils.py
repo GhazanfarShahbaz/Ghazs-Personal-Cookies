@@ -6,6 +6,8 @@ Description: A module used for database event objects, as well as maniupalating 
 Edit Log:
 07/14/2023
 -   Conformed to pylint conventions.
+07/20/2023
+-   Default option for year.
 """
 
 from copy import copy
@@ -52,22 +54,22 @@ def create_event_information(event_data: dict) -> List[Event]:
     """
     Create a list of events from a request.
 
-    This function takes a dictionary representing the event data from a 
-    request and generates a list of events basedon the data. 
-    If the event is a one-off event, it creates a single event. 
-    If the event is a recurring event, it creates multiple events 
+    This function takes a dictionary representing the event data from a
+    request and generates a list of events basedon the data.
+    If the event is a one-off event, it creates a single event.
+    If the event is a recurring event, it creates multiple events
     based on the recurrence settings.
 
     Args:
-        event_data: A dictionary representing the event 
+        event_data: A dictionary representing the event
         data from a request.
 
     Returns:
-        A list of Event objects representing the events 
+        A list of Event objects representing the events
         generated from the request data.
 
     Raises:
-        ValueError: If the event_data dictionary is 
+        ValueError: If the event_data dictionary is
         missing any required fields.
     """
 
@@ -134,7 +136,7 @@ def create_event_information(event_data: dict) -> List[Event]:
     return event_dict_list_to_event_type_list(event_list)
 
 
-def get_daily_reccurance_event_list( # pylint: disable=too-many-locals
+def get_daily_reccurance_event_list(  # pylint: disable=too-many-locals
     event_template: dict,
     start_date: str,
     end_date: str,
@@ -168,7 +170,7 @@ def get_daily_reccurance_event_list( # pylint: disable=too-many-locals
         # Example:  m/t/th
         for reccurance_str in reccurance_type.split("/"):
             reccurance_str = reccurance_str.strip().lower()
-            global WEEKDAY # pylint: disable=global-variable-not-assigned
+            global WEEKDAY  # pylint: disable=global-variable-not-assigned
 
             if WEEKDAY.get(reccurance_str):
                 reccurance_nums.add(WEEKDAY[reccurance_str])
@@ -223,7 +225,7 @@ def get_daily_reccurance_event_list( # pylint: disable=too-many-locals
     return event_list
 
 
-def get_other_reccurance_event_list( # pylint: disable=too-many-locals
+def get_other_reccurance_event_list(  # pylint: disable=too-many-locals
     event_template: dict,
     start_date: str,
     end_date: str,
@@ -233,16 +235,16 @@ def get_other_reccurance_event_list( # pylint: disable=too-many-locals
     """
     Generates a list of recurring events for a specified date range.
 
-    This function takes a dictionary representing an event template, a 
-    start date, an end date, a recurrence type, and a recurrence end date, 
-    and generates a list of recurring events based on the event template and 
+    This function takes a dictionary representing an event template, a
+    start date, an end date, a recurrence type, and a recurrence end date,
+    and generates a list of recurring events based on the event template and
     recurrence settings.
 
     Args:
         event_template: A dictionary representing the event template.
         start_date: A string representing the start date for the generated events.
         end_date: A string representing the end date for the generated events.
-        recurrence_type: A string representing the type of recurrence 
+        recurrence_type: A string representing the type of recurrence
         ("weekly", "monthly", or "yearly").
         recurrence_end_date_string: A string representing the end date for recurrence.
 
@@ -306,7 +308,7 @@ def string_to_date(date_string: str) -> datetime:
     """
     Convert a date string to a datetime object.
 
-    This function takes a string representing a date and attempts to convert 
+    This function takes a string representing a date and attempts to convert
     it to a datetime object.
     It tries to match the input string to a set of supported date formats.
 
@@ -321,12 +323,12 @@ def string_to_date(date_string: str) -> datetime:
     """
     date_string = date_string.strip()
 
-    global DATE_FORMATS # pylint: disable=global-variable-not-assigned
+    global DATE_FORMATS  # pylint: disable=global-variable-not-assigned
     for date_format in DATE_FORMATS:
         try:
             date: datetime = datetime.strptime(date_string, date_format)
             return date
-        except: # pylint: disable=bare-except
+        except:  # pylint: disable=bare-except
             pass
 
     raise ValueError("This is not a valid date format")
@@ -338,12 +340,12 @@ def default_form_get_date_to_and_date_from(
     """
     Gets start and end dates from a user request form using a default option.
 
-    This function takes a string representing the default option and uses it 
+    This function takes a string representing the default option and uses it
     to determine the start and end dates.
-    If the default option is "today", the start date is set to the beginning of 
-    the current day and the end date is set to the end of the current day. 
+    If the default option is "today", the start date is set to the beginning of
+    the current day and the end date is set to the end of the current day.
     If the default option is "week", the start date is set to the beginning of the current
-    week and the end date is set to the end of the current week. 
+    week and the end date is set to the end of the current week.
     If the default option is "month", the start date is set
     to the beginning of the current month and the end date is set to the end of the current month.
 
@@ -387,6 +389,14 @@ def default_form_get_date_to_and_date_from(
         end_date -= timedelta(days=1)
 
         date_to = datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59)
+
+    elif default_option == "year":
+        date_from = datetime(current_date.year, current_date.month, 1, 0, 0)
+
+        end_date: datetime = date_from + relativedelta(year=1)
+        end_date -= timedelta(days=1)
+
+        date_to = datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59)
     else:
         raise ValueError(
             "Invalid default option. Accepted options are 'today', 'week', or 'month'"
@@ -399,7 +409,7 @@ def event_dict_list_to_event_type_list(event_list: List[dict]) -> List[Event]:
     """
     Converts a list of dictionaries to a list of Event objects.
 
-    This function takes a list of dictionaries representing events and 
+    This function takes a list of dictionaries representing events and
     converts them to a list of Event objects.
 
     Args:
@@ -439,3 +449,19 @@ def event_type_list_to_event_type_list(event_list: List[Event]) -> List[dict]:
         raise TypeError("All items in the list must be of type `Event`")
 
     return [event.to_dict() for event in event_list]
+
+
+def time_until_eod() -> int:
+    """
+    Calculate the number of minutes until the end of the day.
+
+    Returns:
+        int: The number of minutes until the end of the day.
+    """
+
+    current_time: datetime = datetime.now()
+    midnight: datetime = (current_time + timedelta(days=1)).replace(
+        hour=0, minute=0, microsecond=0, second=0
+    )
+
+    return (midnight - current_time).seconds // 60
