@@ -6,6 +6,8 @@ Description: A module used to process event requests.
 Edit Log:
 07/14/2023
 -   Conformed to pylint conventions.
+07/20/2023
+-   Added caching to get default event.
 """
 
 from typing import List
@@ -17,14 +19,16 @@ from apps.tool_repository.tools.event_utils import (
     create_event_information,
     default_form_get_date_to_and_date_from,
     event_type_list_to_event_type_list,
+    time_until_eod,
 )
 
+from apps.tool_repository.tools.redis_decorator import Cache
 
 def process_create_event(event_data: dict) -> None:
     """
     Processes a request to create a new event.
 
-    This function takes a dictionary `event_data` representing the event data from a 
+    This function takes a dictionary `event_data` representing the event data from a
     request and creates new events in the event repository.
     The `event_data` can represent a single event or a series of recurring events.
 
@@ -39,12 +43,12 @@ def process_create_event(event_data: dict) -> None:
 
     EventRepository().insert(event_list)
 
-
+# TODO: Need to delete cache if added new event.    pylint:disable=fixme
 def process_get_default_event(default_form: dict) -> List[dict]:
     """
     Processes a request to retrieve a list of events using default parameters.
 
-    This function takes a dictionary `default_form` representing the default 
+    This function takes a dictionary `default_form` representing the default
     parameters for an events request.
     It sets any missing parameters to their default values, then calls the `process_get_event`
     function with these parameters to retrieve a list of events.
@@ -57,22 +61,26 @@ def process_get_default_event(default_form: dict) -> List[dict]:
         fields "EventId", "UserId", "Name", "StartDate", "EndDate", and "Recurring".
     """
 
-    (
-        default_form["DateFrom"],
-        default_form["DateTo"],
-    ) = default_form_get_date_to_and_date_from(default_form.get("DefaultOption"))
+    @Cache(cache_key=default_form.get("DefaultOption"), expiration_time=time_until_eod)
+    def get_default_events():
+        (
+            default_form["DateFrom"],
+            default_form["DateTo"],
+        ) = default_form_get_date_to_and_date_from(default_form.get("DefaultOption"))
 
-    return process_get_event(default_form)
+        return process_get_event(default_form)
+
+    return get_default_events()
 
 
 def process_get_event(filter_form: dict) -> List[dict]:
     """
     Processes a request to retrieve a list of events that match the given filter.
 
-    This function takes a dictionary `filter_form` representing the filter parameters for 
-    an events request, and calls the `EventRepository().get()` method with these parameters 
+    This function takes a dictionary `filter_form` representing the filter parameters for
+    an events request, and calls the `EventRepository().get()` method with these parameters
     to retrieve a list of events that match the filter.
-    The returned events are then converted to a list of dictionaries using the 
+    The returned events are then converted to a list of dictionaries using the
     `event_type_list_to_event_type_list()` function.
 
     Args:
@@ -93,7 +101,7 @@ def process_update_event(update_form: dict) -> None:
     Processes a request to update an existing event.
 
     This function takes a dictionary `update_form` representing the update parameters for an event.
-    If the event is a single event, the function calls `EventRepository().update_by_id()` 
+    If the event is a single event, the function calls `EventRepository().update_by_id()`
     method using the event ID and update dictionary.
     If the event is a recurring event, the `EventRepository().update_by_recurrance_id()`
     method is called instead.
@@ -120,13 +128,13 @@ def process_delete_event(delete_form: dict) -> None:
     """
     Processes a request to delete an existing event.
 
-    This function takes a dictionary `delete_form` representing the delete parameters 
+    This function takes a dictionary `delete_form` representing the delete parameters
     for an event.
     The function then calls the `EventRepository().delete()` method with these parameters
     to delete the given event.
 
     Args:
-        delete_form: A dictionary containing the event ID or recurrence ID that needs to 
+        delete_form: A dictionary containing the event ID or recurrence ID that needs to
         be deleted.
 
     Returns:

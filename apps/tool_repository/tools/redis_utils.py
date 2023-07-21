@@ -10,6 +10,8 @@ Edit Log:
 -   Created basic redis client using context manager.
 07/19/2023
 -   Seperated pickle connection from regular redis connection pool.
+07/20/2023
+-   Added pickle support for list objects
 """
 
 from os import getenv
@@ -56,7 +58,7 @@ class RedisClient:
 
         return self
 
-    def __exit__( # pylint: disable=redefined-builtin
+    def __exit__(  # pylint: disable=redefined-builtin
         self, type, value, traceback
     ) -> None:
         pass
@@ -77,7 +79,7 @@ class RedisClient:
         save_value: any = value
         save_type: str = "non_pickle"
 
-        if isinstance(value, dict):
+        if isinstance(value, (dict, list)):
             save_value = dumps(value)
             save_type = "pickle"
             self.pickle_connection.set(key, save_value)
@@ -109,52 +111,17 @@ class RedisClient:
 
         value: any = None
 
+        print(key)
+
         if self.connection.get(f"__type__{key}__") == "pickle":
             value = loads(self.pickle_connection.get(key))
+            print("test")
         else:
             value = self.connection.get(key)
 
         if not value:
-            raise KeyError("The following key may have expired or does not exist")
+            raise KeyError(
+                "The following key may have expired, does not exist, or was empty"
+            )
 
         return value
-
-
-def cached(cache_key: str, expiration_time=None) -> any:
-    """
-    A decorator that caches the result of a function based on a
-    cache key and an optional expiration time.
-
-    Args:
-        cache_key (str): The cache key to store/retrieve the cached result.
-        expiration_time (int, optional): The expiration time for the cached
-                                         result in seconds. Defaults to None.
-
-    Returns:
-        any: The cached result of the decorated function.
-
-    Raises:
-        KeyError: If the cache key expired or does not exist.
-    """
-
-    def decorator(func):
-        def function_wrapper(*args, **kwargs):
-            response: dict = {}
-
-            with RedisClient() as client:
-                try:
-                    response = client.get(cache_key)
-                except KeyError as exception:
-                    print(f"The {cache_key} key expired or did not exist", exception)
-
-            if not response:
-                response = func(*args, **kwargs)
-
-            with RedisClient() as client:
-                client.save(cache_key, response, expiration_time)
-
-            return response
-
-        return function_wrapper
-
-    return decorator
