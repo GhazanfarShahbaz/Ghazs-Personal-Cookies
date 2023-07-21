@@ -12,10 +12,12 @@ Edit Log:
 -   Seperated pickle connection from regular redis connection pool.
 07/20/2023
 -   Added pickle support for list objects
+-   Added logic to remove cache keys
 """
 
 from os import getenv
 from pickle import loads, dumps
+from typing import List
 
 from redis import Redis, ConnectionPool  # pylint: disable=import-error
 
@@ -111,11 +113,8 @@ class RedisClient:
 
         value: any = None
 
-        print(key)
-
         if self.connection.get(f"__type__{key}__") == "pickle":
             value = loads(self.pickle_connection.get(key))
-            print("test")
         else:
             value = self.connection.get(key)
 
@@ -125,3 +124,26 @@ class RedisClient:
             )
 
         return value
+
+    def remove_keys(self, keys: List[str]) -> None:
+        """
+        Delete Redis cache keys from the appropriate connection pool.
+
+        Args:
+            keys (list): A list of cache keys to be deleted.
+
+        Returns:
+            None
+        """
+
+        for key in keys:
+            value_type: str = self.connection.get(f"__type__{key}__") == "pickle"
+
+            if not value_type:
+                pass
+
+            # It doesn't actually matter which one you delete with.
+            if value_type == "pickle":
+                self.connection.delete(key)
+            else:
+                self.pickle_connection.delete(key)

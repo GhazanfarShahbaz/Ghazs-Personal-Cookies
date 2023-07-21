@@ -8,6 +8,7 @@ Edit Log:
 -   Conformed to pylint conventions.
 07/20/2023
 -   Added caching to get default event.
+-   Remove previous cache when creating, deleting, or updating events.
 """
 
 from typing import List
@@ -23,7 +24,22 @@ from apps.tool_repository.tools.event_utils import (
 )
 
 from apps.tool_repository.tools.redis_decorator import Cache
+from apps.tool_repository.tools.redis_utils import RedisClient
 
+DEFAULT_KEYS: List[str] = ["today", "week", "month", "year"]
+
+def key_remover(func):
+    def wrapper(*args, **kwargs):
+        with RedisClient() as client:
+            global DEFAULT_KEYS #pylint: disable=global-variable-not-assigned
+            client.remove_keys(DEFAULT_KEYS)
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+@key_remover
 def process_create_event(event_data: dict) -> None:
     """
     Processes a request to create a new event.
@@ -43,7 +59,7 @@ def process_create_event(event_data: dict) -> None:
 
     EventRepository().insert(event_list)
 
-# TODO: Need to delete cache if added new event.    pylint:disable=fixme
+
 def process_get_default_event(default_form: dict) -> List[dict]:
     """
     Processes a request to retrieve a list of events using default parameters.
@@ -96,6 +112,7 @@ def process_get_event(filter_form: dict) -> List[dict]:
     return event_type_list_to_event_type_list(event_list)
 
 
+@key_remover
 def process_update_event(update_form: dict) -> None:
     """
     Processes a request to update an existing event.
@@ -124,6 +141,7 @@ def process_update_event(update_form: dict) -> None:
         )
 
 
+@key_remover
 def process_delete_event(delete_form: dict) -> None:
     """
     Processes a request to delete an existing event.
