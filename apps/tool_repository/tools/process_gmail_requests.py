@@ -20,6 +20,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
+from apps.tool_repository.tools.redis_decorator import Cache
 
 def create_authorization_file(authorization_dict: Dict) -> tempfile:
     """
@@ -146,52 +147,58 @@ def get_emails( # pylint: disable=too-many-locals
         A dictionary containing the email labels, subject, sender, snippet and message text for each
         email.
     """
+    cache_key: str = f"{str(label_filters)}_{max_results}_{get_snippet}"
 
-    creds: Credentials = get_credentials(authorization_dict)
+    @Cache(cache_key=cache_key, expiration_time=5)
+    def filter_emails():
 
-    # Connect to the Gmail API
-    service = build("gmail", "v1", credentials=creds)
+        creds: Credentials = get_credentials(authorization_dict)
 
-    # We can also pass maxResults to get any number of emails. Like this:
-    results = (
-        service # pylint: disable=no-member
-        .users()
-        .messages()
-        .list(userId="me", labelIds=label_filters, maxResults=max_results)
-        .execute()
-    )
+        # Connect to the Gmail API
+        service = build("gmail", "v1", credentials=creds)
 
-    messages: list = results.get("messages")
+        # We can also pass maxResults to get any number of emails. Like this:
+        results = (
+            service # pylint: disable=no-member
+            .users()
+            .messages()
+            .list(userId="me", labelIds=label_filters, maxResults=max_results)
+            .execute()
+        )
 
-    email_data: Dict = {}
-    size: int = 0
+        messages: list = results.get("messages")
 
-    for message in messages:
-        msg = service.users().messages().get(userId="me", id=message["id"]).execute() # pylint: disable=no-member
+        email_data: Dict = {}
+        size: int = 0
 
-        if get_snippet is True:
-            subject, sender = None, None
-            try:
-                payload = msg["payload"]
-                headers = payload["headers"]
+        for message in messages:
+            msg = service.users().messages().get(userId="me", id=message["id"]).execute() # pylint: disable=no-member
 
-                for data in headers:
-                    if data["name"] == "Subject":
-                        subject = data["value"]
-                    if data["name"] == "From":
-                        sender = data["value"]
-            except: # pylint: disable=bare-except
-                continue
+            if get_snippet is True:
+                subject, sender = None, None
+                try:
+                    payload = msg["payload"]
+                    headers = payload["headers"]
 
-            email_data[size] = {
-                "Labels": msg["labelIds"],
-                "Snippet": msg["snippet"],
-                "Subject": str(subject),
-                "Sender": str(sender),
-            }
-        else:
-            email_data[size] = extract_full_email(msg)
+                    for data in headers:
+                        if data["name"] == "Subject":
+                            subject = data["value"]
+                        if data["name"] == "From":
+                            sender = data["value"]
+                except: # pylint: disable=bare-except
+                    continue
 
-        size += 1
+                email_data[size] = {
+                    "Labels": msg["labelIds"],
+                    "Snippet": msg["snippet"],
+                    "Subject": str(subject),
+                    "Sender": str(sender),
+                }
+            else:
+                email_data[size] = extract_full_email(msg)
 
-    return email_data
+            size += 1
+
+        return email_data
+
+    return filter_emails()
