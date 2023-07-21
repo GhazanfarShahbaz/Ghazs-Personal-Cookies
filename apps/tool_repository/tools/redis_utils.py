@@ -15,7 +15,7 @@ Edit Log:
 from os import getenv
 from pickle import loads, dumps
 
-from redis import Redis, ConnectionPool # pylint: disable=import-error
+from redis import Redis, ConnectionPool  # pylint: disable=import-error
 
 
 class RedisClient:
@@ -26,6 +26,8 @@ class RedisClient:
     The second is for nested dictionary objects.
     """
 
+    # https://stackoverflow.com/questions/32276493/how-to-store-and-retrieve-a-dictionary-with-redis
+
     connection_pool_native: ConnectionPool = ConnectionPool(
         host=getenv("REDIS_HOST"), port=getenv("REDIS_PORT"), decode_responses=True
     )
@@ -33,17 +35,18 @@ class RedisClient:
     connection_pool_pickle: ConnectionPool = ConnectionPool(
         host=getenv("REDIS_HOST"), port=getenv("REDIS_PORT"), decode_responses=False
     )
-    #https://github.com/redis/redis-py/issues/809
+    # https://github.com/redis/redis-py/issues/809
 
     def __init__(self):
         self.connection: Redis = Redis(connection_pool=self.connection_pool_native)
-        self.pickle_connection: Redis = Redis(connection_pool=self.connection_pool_pickle)
-
+        self.pickle_connection: Redis = Redis(
+            connection_pool=self.connection_pool_pickle
+        )
 
     def __enter__(self) -> Redis:
         """
         Allows us to setup a context manager with Redis Client.
-        More specifically allowing us to use the redis connection that has been 
+        More specifically allowing us to use the redis connection that has been
         created with the connection pool.
 
 
@@ -53,7 +56,9 @@ class RedisClient:
 
         return self
 
-    def __exit__(self, type, value, traceback) -> None: #pylint: disable=redefined-builtin
+    def __exit__( # pylint: disable=redefined-builtin
+        self, type, value, traceback
+    ) -> None:
         pass
 
     def save(self, key: str, value: any, expiration_time=None) -> bool:
@@ -109,10 +114,47 @@ class RedisClient:
         else:
             value = self.connection.get(key)
 
-        if not value :
+        if not value:
             raise KeyError("The following key may have expired or does not exist")
 
         return value
 
 
-# https://stackoverflow.com/questions/32276493/how-to-store-and-retrieve-a-dictionary-with-redis
+def cached(cache_key: str, expiration_time=None) -> any:
+    """
+    A decorator that caches the result of a function based on a
+    cache key and an optional expiration time.
+
+    Args:
+        cache_key (str): The cache key to store/retrieve the cached result.
+        expiration_time (int, optional): The expiration time for the cached
+                                         result in seconds. Defaults to None.
+
+    Returns:
+        any: The cached result of the decorated function.
+
+    Raises:
+        KeyError: If the cache key expired or does not exist.
+    """
+
+    def decorator(func):
+        def function_wrapper(*args, **kwargs):
+            response: dict = {}
+
+            with RedisClient() as client:
+                try:
+                    response = client.get(cache_key)
+                except KeyError as exception:
+                    print(f"The {cache_key} key expired or did not exist", exception)
+
+            if not response:
+                response = func(*args, **kwargs)
+
+            with RedisClient() as client:
+                client.save(cache_key, response, expiration_time)
+
+            return response
+
+        return function_wrapper
+
+    return decorator
