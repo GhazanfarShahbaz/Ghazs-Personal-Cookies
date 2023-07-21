@@ -9,16 +9,17 @@ Edit Log:
 -   Added timeout to get weather request.
 07/19/2023
 -   Added caching to get weather.
+07/20/2023
+-   Updating caching logic to use cache decorator class instead of function.
 """
 
 from os import environ
 
 from requests import get
 
+from apps.tool_repository.tools.redis_decorator import Cache
 
-from apps.tool_repository.tools.redis_utils import cached
-
-@cached("weather_data", 5)
+@Cache("weather_data", 5)
 def get_weather() -> dict:
     """
     Retrieves weather information from an API.
