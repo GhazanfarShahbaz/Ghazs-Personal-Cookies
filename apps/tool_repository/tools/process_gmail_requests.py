@@ -6,6 +6,8 @@ Description: A module for handling email requests using hte gmail api.
 Edit Log:
 07/14/2023
 -   Conformed to pylint conventions.
+07/20/2023
+-   Cache get emails based on filters.
 """
 
 from typing import Dict
