@@ -24,6 +24,7 @@ from googleapiclient.discovery import build
 
 from apps.tool_repository.tools.redis_decorator import Cache
 
+
 def create_authorization_file(authorization_dict: Dict) -> tempfile:
     """
     Creates a temporary file containing authorization information.
@@ -39,7 +40,9 @@ def create_authorization_file(authorization_dict: Dict) -> tempfile:
         A handle to a temporary file containing the authorization information.
     """
 
-    authorization_file: tempfile = tempfile.NamedTemporaryFile() # pylint: disable=consider-using-with
+    authorization_file: tempfile = (
+        tempfile.NamedTemporaryFile()
+    )  # pylint: disable=consider-using-with
     authorization_file.write(json.dumps(authorization_dict).encode("utf-8"))
     authorization_file.flush()
 
@@ -50,7 +53,7 @@ def get_credentials(authorization_dict: Dict) -> Credentials:
     """
     Retrieves user credentials from a temporary file.
 
-    This function takes a dictionary `authorization_dict` containing authorization 
+    This function takes a dictionary `authorization_dict` containing authorization
     information and creates a temporary file.
     The function then reads the credentials from the temporary file and returns them
     as a `Credentials` object.
@@ -79,7 +82,7 @@ def extract_full_email(msg) -> dict:
 
     This function takes an email message `msg` and extracts specific fields from it.
     The fields that are extracted include the email labels, snippet, subject, sender,
-    and message text. 
+    and message text.
     The function returns a dictionary containing the extracted fields.
 
     Args:
@@ -119,27 +122,27 @@ def extract_full_email(msg) -> dict:
             "Sender": str(sender),
             "Message": str(body),
         }
-    except: # pylint: disable=bare-except
+    except:  # pylint: disable=bare-except
         return {"Labels": None}
 
 
-def get_emails( # pylint: disable=too-many-locals
+def get_emails(  # pylint: disable=too-many-locals
     authorization_dict: Dict, label_filters: list, max_results: int, get_snippet: bool
 ) -> dict:
     """
     Retrieves a list of email messages from Gmail.
 
-    This function takes a dictionary `authorization_dict` containing authorization information, 
+    This function takes a dictionary `authorization_dict` containing authorization information,
     a list of label filters `label_filters`, an integer `max_results` representing the maximum
     number of email messages to retrieve, and a boolean `get_snippet` indicating whether to
     retrieve only the email header or also the full email body. The function then connects to
     the Gmail API using the provided authorization information, retrieves a list of email messages
-    based on the provided label filters and maximum number of results, and returns a dictionary 
+    based on the provided label filters and maximum number of results, and returns a dictionary
     containing the email labels, subject, sender, snippet and message text for each email.
 
     Args:
         authorization_dict: A dictionary containing the authorization information for the Gmail API.
-        label_filters: A list of strings containing label filters to apply when retrieving email 
+        label_filters: A list of strings containing label filters to apply when retrieving email
         messages.
         max_results: An integer representing the maximum number of email messages to retrieve.
         get_snippet: A boolean indicating whether to retrieve only the email header or also the full
@@ -153,7 +156,6 @@ def get_emails( # pylint: disable=too-many-locals
 
     @Cache(cache_key=cache_key, expiration_time=5)
     def filter_emails():
-
         creds: Credentials = get_credentials(authorization_dict)
 
         # Connect to the Gmail API
@@ -161,8 +163,7 @@ def get_emails( # pylint: disable=too-many-locals
 
         # We can also pass maxResults to get any number of emails. Like this:
         results = (
-            service # pylint: disable=no-member
-            .users()
+            service.users()  # pylint: disable=no-member
             .messages()
             .list(userId="me", labelIds=label_filters, maxResults=max_results)
             .execute()
@@ -174,7 +175,9 @@ def get_emails( # pylint: disable=too-many-locals
         size: int = 0
 
         for message in messages:
-            msg = service.users().messages().get(userId="me", id=message["id"]).execute() # pylint: disable=no-member
+            msg = (
+                service.users().messages().get(userId="me", id=message["id"]).execute()
+            )  # pylint: disable=no-member
 
             if get_snippet is True:
                 subject, sender = None, None
@@ -187,7 +190,7 @@ def get_emails( # pylint: disable=too-many-locals
                             subject = data["value"]
                         if data["name"] == "From":
                             sender = data["value"]
-                except: # pylint: disable=bare-except
+                except:  # pylint: disable=bare-except
                     continue
 
                 email_data[size] = {
