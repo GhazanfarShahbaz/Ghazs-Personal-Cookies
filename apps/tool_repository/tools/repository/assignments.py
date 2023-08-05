@@ -20,7 +20,7 @@ from apps.tool_repository.tools.repository.models.class_model import Class
 from apps.tool_repository.tools.repository.models.syllabus_model import Syllabus
 
 
-class AssignmentRepository():
+class AssignmentRepository:
     """
     A class representing a data store for Assignment objects.
 
@@ -47,7 +47,7 @@ class AssignmentRepository():
         manager value.
         """
 
-        pass # pylint: disable=unnecessary-pass
+        pass  # pylint: disable=unnecessary-pass
 
     def __exit__(self, type, value, traceback):  # pylint: disable=redefined-builtin
         """
