@@ -21,7 +21,7 @@ def process_create_assignment(assignment_data: dict) -> None:
     """
     Process a request to create a new assignment.
 
-    This function takes a dictionary representing assignment data from a request and 
+    This function takes a dictionary representing assignment data from a request and
     inserts the data into the AssignmentRepository to create the new assignment.
 
     Args:
@@ -42,7 +42,7 @@ def process_update_assignment(update_form: dict) -> None:
     data to update an existing assignment in the AssignmentRepository.
 
     Args:
-        update_form: A dictionary representing the update data from a request. The required 
+        update_form: A dictionary representing the update data from a request. The required
         fields are "AssignmentId" and "UpdateParams".
 
     Returns:
@@ -58,16 +58,16 @@ def process_get_assignment_request(filter_form: dict) -> List[dict]:
     """
     Process a request to get a list of assignments.
 
-    This function takes a dictionary representing filter data from a request and uses the data 
+    This function takes a dictionary representing filter data from a request and uses the data
     to retrieve a list of assignments from the AssignmentRepository.
 
     Args:
-        filter_form: A dictionary representing the filter data from a request. The optional fields 
+        filter_form: A dictionary representing the filter data from a request. The optional fields
         are "UserId", "ClassId", "AssignmentId", "StartDate", "EndDate", and "Status".
 
     Returns:
-        A list of dictionaries representing the retrieved assignments. 
-        Each dictionary contains the fields "AssignmentId", "UserId", "ClassId", "StartDate", 
+        A list of dictionaries representing the retrieved assignments.
+        Each dictionary contains the fields "AssignmentId", "UserId", "ClassId", "StartDate",
         "EndDate", and "Status".
     """
 
@@ -80,11 +80,11 @@ def process_delete_assignment_request(delete_form: dict) -> None:
     """
     Process a request to delete an assignment.
 
-    This function takes a dictionary representing delete data from a request and uses the data to 
+    This function takes a dictionary representing delete data from a request and uses the data to
     delete an existing assignment from the AssignmentRepository.
 
     Args:
-        delete_form: A dictionary representing the delete data from a request. The required fields 
+        delete_form: A dictionary representing the delete data from a request. The required fields
         are "AssignmentId", "UserId", and "ClassId".
 
     Returns:
