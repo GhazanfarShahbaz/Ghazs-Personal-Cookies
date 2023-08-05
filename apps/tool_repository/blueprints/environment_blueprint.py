@@ -19,6 +19,7 @@ from flask import Blueprint, request
 
 environment_blueprint: Blueprint = Blueprint("environment", __name__)
 
+
 @environment_blueprint.route("/setEnvironmentVariable", methods=["POST"])
 def set_environment_variable():
     """
