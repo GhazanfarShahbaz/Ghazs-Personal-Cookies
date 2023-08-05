@@ -10,30 +10,23 @@ Edit Log:
 
 # pylint: disable=invalid-name, global-variable-not-assigned, too-few-public-methods, undefined-variable
 
-from sqlalchemy import (
-    Column,
-    DateTime,
-    JSON,
-    Integer,
-    String,
-    Float
-)
+from sqlalchemy import Column, DateTime, JSON, Integer, String, Float
 
 from . import Base
 
 
 class EndpointDiagnostics(Base):
     """
-        Represents diagnostics information for an endpoint.
+    Represents diagnostics information for an endpoint.
 
-        Attributes:
-        - DiagnosticId: The unique ID of the diagnostic entry.
-        - Endpoint: The endpoint URL.
-        - Request: The request data in JSON format.
-        - Response: The response data in JSON format.
-        - Date: The date and time of the diagnostic entry.
-        - Error: The error message, if any.
-        - Latency: The latency of the endpoint.
+    Attributes:
+    - DiagnosticId: The unique ID of the diagnostic entry.
+    - Endpoint: The endpoint URL.
+    - Request: The request data in JSON format.
+    - Response: The response data in JSON format.
+    - Date: The date and time of the diagnostic entry.
+    - Error: The error message, if any.
+    - Latency: The latency of the endpoint.
     """
 
     __tablename__ = "endpoint_"
