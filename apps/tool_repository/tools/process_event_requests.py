@@ -28,10 +28,11 @@ from apps.tool_repository.tools.redis_utils import RedisClient
 
 DEFAULT_KEYS: List[str] = ["today", "week", "month", "year"]
 
+
 def key_remover(func):
     def wrapper(*args, **kwargs):
         with RedisClient() as client:
-            global DEFAULT_KEYS #pylint: disable=global-variable-not-assigned
+            global DEFAULT_KEYS  # pylint: disable=global-variable-not-assigned
             client.remove_keys(DEFAULT_KEYS)
 
         return func(*args, **kwargs)
@@ -56,7 +57,6 @@ def process_create_event(event_data: dict) -> None:
     """
 
     event_list: List[Event] = create_event_information(event_data)
-
     EventRepository().insert(event_list)
 
 
@@ -77,7 +77,7 @@ def process_get_default_event(default_form: dict) -> List[dict]:
         fields "EventId", "UserId", "Name", "StartDate", "EndDate", and "Recurring".
     """
 
-    @Cache(cache_key=default_form.get("DefaultOption"), expiration_time=time_until_eod)
+    # @Cache(cache_key=default_form.get("DefaultOption"), expiration_time=time_until_eod)
     def get_default_events():
         (
             default_form["DateFrom"],
