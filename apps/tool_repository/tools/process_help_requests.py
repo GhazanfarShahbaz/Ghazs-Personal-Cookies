@@ -8,7 +8,7 @@ Edit Log:
 -   Conformed to pylint conventions.
 """
 
-#pylint: disable=line-too-long
+# pylint: disable=line-too-long
 from typing import Optional
 
 commands = {
