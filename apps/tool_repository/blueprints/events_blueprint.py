@@ -13,9 +13,12 @@ Edit Log:
 
 from typing import List
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 
-from apps.tool_repository.response_processing.event_processing import print_events
+from apps.tool_repository.response_processing.event_processing import (
+    print_events,
+    jsonify_event_list
+)
 from apps.tool_repository.tools.repository.models.event_model import Event
 
 from apps.tool_repository.tools.process_event_requests import (
@@ -27,6 +30,7 @@ from apps.tool_repository.tools.process_event_requests import (
 )
 
 events_blueprint: Blueprint = Blueprint("events", __name__)
+
 
 @events_blueprint.route("/createEvent", methods=["POST"])
 def create_event():
@@ -100,8 +104,9 @@ def get_events():
     else:
         event_list = process_get_event({})
 
+    current_app.logger.info(jsonify_event_list(event_list))
     return (
-        jsonify(event_list)
+        jsonify_event_list(event_list)
         if request_form.get("stringifyResult") is None
         else jsonify(print_events(event_list, set()))
     )
