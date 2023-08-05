@@ -10,12 +10,7 @@ Edit Log:
 
 # pylint: disable=invalid-name, global-variable-not-assigned, too-few-public-methods, undefined-variable, too-many-instance-attributes
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    ForeignKey
-)
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from . import Base
