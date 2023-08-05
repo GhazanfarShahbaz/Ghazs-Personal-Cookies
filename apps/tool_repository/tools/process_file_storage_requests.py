@@ -39,9 +39,9 @@ def process_delete_file(delete_file_form) -> Dict[str, str]:
     """
     Process a file deletion request.
 
-    This function takes a dictionary `delete_file_form` representing the delete 
+    This function takes a dictionary `delete_file_form` representing the delete
     parameters for a file.
-    The function then calls the `delete_file()` method with these parameters to 
+    The function then calls the `delete_file()` method with these parameters to
     delete the file from a storage system.
 
     Args:
