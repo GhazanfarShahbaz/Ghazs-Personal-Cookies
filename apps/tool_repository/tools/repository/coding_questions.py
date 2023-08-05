@@ -20,7 +20,7 @@ from apps.tool_repository.tools.repository.models.coding_question_model import (
 )
 
 
-class CodingQuestionRepository():
+class CodingQuestionRepository:
     """
     A class representing a data store for CodingQuestion objects.
 
@@ -83,7 +83,7 @@ class CodingQuestionRepository():
         Updates a coding question object in the database with the specified changes.
 
         This method takes a question ID and a dictionary of updates, and updates the corresponding
-        coding question object in the database with the new values. Any keys in the update 
+        coding question object in the database with the new values. Any keys in the update
         dictionarythat are not valid attributes of the coding question object are ignored.
 
         Args:
@@ -168,10 +168,10 @@ class CodingQuestionRepository():
 
     def delete(self, filters: dict) -> None:
         """
-        Retrieves a list of coding question objects from the database that match the specified 
+        Retrieves a list of coding question objects from the database that match the specified
         filter criteria.
 
-        This method queries the database for coding questions that match the specified filter 
+        This method queries the database for coding questions that match the specified filter
         criteria and returns a list of coding question objects that match the criteria.
 
         Args:
