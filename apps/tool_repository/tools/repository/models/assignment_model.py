@@ -21,18 +21,19 @@ from sqlalchemy import (
 
 from . import Base
 
+
 class Assignment(Base):
     """
-        Represents an assignment in a syllabus section.
+    Represents an assignment in a syllabus section.
 
-        Attributes:
-        - SectionId: The ID of the section the assignment belongs to.
-        - AssignmentId: The unique ID of the assignment.
-        - Name: The name of the assignment.
-        - Grade: The grade of the assignment.
-        - DateAssigned: The date when the assignment was assigned.
-        - DateDue: The due date of the assignment.
-        - Submitted: A boolean indicating whether the assignment has been submitted.
+    Attributes:
+    - SectionId: The ID of the section the assignment belongs to.
+    - AssignmentId: The unique ID of the assignment.
+    - Name: The name of the assignment.
+    - Grade: The grade of the assignment.
+    - DateAssigned: The date when the assignment was assigned.
+    - DateDue: The due date of the assignment.
+    - Submitted: A boolean indicating whether the assignment has been submitted.
     """
 
     __tablename__ = "assignments"
