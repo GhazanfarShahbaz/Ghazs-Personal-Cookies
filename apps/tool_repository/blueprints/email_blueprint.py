@@ -17,6 +17,7 @@ from apps.tool_repository.tools.process_gmail_requests import get_emails
 
 email_blueprint: Blueprint = Blueprint("email", __name__)
 
+
 @email_blueprint.route("/getGmailEmails", methods=["POST"])
 def get_gmail_emails():
     """
