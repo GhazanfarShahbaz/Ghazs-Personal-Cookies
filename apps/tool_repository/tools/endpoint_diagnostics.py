@@ -13,10 +13,10 @@ from typing import Dict, List
 
 from werkzeug.datastructures import ImmutableMultiDict
 
-from apps.tool_repository.tools.repository.endpoint_diagnostics import (
+from repository.endpoint_diagnostics import (
     EndpointDiagnosticsRepository,
 )
-from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import (
+from repository.models.endpoint_diagnostics_model import (
     EndpointDiagnostics,
 )
 

@@ -19,7 +19,7 @@ from apps.tool_repository.response_processing.event_processing import (
     print_events,
     jsonify_event_list
 )
-from apps.tool_repository.tools.repository.models.event_model import Event
+from repository.models.event_model import Event
 
 from apps.tool_repository.tools.process_event_requests import (
     process_create_event,

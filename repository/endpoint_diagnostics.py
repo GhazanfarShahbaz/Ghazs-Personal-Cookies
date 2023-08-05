@@ -15,8 +15,8 @@ from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 
-from apps.tool_repository.tools.repository.models.model import Session as Sess
-from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import (
+from repository.models.model import Session as Sess
+from repository.models.endpoint_diagnostics_model import (
     EndpointDiagnostics,
 )
 
