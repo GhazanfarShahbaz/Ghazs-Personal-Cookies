@@ -19,11 +19,11 @@ from apps.tool_repository.tools.repository.models.class_model import Class
 from apps.tool_repository.tools.repository.models.syllabus_model import Syllabus
 
 
-class SyllabusRepository():
+class SyllabusRepository:
     """
     A class representing a data store for Syllabus objects.
 
-    This class provides methods for inserting, updating, and querying Syllabus 
+    This class provides methods for inserting, updating, and querying Syllabus
     objects in the database.
 
     Attributes:
