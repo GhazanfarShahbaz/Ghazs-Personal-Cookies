@@ -9,7 +9,7 @@ Edit Log:
 - Create file
 """
 
-from apps.leetcode_questions.utils.allowed_params import (
+from apps.coding_questions.utils.allowed_params import (
     allowed_difficulties,
     allowed_tags,
     allowed_subscription,

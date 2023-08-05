@@ -9,7 +9,7 @@ Edit Log:
 - Create file
 """
 
-from apps.leetcode_questions.utils.allowed_params import allowed_code_chef_difficulty
+from apps.coding_questions.utils.allowed_params import allowed_code_chef_difficulty
 
 from repository.codechef_question_repository import CodeChefQuestionRepository
 

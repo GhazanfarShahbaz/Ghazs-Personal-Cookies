@@ -15,10 +15,10 @@ from random import randint
 
 from flask import Flask, request
 
-from apps.leetcode_questions.utils.process_random_codechef_question import (
+from apps.coding_questions.utils.process_random_codechef_question import (
     process_random_codechef_request,
 )
-from apps.leetcode_questions.utils.process_random_leetcode import (
+from apps.coding_questions.utils.process_random_leetcode import (
     process_random_leetcode_request,
 )
 
