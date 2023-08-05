@@ -31,10 +31,10 @@ def process_commit_diagnostics(
     """
     Commits endpoint diagnostics to the database.
 
-    This function takes optional diagnostic ID and endpoint info as input. 
+    This function takes optional diagnostic ID and endpoint info as input.
     If a diagnostic ID is not provided, the function creates a new diagnostic entry.
-    If a diagnostic ID is provided, the function updates the existing diagnostic entry with the 
-    corresponding response and error. 
+    If a diagnostic ID is provided, the function updates the existing diagnostic entry with the
+    corresponding response and error.
     The diagnostic info is passed in a dictionary containing an endpoint name, request data,
     response data, and error data.
 
@@ -67,16 +67,16 @@ def process_get_diagnostics(
     Processes a request to retrieve endpoint diagnostics.
 
     This function takes a dictionary representing filter data from a request and uses the data
-    to retrieve endpoint diagnostics from the EndpointDiagnosticsRepository. 
+    to retrieve endpoint diagnostics from the EndpointDiagnosticsRepository.
     The filter can be used to query diagnostics by date range or endpoint name.
 
     Args:
-        diagnostic_filter_form: A dictionary representing the filter data from a request. 
+        diagnostic_filter_form: A dictionary representing the filter data from a request.
         The optional fields are "Endpoint", "EndpointCounter", "DateFrom", and "DateTo".
 
     Returns:
-        A list of dictionaries representing the retrieved endpoint diagnostics. 
-        Each dictionary contains the fields "DiagnosticId", "Endpoint", "Request", "Response", 
+        A list of dictionaries representing the retrieved endpoint diagnostics.
+        Each dictionary contains the fields "DiagnosticId", "Endpoint", "Request", "Response",
         "Error", and "Datetime".
     """
 
