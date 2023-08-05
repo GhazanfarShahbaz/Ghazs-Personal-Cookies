@@ -23,7 +23,7 @@ def process_create_syllabus(syllabus_data: dict) -> None:
     """
     Processes a request to create a new syllabus.
 
-    This function takes a dictionary `syllabus_data` representing the syllabus data 
+    This function takes a dictionary `syllabus_data` representing the syllabus data
     from a request and creates a new syllabus in the syllabus repository.
 
     Args:
@@ -40,7 +40,7 @@ def process_update_syllabus(update_form: dict) -> None:
     """
     Processes a request to update an existing syllabus.
 
-    This function takes a dictionary `update_form` representing the update parameters 
+    This function takes a dictionary `update_form` representing the update parameters
     for a syllabus.
     The function then calls the `SyllabusRepository().update()` method with these parameters
     to update the syllabus in the syllabus repository.
@@ -52,7 +52,7 @@ def process_update_syllabus(update_form: dict) -> None:
         None. The function does not return anything.
     """
 
-    SyllabusRepository().insert(    # pylint: disable=too-many-function-args
+    SyllabusRepository().insert(  # pylint: disable=too-many-function-args
         update_form.get("SyllabusId"), update_form.get("UpdateParams")
     )
 
@@ -63,7 +63,7 @@ def process_get_syllabus_request(filter_form: dict) -> List[dict]:
 
     This function takes a dictionary `filter_form` representing the filter parameters for a
     syllabus request, and calls the `SyllabusRepository().get()` method with these parameters
-    to retrieve a list of syllabuses that match the filter. 
+    to retrieve a list of syllabuses that match the filter.
     The returned syllabuses are then converted to a list of dictionaries using the
     `syllabus_type_list_to_event_dict_list()` function.
 
@@ -84,7 +84,7 @@ def process_delete_syllabus_request(delete_form: dict) -> None:
     """
     Processes a request to delete an existing syllabus.
 
-    This function takes a dictionary `delete_form` representing the delete parameters for a 
+    This function takes a dictionary `delete_form` representing the delete parameters for a
     syllabus request.
     The function then calls the `SyllabusRepository().delete()` method with these parameters to
     delete the given syllabus from the syllabus repository.
