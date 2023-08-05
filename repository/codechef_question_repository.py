@@ -14,7 +14,7 @@ from sqlalchemy import or_
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Session
 
-from repository.models.models.model import Session as Sess
+from repository.models.model import Session as Sess
 from repository.models.codechef_question_model import CodeChefQuestion
 
 
