@@ -14,6 +14,7 @@ from os import environ
 from sqlalchemy import create_engine
 from sqlalchemy.engine.base import Engine
 
+
 def get_engine() -> Engine:
     """
     Creates and returns an SQLAlchemy engine object.
@@ -36,6 +37,6 @@ def get_engine() -> Engine:
         f"{sql_type}://{sql_username}:{sql_password}@{sql_host}:{sql_port}/{sql_database}",
         pool_size=20,
         max_overflow=20,
-        pool_recycle=3600
+        pool_recycle=3600,
     )
     return engine
