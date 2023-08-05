@@ -118,7 +118,7 @@ class RedisClient:
         else:
             value = self.connection.get(key)
 
-        if not value:
+        if value is None:
             raise KeyError(
                 "The following key may have expired, does not exist, or was empty"
             )
