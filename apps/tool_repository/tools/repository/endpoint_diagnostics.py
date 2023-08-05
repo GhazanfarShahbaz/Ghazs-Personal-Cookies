@@ -21,7 +21,7 @@ from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model imp
 )
 
 
-class EndpointDiagnosticsRepository():
+class EndpointDiagnosticsRepository:
     """
     A class representing a data store for EndpointDiagnostics objects.
 
