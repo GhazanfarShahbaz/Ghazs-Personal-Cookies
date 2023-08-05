@@ -12,6 +12,7 @@ Edit Log:
 from os import environ
 from twilio.rest import Client
 
+
 def get_client():
     """
     Creates and returns a twilio client
@@ -24,10 +25,10 @@ def get_client():
 def send_message(message: str):
     """
     Sends a message to a specified phone number using the twilo api.
-    
+
     Args:
         message: A string containing the message to send
-        
+
     Returns:
         None
     """
