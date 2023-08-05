@@ -15,8 +15,8 @@ from typing import List
 from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, distinct, asc
 
-from apps.tool_repository.tools.repository.models.model import Session as Sess
-from apps.tool_repository.tools.repository.models.event_model import Event
+from repository.models.model import Session as Sess
+from repository.models.event_model import Event
 
 
 class EventRepository:

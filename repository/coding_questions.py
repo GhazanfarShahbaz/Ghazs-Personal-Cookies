@@ -14,8 +14,8 @@ from typing import List
 
 from sqlalchemy.orm import Session, Query
 
-from apps.tool_repository.tools.repository.models.model import Session as Sess
-from apps.tool_repository.tools.repository.models.coding_question_model import (
+from repository.models.model import Session as Sess
+from repository.models.coding_question_model import (
     CodingQuestion,
 )
 

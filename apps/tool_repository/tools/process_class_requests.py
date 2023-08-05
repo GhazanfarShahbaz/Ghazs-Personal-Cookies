@@ -11,8 +11,8 @@ Edit Log:
 from typing import List
 from apps.tool_repository.tools.class_utils import class_type_list_to_event_dict_list
 
-from apps.tool_repository.tools.repository.models.class_model import Class
-from apps.tool_repository.tools.repository.classes import ClassRepository
+from repository.models.class_model import Class
+from repository.classes import ClassRepository
 
 
 def process_create_class(class_data: dict) -> None:

@@ -10,7 +10,7 @@ Edit Log:
 
 from typing import List
 
-from apps.tool_repository.tools.repository.models.assignment_model import Assignment
+from repository.models.assignment_model import Assignment
 
 
 def assignment_type_list_to_event_dict_list(

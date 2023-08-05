@@ -14,9 +14,9 @@ from typing import List
 
 from sqlalchemy.orm import Session, Query
 
-from apps.tool_repository.tools.repository.models.model import Session as Sess
-from apps.tool_repository.tools.repository.models.class_model import Class
-from apps.tool_repository.tools.repository.models.syllabus_model import Syllabus
+from repository.models.model import Session as Sess
+from repository.models.class_model import Class
+from repository.models.syllabus_model import Syllabus
 
 
 class SyllabusRepository:

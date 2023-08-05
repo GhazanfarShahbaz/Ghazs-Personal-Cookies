@@ -13,8 +13,8 @@ Edit Log:
 
 from typing import List
 
-from apps.tool_repository.tools.repository.events import EventRepository
-from apps.tool_repository.tools.repository.models.event_model import Event
+from repository.events import EventRepository
+from repository.models.event_model import Event
 
 from apps.tool_repository.tools.event_utils import (
     create_event_information,

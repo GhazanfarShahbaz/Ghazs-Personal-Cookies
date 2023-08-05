@@ -16,10 +16,10 @@ from apps.tool_repository.tools.endpoint_diagnostics import (
     commit_endpoint_diagnostics,
     diagnostics_type_list_to_diagnostic_dict_list,
 )
-from apps.tool_repository.tools.repository.models.endpoint_diagnostics_model import (
+from repository.models.endpoint_diagnostics_model import (
     EndpointDiagnostics,
 )
-from apps.tool_repository.tools.repository.endpoint_diagnostics import (
+from repository.endpoint_diagnostics import (
     EndpointDiagnosticsRepository,
 )
 from apps.tool_repository.tools.event_utils import string_to_date

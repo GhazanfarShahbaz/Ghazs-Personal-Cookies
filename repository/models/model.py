@@ -10,7 +10,7 @@ Description: A module that indirectly combines all models and setups the engine.
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import sessionmaker
 
-from apps.tool_repository.tools.repository.get_db_engine import get_engine
+from repository.get_db_engine import get_engine
 
 from . import Base
 
