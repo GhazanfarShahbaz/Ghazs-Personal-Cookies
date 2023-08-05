@@ -22,6 +22,7 @@ from apps.tool_repository.tools.process_syllabus_requests import (
 
 syllabus_blueprint: Blueprint = Blueprint("syllabus", __name__)
 
+
 @syllabus_blueprint.route("/addSyllabus", methods=["POST"])
 def add_syllabus():
     """
