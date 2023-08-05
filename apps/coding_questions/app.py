@@ -101,12 +101,16 @@ def home():
 
 @app.route("/getRandomLeetcodeProblem", methods=["POST"])
 def get_random_problem():
-    return {"link": process_random_leetcode_request(request.get("filterForm"))}
+    request_form = request.json
+
+    return {"link": process_random_leetcode_request(request_form.get("filterForm"))}
 
 
 @app.route("/getRandomCodeChefProblem", methods=["POST"])
 def get_random_codechef_problem():
-    return {"link": process_random_codechef_request(request.get("filterForm"))}
+    request_form = request.json
+
+    return {"link": process_random_codechef_request(request_form.get("filterForm"))}
 
 
 @app.route("/getRandomEulerProblem", methods=["GET"])
