@@ -13,13 +13,13 @@ Edit Log:
 from typing import List
 
 from sqlalchemy.orm import Session, Query
-from sqlalchemy import func, distinct
+from sqlalchemy import func, distinct, asc
 
 from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.event_model import Event
 
 
-class EventRepository():
+class EventRepository:
     """
     A class representing a data store for Event objects.
 
@@ -45,7 +45,7 @@ class EventRepository():
         """
         return self  # pylint: disable=unnecessary-pass
 
-    def __exit__(self, type, value, traceback): # pylint: disable=redefined-builtin
+    def __exit__(self, type, value, traceback):  # pylint: disable=redefined-builtin
         """
         Called when the context manager is exited.
 
@@ -68,13 +68,16 @@ class EventRepository():
         Returns:
             None
         """
+        for event in events:
+            self.session.add(event)
+        self.session.commit()
 
     def update_by_id(self, event_id: int, update_dictionary: dict) -> None:
         """
         Updates an Event object in the database with the specified changes.
 
-        This method takes an event ID and a dictionary of updates, and updates the 
-        corresponding event object in the database with the new values. 
+        This method takes an event ID and a dictionary of updates, and updates the
+        corresponding event object in the database with the new values.
         Any keys in the update dictionary that are not valid attributes of the event
         object are ignored.
 
@@ -128,7 +131,7 @@ class EventRepository():
             None
 
         Raises:
-            ValueError: If the `recurrance_id` parameter is not a valid ID for an event 
+            ValueError: If the `recurrance_id` parameter is not a valid ID for an event
             recurrence pattern.
         """
 
@@ -186,6 +189,9 @@ class EventRepository():
 
         if filters.get("Description"):
             query = query.filter(Event.Description == filters["Description"])
+            
+            
+        query = query.order_by(asc(Event.StartDate))
 
         return query.all()
 
@@ -193,7 +199,7 @@ class EventRepository():
         """
         Deletes Event objects from the database that match the specified filter criteria.
 
-        This method queries the database for Event objects that match the specified filter 
+        This method queries the database for Event objects that match the specified filter
         criteria and deletes all of them.
 
         Args:
@@ -253,4 +259,4 @@ class EventRepository():
         """
 
         query: Query = self.session.query(func.max(distinct(Event.ReccuranceId)))
-        return query.first()[0] + 1 if query.first()[0] else 0
+        return query.first()[0] + 1 if query.first()[0] is not None else 0

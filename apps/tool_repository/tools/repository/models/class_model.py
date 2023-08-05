@@ -22,15 +22,15 @@ from . import Base
 
 class Class(Base):
     """
-        Represents a class in a university.
+    Represents a class in a university.
 
-        Attributes:
-        - ClassId: The unique ID of the class.
-        - Department: The department of the class.
-        - CourseNumber: The course number of the class.
-        - Professor: The professor teaching the class.
-        - Name: The name of the class.
-        - Semester: The semester in which the class is being taught.
+    Attributes:
+    - ClassId: The unique ID of the class.
+    - Department: The department of the class.
+    - CourseNumber: The course number of the class.
+    - Professor: The professor teaching the class.
+    - Name: The name of the class.
+    - Semester: The semester in which the class is being taught.
     """
 
     __tablename__ = "classes"

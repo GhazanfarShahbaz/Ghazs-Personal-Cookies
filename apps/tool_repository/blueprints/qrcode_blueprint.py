@@ -19,6 +19,7 @@ from apps.tool_repository.tools.process_qr_code_requests import (
 
 qrcode_blueprint: Blueprint = Blueprint("qrcode", __name__)
 
+
 @qrcode_blueprint.route("/generateLinkQRCode", methods=["POST"])
 def generate_qr_code_for_link():
     """

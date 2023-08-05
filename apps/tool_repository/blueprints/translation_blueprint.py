@@ -17,6 +17,7 @@ from apps.tool_repository.tools.process_translate_request import process_transla
 
 translation_blueprint: Blueprint = Blueprint("translation", __name__)
 
+
 @translation_blueprint.route("/getTranslation", methods=["POST"])
 def get_translation():
     """

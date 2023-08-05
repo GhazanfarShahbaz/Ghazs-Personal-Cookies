@@ -47,20 +47,20 @@ def get_aws_client_or_resource(aws_type: str) -> any:
     """
     Creates a boto3 client or resource for the specified AWS type.
 
-    This function takes an AWS type (either "client" or "resource") as 
-    input and uses it to create either a boto3 client or resource object. 
-    It uses the AWS credentials stored in environment variables to create the 
+    This function takes an AWS type (either "client" or "resource") as
+    input and uses it to create either a boto3 client or resource object.
+    It uses the AWS credentials stored in environment variables to create the
     client/resource object.
 
     Args:
-        aws_type: A string representing the type of AWS object to create 
+        aws_type: A string representing the type of AWS object to create
                   ("client" or "resource").
 
     Returns:
         A boto3 client or resource object for the specified AWS type.
 
     Raises:
-        KeyError: If the supplied aws_type is not a valid key in the 
+        KeyError: If the supplied aws_type is not a valid key in the
                   FUNCTION_MAPPER dictionary.
     """
 
@@ -102,7 +102,7 @@ def upload_file(file, content_type) -> str:
             Key=f"server_files/{file.filename}",
             ContentType=content_type,
         )
-    except: # pylint: disable=bare-except
+    except:  # pylint: disable=bare-except
         return "Failed to upload file"
     finally:
         file.close()
@@ -114,8 +114,8 @@ def delete_file(bucket_name: str, file_path: str) -> str:
     """
     Deletes a file from an AWS S3 bucket.
 
-    This function takes a bucket name and a file path as input, and deletes the specified 
-    file from the AWS S3 bucket using the boto3 client associated with the AWS environment 
+    This function takes a bucket name and a file path as input, and deletes the specified
+    file from the AWS S3 bucket using the boto3 client associated with the AWS environment
     variables.
 
     Args:
@@ -137,9 +137,9 @@ def list_bucket_files(bucket_name: str, prefix: str) -> Dict[Dict, List[str]]:
     """
     Lists files in an AWS S3 bucket with an optional prefix.
 
-    This function takes the name of an AWS S3 bucket and an optional prefix as input, and 
-    returns a dictionary with two keys: "files" and "folders". The "files" key contains a 
-    list of all the files in the bucket with the specified prefix, while the "folders" key 
+    This function takes the name of an AWS S3 bucket and an optional prefix as input, and
+    returns a dictionary with two keys: "files" and "folders". The "files" key contains a
+    list of all the files in the bucket with the specified prefix, while the "folders" key
     contains a list of all the folders (directories) in the bucket with the specified prefix.
 
     Args:
@@ -147,7 +147,7 @@ def list_bucket_files(bucket_name: str, prefix: str) -> Dict[Dict, List[str]]:
         prefix: An optional prefix used to filter the files/folders in the bucket.
 
     Returns:
-        A dictionary with two keys: "files" and "folders". The "files" key contains a 
+        A dictionary with two keys: "files" and "folders". The "files" key contains a
         list of all the files in the bucket with the specified prefix, while the "folders"
         key contains a list of all the folders in the bucket with the specified prefix.
     """

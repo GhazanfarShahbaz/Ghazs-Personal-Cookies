@@ -17,7 +17,7 @@ def get_languages_and_abbreviations() -> Tuple[Set[str], Dict[str, str]]:
     """
     Retrieves languages and their abbreviations.
 
-    This function retrieves a list of languages and their abbreviations from 
+    This function retrieves a list of languages and their abbreviations from
     Google Translate and returns them as a tuple of a set of abbreviations and a
     dictionary of languages to their abbreviations.
 
@@ -26,7 +26,7 @@ def get_languages_and_abbreviations() -> Tuple[Set[str], Dict[str, str]]:
         their abbreviations.
     """
 
-    abbreviations: Set[str] = set() # pylint: disable=redefined-outer-name
+    abbreviations: Set[str] = set()  # pylint: disable=redefined-outer-name
     languages_to_abbreviations: Dict[str, str] = {}
 
     client = translate.Client()
@@ -43,15 +43,17 @@ def get_languages_and_abbreviations() -> Tuple[Set[str], Dict[str, str]]:
 abbreviations, language_to_abbreviations = get_languages_and_abbreviations()
 
 
-def correct_language(language: str, response: dict) -> str: # pylint: disable=unused-argument
+def correct_language(
+    language: str, response: dict
+) -> str:  # pylint: disable=unused-argument
     """
     Corrects the language parameter for API requests.
 
-    This function takes a string `language` and a dictionary `response` and 
-    determines whether the language parameter in the request is correct. 
+    This function takes a string `language` and a dictionary `response` and
+    determines whether the language parameter in the request is correct.
     If the language parameter is not in the set of abbreviations or dictionary
-    of language to abbreviations, this function attempts to find the correct 
-    abbreviation and returns it. 
+    of language to abbreviations, this function attempts to find the correct
+    abbreviation and returns it.
     If no abbreviation is found, this function returns None.
 
     Args:

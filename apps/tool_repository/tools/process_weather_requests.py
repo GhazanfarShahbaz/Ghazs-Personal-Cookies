@@ -19,15 +19,16 @@ from requests import get
 
 from apps.tool_repository.tools.redis_decorator import Cache
 
+
 @Cache("weather_data", 5)
 def get_weather() -> dict:
     """
     Retrieves weather information from an API.
 
     This function retrieves weather information from an API using the OpenWeatherMap API.
-    The function uses environment variables to retrieve the API key, ZIP code, and country 
-    code. 
-    The function then sends a request to the OpenWeatherMap API to retrieve the weather 
+    The function uses environment variables to retrieve the API key, ZIP code, and country
+    code.
+    The function then sends a request to the OpenWeatherMap API to retrieve the weather
     information for the specified location and returns it as a dictionary.
 
     Returns:
@@ -39,8 +40,8 @@ def get_weather() -> dict:
     weather_country: str = environ["WEATHER_COUNTRY"]
 
     response: dict = get(
-        f"https://api.openweathermap.org/data/2.5/weather?zip={weather_zip_code},{weather_country}&appid={api_key}", # pylint: disable=line-too-long
-        timeout=10
+        f"https://api.openweathermap.org/data/2.5/weather?zip={weather_zip_code},{weather_country}&appid={api_key}",  # pylint: disable=line-too-long
+        timeout=10,
     ).json()
 
     return response

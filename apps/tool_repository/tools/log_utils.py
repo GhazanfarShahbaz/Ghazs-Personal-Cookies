@@ -18,11 +18,11 @@ def split_up_log_file() -> Dict[str, List[str]]:
     """
     Splits up a log file by application.
 
-    This function reads a log file from `PATH_TO_LOG_FILE` and splits it up into separate 
+    This function reads a log file from `PATH_TO_LOG_FILE` and splits it up into separate
     lists of log entries by application.
-    The log entries are identified as belonging to a particular application by the path to 
+    The log entries are identified as belonging to a particular application by the path to
     the log file contained in the entry.
-    The function returns a dictionary with application names as keys and lists of log entries 
+    The function returns a dictionary with application names as keys and lists of log entries
     as values.
 
     Returns:

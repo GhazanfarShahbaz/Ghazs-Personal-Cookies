@@ -19,6 +19,7 @@ from apps.tool_repository.tools.process_endpoint_diagnostics import (
 
 diagnostics_blueprint: Blueprint = Blueprint("diagnostics", __name__)
 
+
 @diagnostics_blueprint.route("/getEndpointDiagnostics", methods=["POST"])
 def get_endpoints_data():
     """

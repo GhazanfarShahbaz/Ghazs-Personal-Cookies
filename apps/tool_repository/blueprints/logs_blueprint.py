@@ -17,6 +17,7 @@ from apps.tool_repository.tools.process_log_requests import process_get_logs
 
 logs_blueprint: Blueprint = Blueprint("logs", __name__)
 
+
 @logs_blueprint.route("/getLogs", methods=["POST"])
 def get_logs():
     """

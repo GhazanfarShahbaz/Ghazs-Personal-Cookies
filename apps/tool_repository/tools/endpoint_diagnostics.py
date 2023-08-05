@@ -51,7 +51,9 @@ def setup_request(request: dict, path: str) -> None:
     request.args = ImmutableMultiDict(request_copy)
 
 
-def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:  # pylint: disable=unused-argument
+def setup_endpoint_diagnostics( # pylint: disable=unused-argument
+    endpoint: str, request: dict
+) -> int:
     """
     Sets up diagnostics for the endpoint using a string and the user's request data.
 
@@ -81,7 +83,9 @@ def setup_endpoint_diagnostics(endpoint: str, request: dict) -> int:  # pylint: 
     return endpoint_id
 
 
-def commit_endpoint_diagnostics(diagnostic_id: int, response: dict, error="") -> bool:  # pylint: disable=unused-argument
+def commit_endpoint_diagnostics(  # pylint: disable=unused-argument
+    diagnostic_id: int, response: dict, error=""
+) -> bool:
     """
     Commits endpoint diagnostics with the new feature diagnostic values.
 

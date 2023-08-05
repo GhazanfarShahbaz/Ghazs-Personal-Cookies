@@ -22,6 +22,7 @@ from apps.tool_repository.tools.process_class_requests import (
 
 class_blueprint: Blueprint = Blueprint("class", __name__)
 
+
 @class_blueprint.route("/addClass", methods=["POST"])
 def add_class():
     """

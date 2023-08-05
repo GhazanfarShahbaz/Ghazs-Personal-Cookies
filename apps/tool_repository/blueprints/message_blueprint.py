@@ -15,6 +15,7 @@ from flask import Blueprint
 
 message_blueprint: Blueprint = Blueprint("message", __name__)
 
+
 @message_blueprint.route("/sendTextMessage", methods=["POST"])
 def send_message():
     """

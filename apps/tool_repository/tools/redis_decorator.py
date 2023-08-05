@@ -9,10 +9,14 @@ Edit Log:
 -   Created base decorator
 """
 
+import logging
+
 from apps.tool_repository.tools.redis_utils import RedisClient
 
+logger = logging.getLogger('MainLogger')
 
-class Cache:    #pylint: disable=too-few-public-methods
+
+class Cache:  # pylint: disable=too-few-public-methods
     """
     A decorator class for caching function results using Redis.
 
@@ -29,12 +33,15 @@ class Cache:    #pylint: disable=too-few-public-methods
             result in seconds. This can be specified as an integer or as a callable
             function that returns an integer. Defaults to None.
         """
+        
         self.cache_key = cache_key
 
         if callable(expiration_time):
             self.expiration_time = expiration_time()
         else:
             self.expiration_time = expiration_time
+
+        logger.info(f"Cache on the following key {self.cache_key} with expiration of {self.expiration_time}")
 
     def __call__(self, func):
         """
@@ -64,10 +71,15 @@ class Cache:    #pylint: disable=too-few-public-methods
             with RedisClient() as client:
                 try:
                     response = client.get(self.cache_key)
-                except KeyError as exception:
-                    print(
-                        f"The {self.cache_key} key expired or did not exist", exception
+                    logger.info(
+                        f"{self.cache_key} exists and is not exired"
                     )
+                except KeyError as exception:
+                    logger.info(
+                        f"The {self.cache_key} key expired or did not exist"
+                    )
+                    
+                    
 
             if not response:
                 response = func(*args, **kwargs)

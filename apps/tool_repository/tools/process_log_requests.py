@@ -17,7 +17,7 @@ def process_get_logs() -> Dict[str, List[str]]:
     """
     Processes a request to retrieve log files.
 
-    This function calls the `split_up_log_file` function to retrieve log files and returns 
+    This function calls the `split_up_log_file` function to retrieve log files and returns
     them as a dictionary containing the file names and their contents.
 
     Returns:

@@ -11,6 +11,7 @@ from io import BytesIO
 
 import qrcode
 
+
 def get_qr_settings() -> qrcode.main.QRCode:
     """
     Returns QR code settings.

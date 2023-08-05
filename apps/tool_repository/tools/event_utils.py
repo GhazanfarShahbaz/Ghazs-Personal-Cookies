@@ -171,8 +171,9 @@ def get_daily_reccurance_event_list(  # pylint: disable=too-many-locals
         for reccurance_str in reccurance_type.split("/"):
             reccurance_str = reccurance_str.strip().lower()
             global WEEKDAY  # pylint: disable=global-variable-not-assigned
-
-            if WEEKDAY.get(reccurance_str):
+            
+            # If just .get() then monday is ignored
+            if WEEKDAY.get(reccurance_str) is not None:
                 reccurance_nums.add(WEEKDAY[reccurance_str])
 
     if reccurance_type != "daily":
@@ -201,7 +202,7 @@ def get_daily_reccurance_event_list(  # pylint: disable=too-many-locals
     time_delta: timedelta = timedelta(days=1)
 
     while current_date <= reccurance_end_date:
-        if current_date.WEEKDAY() in reccurance_nums:
+        if current_date.weekday() in reccurance_nums:
             insertion_start_date: datetime = datetime(
                 current_date.year,
                 current_date.month,
@@ -373,8 +374,8 @@ def default_form_get_date_to_and_date_from(
     elif default_option == "week":
         end_date: datetime = None
 
-        if current_date.WEEKDAY() != 0:
-            current_date -= timedelta(days=current_date.WEEKDAY())
+        if current_date.weekday() != 0:
+            current_date -= timedelta(days=current_date.weekday())
             end_date = current_date + timedelta(days=6)
 
         date_from = datetime(
@@ -393,7 +394,7 @@ def default_form_get_date_to_and_date_from(
     elif default_option == "year":
         date_from = datetime(current_date.year, current_date.month, 1, 0, 0)
 
-        end_date: datetime = date_from + relativedelta(year=1)
+        end_date: datetime = date_from + relativedelta(years=1)
         end_date -= timedelta(days=1)
 
         date_to = datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59)

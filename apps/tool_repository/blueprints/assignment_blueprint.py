@@ -22,6 +22,7 @@ from apps.tool_repository.tools.process_assignment_requests import (
 
 assignment_blueprint: Blueprint = Blueprint("assignment", __name__)
 
+
 @assignment_blueprint.route("/addAssignment", methods=["POST"])
 def add_assignment():
     """

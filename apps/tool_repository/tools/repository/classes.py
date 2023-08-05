@@ -18,7 +18,7 @@ from apps.tool_repository.tools.repository.models.model import Session as Sess
 from apps.tool_repository.tools.repository.models.class_model import Class
 
 
-class ClassRepository():
+class ClassRepository:
     """
     A class representing a data store for Class objects.
 

@@ -20,6 +20,7 @@ from apps.tool_repository.tools.process_file_storage_requests import (
 
 file_blueprint: Blueprint = Blueprint("file", __name__)
 
+
 @file_blueprint.route("/uploadFile", methods=["POST"])
 def upload_file():
     """
