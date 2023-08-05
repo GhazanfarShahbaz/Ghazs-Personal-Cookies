@@ -17,6 +17,7 @@ from apps.tool_repository.tools.process_help_requests import get_command
 
 help_blueprint: Blueprint = Blueprint("help", __name__)
 
+
 @help_blueprint.route("/getHelp", methods=["POST"])
 def get_help():
     """
