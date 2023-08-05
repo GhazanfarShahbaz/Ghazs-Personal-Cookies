@@ -10,12 +10,7 @@ Edit Log:
 
 # pylint: disable=invalid-name, global-variable-not-assigned, too-few-public-methods, undefined-variable, too-many-instance-attributes
 
-from sqlalchemy import (
-    Column,
-    DateTime,
-    Integer,
-    String
-)
+from sqlalchemy import Column, DateTime, Integer, String
 
 from . import Base
 
@@ -69,4 +64,5 @@ class Event(Base):
             "Type": self.Type,
             "Description": self.Description,
             "ReccuranceType": self.ReccuranceType,
+            "Location": self.Location
         }
