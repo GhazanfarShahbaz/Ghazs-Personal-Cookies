@@ -17,6 +17,7 @@ from apps.tool_repository.tools.process_weather_requests import get_weather
 
 weather_blueprint: Blueprint = Blueprint("weather", __name__)
 
+
 @weather_blueprint.route("/getCurrentWeather", methods=["POST"])
 def get_current_weather():
     """
