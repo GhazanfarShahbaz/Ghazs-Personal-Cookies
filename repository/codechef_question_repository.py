@@ -129,13 +129,10 @@ class CodeChefQuestionRepository():
         if "name" in filters and filters["name"]:
             query = query.filter(CodeChefQuestion.name.ilike(f'%{filters["name"]}%'))
 
-        if "tags" in filters and filters["tags"]:
-            tag_filters = [
-                CodeChefQuestion.tags.contains(tag) for tag in filters["tags"]
-            ]
-            query = query.filter(or_(*tag_filters))
-
         if "difficulty" in filters and filters["difficulty"]:
+            if isinstance(filters["difficulty"], str):
+                filters["difficulty"] = [filters["difficulty"]]
+                
             query = query.filter(CodeChefQuestion.difficulty.in_(filters["difficulty"]))
 
         return query.order_by(func.random()).first()    # pylint: disable=not-callable
