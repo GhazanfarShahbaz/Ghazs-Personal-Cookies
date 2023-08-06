@@ -142,13 +142,19 @@ class LeetCodeQuestionRepository():
                 LeetCodeQuestion.name.ilike(f'%{filter_form["name"]}%')
             )
 
-        if "tag" in filter_form and filter_form["tag"]:
+        if "tag" in filter_form and filter_form["tag"] is not None:
+            if isinstance(filter_form["tag"], str):
+                filter_form["tag"] = [filter_form["tag"]]
+
             tags_filters = [
                 LeetCodeQuestion.tags.contains(tag) for tag in filter_form["tag"]
             ]
-            query = query.filter(or_(*tags_filters))
+            query = query.filter(LeetCodeQuestion.tags.contains(filter_form["tag"]))
 
-        if "difficulty" in filter_form and filter_form["difficulty"]:
+        if "difficulty" in filter_form and filter_form["difficulty"] is not None:
+            if isinstance(filter_form["difficulty"], str):
+                filter_form["difficulty"] = [filter_form["difficulty"]]
+
             query = query.filter(
                 LeetCodeQuestion.difficulty.in_(filter_form["difficulty"])
             )

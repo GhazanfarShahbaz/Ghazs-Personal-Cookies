@@ -10,7 +10,8 @@ Edit Log:
 
 # pylint: disable=invalid-name, global-variable-not-assigned, too-few-public-methods, undefined-variable, too-many-instance-attributes
 
-from sqlalchemy import Column, ARRAY, Boolean, Float, Integer, String
+from sqlalchemy import Column, Boolean, Float, Integer, String
+from sqlalchemy.dialects.postgresql import ARRAY
 
 from . import Base
 
@@ -37,7 +38,7 @@ class LeetCodeQuestion(Base):
     link = Column(String(156))
     acceptance = Column(Float)
     difficulty = Column(String(32))
-    tags = Column(ARRAY(String()), server_default="{}")
+    tags = Column(ARRAY(String), server_default="{}")
 
     def __init__(self, question_information):
         """
