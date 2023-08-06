@@ -29,18 +29,20 @@ def process_random_leetcode_request(filter_form: dict) -> str:
         str: The link to a randomly selected LeetCode question that matches the filter criteria.
     """
 
-    if filter_form.get("difficulty") and not allowed_difficulties(
-        filter_form.get("difficulty")
-    ):
-        filter_form["difficulty"] = None
+    if filter_form.get("difficulty"):
+        filter_form["difficulty"] = filter_form["difficulty"].title()
+        if not allowed_difficulties(filter_form["difficulty"]):
+            filter_form["difficulty"] = None
 
-    if filter_form.get("tag") and not allowed_tags(filter_form.get("tag")):
-        filter_form["tag"] = None
+    if filter_form.get("tag"):
+        filter_form["tag"] =  filter_form["tag"].title()
+        if not allowed_tags(filter_form["tag"]):
+            filter_form["tag"] = None
 
     if filter_form.get("subscription") and not allowed_subscription(
         filter_form.get("subscription")
     ):
-        filter_form["subscription"] = None
-
+        filter_form["subscription"] = False
+    
     with LeetCodeQuestionRepository() as repository:
         return repository.filter_and_get_random(filter_form).link
