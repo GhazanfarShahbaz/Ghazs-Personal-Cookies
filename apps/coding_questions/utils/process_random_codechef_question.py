@@ -26,10 +26,10 @@ def process_random_codechef_request(filter_form: dict) -> str:
 
     """
     
-    if filter_form.get("difficulty") and not allowed_code_chef_difficulty(
-        filter_form.get("difficulty")
-    ):
-        filter_form["difficulty"] = None
+    if filter_form.get("difficulty"):
+        filter_form["difficulty"] = filter_form["difficulty"].lower()
+        if not allowed_code_chef_difficulty(filter_form.get("difficulty")):
+            filter_form["difficulty"] = None
 
     with CodeChefQuestionRepository() as repository:
         return repository.filter_and_get_random(filter_form).link
