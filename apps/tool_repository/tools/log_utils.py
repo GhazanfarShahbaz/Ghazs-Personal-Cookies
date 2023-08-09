@@ -31,6 +31,12 @@ def split_up_log_file() -> Dict[str, List[str]]:
 
     # current_log_file: str = '{:%Y-%m-%d}.log'.format(datetime.now())
     log_dictionary: Dict[str, List[str]] = {"personal_website": []}
+    apps: Dict[str, str] = {
+        "personal_website": "personal_website",
+        "tool_repository": "tools",
+        "knowledge_graph": "knowledge_graph",
+        "coding_questions": "coding_qustions"
+    }
 
     with open(f"{PATH_TO_LOG_FILE}app.log", "r", encoding="utf8") as log_file:
         previous_app: str = "personal_website"
@@ -42,14 +48,11 @@ def split_up_log_file() -> Dict[str, List[str]]:
 
             if len(split_colon) >= 2:
                 path_to_file: str = split_colon[1]
-
-                # TODO: Replace this so we don't use if statements pylint: disable=fixme
-                if "tool_repository" in path_to_file:
-                    app = "tools"
-                elif "knowledge_graph" in path_to_file:
-                    app = "knowledge_graph"
-                elif "personal_website" in path_to_file:
-                    app = "personal_website"
+                
+                for app_path, app_name in apps.items():
+                    if app_path in path_to_file:
+                        app = app_name 
+                        break
 
                 if not app in log_dictionary:
                     log_dictionary[app] = []

@@ -15,6 +15,7 @@ from apps.personal_website.app import app as personal_website_app
 from apps.tool_repository.app import app as tool_app
 from apps.knowledge_graph.app import app as knowledge_graph_app
 from apps.projects.the_mouseion.app import app as mouseion_app
+from apps.coding_questions.app import app as coding_question_app
 
 
 # Define a dictionary of Flask apps. Each key is an app number and
@@ -24,6 +25,7 @@ app_list: Dict[int, dict] = {
     2: {"app_name": "Tools Application", "app_module": tool_app},
     3: {"app_name": "Knowledge Graph", "app_module": knowledge_graph_app},
     4: {"app_name": "The Mouseion", "app_module": mouseion_app},
+    5: {"app_name": "Coding Questions App", "app_module": coding_question_app},
 }
 
 
