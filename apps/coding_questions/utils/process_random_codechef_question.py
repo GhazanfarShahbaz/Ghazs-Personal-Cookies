@@ -12,9 +12,10 @@ Edit Log:
 from apps.coding_questions.utils.allowed_params import allowed_code_chef_difficulty
 
 from repository.codechef_question_repository import CodeChefQuestionRepository
+from repository.models.codechef_question_model import CodeChefQuestion
 
 
-def process_random_codechef_request(filter_form: dict) -> str:
+def process_random_codechef_request(filter_form: dict) -> CodeChefQuestion:
     """
     Process a random CodeChef request based on the provided filter form.
 
@@ -32,4 +33,4 @@ def process_random_codechef_request(filter_form: dict) -> str:
             filter_form["difficulty"] = None
 
     with CodeChefQuestionRepository() as repository:
-        return repository.filter_and_get_random(filter_form).link
+        return repository.filter_and_get_random(filter_form)

@@ -12,13 +12,13 @@ Edit Log:
 from apps.coding_questions.utils.allowed_params import (
     allowed_difficulties,
     allowed_tags,
-    allowed_subscription,
 )
 
 from repository.leetcode_question_repository import LeetCodeQuestionRepository
+from repository.models.leetcode_question_model import LeetCodeQuestion
 
 
-def process_random_leetcode_request(filter_form: dict) -> str:
+def process_random_leetcode_request(filter_form: dict) -> LeetCodeQuestion:
     """
     Process random leetcode request based on the provided filter form.
 
@@ -39,10 +39,8 @@ def process_random_leetcode_request(filter_form: dict) -> str:
         if not allowed_tags(filter_form["tag"]):
             filter_form["tag"] = None
 
-    if filter_form.get("subscription") and not allowed_subscription(
-        filter_form.get("subscription")
-    ):
+    if filter_form.get("subscription") and not isinstance(filter_form["subscription"], bool):
         filter_form["subscription"] = False
     
     with LeetCodeQuestionRepository() as repository:
-        return repository.filter_and_get_random(filter_form).link
+        return repository.filter_and_get_random(filter_form)
