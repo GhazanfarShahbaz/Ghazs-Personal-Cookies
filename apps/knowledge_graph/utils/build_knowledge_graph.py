@@ -72,7 +72,11 @@ def extract_link_from_file(path_to_file: str, markdown_files) -> Set[str]:
 
                 for character in match:
                     # "Ghaz's Notes#Table Of Contents | Contents" -> "Ghaz's Notes"
-                    if previous_character != "\\" and character == "#" or character == "|":
+                    if (
+                        previous_character != "\\"
+                        and character == "#"
+                        or character == "|"
+                    ):
                         break
 
                     actual_link += character
@@ -81,15 +85,14 @@ def extract_link_from_file(path_to_file: str, markdown_files) -> Set[str]:
                 actual_link = actual_link.strip()
                 # TODO: LOOK FOR A BETTER SOLUTION
                 markdown_exists: bool = False
-                
+
                 for path, file_name in markdown_files.items():
                     if file_name == actual_link:
                         markdown_exists = True
                         break
-                
-                if markdown_exists: 
+
+                if markdown_exists:
                     links.add(actual_link)
-                            
 
     return links
 
