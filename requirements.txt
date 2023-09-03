@@ -56,7 +56,7 @@ msgpack==1.0.5
 multidict==6.0.4
 mypy-extensions==1.0.0
 numpy==1.25.0
-obsidian-wrapper==0.0.1
+obsidian-wrapper==0.0.3
 packaging==23.1
 pandas==2.0.3
 pathspec==0.11.1
