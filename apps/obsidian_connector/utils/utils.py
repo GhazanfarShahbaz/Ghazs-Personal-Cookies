@@ -36,3 +36,15 @@ def get_vault_file_contents_by_name(file_name: str) -> str:
             contents += line
 
     return contents
+
+def get_file_contents_by_name_detailed(file_name: str) -> str:
+    global VAULT 
+    
+    markdown_files: Dict[str, ObsidianMarkdownFile] = VAULT.markdown_files
+    
+    if not file_name in markdown_files:
+        raise KeyError("File was not found in obsidian vault")
+
+    markdown_file: ObsidianMarkdownFile = markdown_files[file_name]
+
+    return markdown_file.get_file_contents(as_dict=True)

@@ -16,6 +16,7 @@ from apps.obsidian_connector.utils.utils import (
     reload_vault,
     get_vault_files,
     get_vault_file_contents_by_name,
+    get_file_contents_by_name_detailed,
 )
 
 from apps.tool_repository.app import validate_user
@@ -102,12 +103,17 @@ def home_route():
 
 @app.route("/getFileList", methods=["POST"])
 def get_file_list():
-    return {"fileNames": get_vault_files()}
+    return {"fileNames": sorted(get_vault_files())}
 
 
-@app.route("/getFileConntents", methods=["POST"])
+@app.route("/getFileContents", methods=["POST"])
 def get_file_contents():
-    return {"contents": get_vault_file_contents_by_name(request.get("fileName"))}
+    return {"contents": get_vault_file_contents_by_name(request.json.get("fileName"))}
+
+
+@app.route("/geFileContentsDetailed", methods=["POST"])
+def get_file_contents_detailed():
+    return {"contents": get_file_contents_by_name_detailed(request.json.get("fileName"))}
 
 
 # TODO: Endoint for editing a markdown file.
