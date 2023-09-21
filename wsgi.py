@@ -18,6 +18,7 @@ from apps.tool_repository.app import app as tool_app
 from apps.knowledge_graph.app import app as knowledge_graph_app
 from apps.projects.the_mouseion.app import app as mouseion_app
 from apps.coding_questions.app import app as coding_questions_app
+from apps.obsidian_connector.app import app as obsidian_connector_app
 
 
 
@@ -44,6 +45,7 @@ def set_up_application() -> DispatcherMiddleware:
             "/the_mouseion": mouseion_app,
             "/knowledge_graph": knowledge_graph_app,
             "/coding_questions": coding_questions_app,
+            "/obsidian_connector": obsidian_connector_app,
         },
     )
 

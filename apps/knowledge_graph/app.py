@@ -14,7 +14,7 @@ from pathlib import Path
 from os.path import join
 
 from flask import Flask, request
-from flask_apscheduler import APScheduler  # pylint: disable=import-error
+from flask_apscheduler import APScheduler
 from flask_cors import CORS
 
 from apps.knowledge_graph.utils.build_knowledge_graph import (
