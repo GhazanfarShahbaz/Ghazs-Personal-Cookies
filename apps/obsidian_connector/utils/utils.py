@@ -48,3 +48,8 @@ def get_file_contents_by_name_detailed(file_name: str) -> str:
     markdown_file: ObsidianMarkdownFile = markdown_files[file_name]
 
     return markdown_file.get_file_contents(as_dict=True)
+
+
+def get_folder_contents(folder_name: str) -> str:
+    # NOTE: For now will only give one level down contents    
+    
