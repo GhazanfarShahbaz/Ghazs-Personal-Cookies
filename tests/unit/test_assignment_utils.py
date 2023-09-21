@@ -1,7 +1,7 @@
 from apps.tool_repository.tools.assignment_utils import (
     assignment_type_list_to_event_dict_list,
 )  # pylint: disable=import-error, useless-option-value, nknown-option-value, unrecognized-option
-from apps.tool_repository.tools.repository.models.assignment_model import Assignment
+from repository.models.assignment_model import Assignment
 
 import pytest
 

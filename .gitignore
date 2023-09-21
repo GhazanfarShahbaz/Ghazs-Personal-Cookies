@@ -54,3 +54,6 @@ s
 
 # Django stuff:
 *.log
+
+# Python Version
+.python-version
