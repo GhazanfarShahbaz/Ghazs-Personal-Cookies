@@ -17,6 +17,7 @@ from apps.obsidian_connector.utils.utils import (
     get_vault_files,
     get_vault_file_contents_by_name,
     get_file_contents_by_name_detailed,
+    get_folder_contents
 )
 
 from apps.tool_repository.app import validate_user
@@ -115,6 +116,10 @@ def get_file_contents():
 def get_file_contents_detailed():
     return {"contents": get_file_contents_by_name_detailed(request.json.get("fileName"))}
 
+@app.route("/getFolderContents", methods=["POST"])
+def get_folder():
+    request_data = request.json
+    return get_file_contents(request_data["folderName"])
 
 # TODO: Endoint for editing a markdown file.
 # TODO: Endpoint for getting file information like referenced files , lasted edited, first created, last opened, etc.add()

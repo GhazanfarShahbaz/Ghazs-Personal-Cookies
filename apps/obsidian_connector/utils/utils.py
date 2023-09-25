@@ -3,7 +3,7 @@ from os import getenv
 from typing import Dict, List
 
 
-from obsidian_wrapper.obsidian_vault import ObsidianVault
+from obsidian_wrapper.obsidian_vault import ObsidianVault, VaultTree
 from obsidian_wrapper.obsidian_markdown_file import ObsidianMarkdownFile
 
 VAULT: ObsidianVault = ObsidianVault(getenv("PATH_TO_OBSIDIAN_VAULT"))
@@ -50,6 +50,28 @@ def get_file_contents_by_name_detailed(file_name: str) -> str:
     return markdown_file.get_file_contents(as_dict=True)
 
 
-def get_folder_contents(folder_name: str) -> str:
-    # NOTE: For now will only give one level down contents    
+def get_folder_contents(folder_name: str) -> Dict[str, str]:
+    global VAULT 
+    data:  Tuple[str, VaultTree, int] = VAULT.get_folder(folder_path=folder_name)
+    
+    # Contents are only only one level down
+    current_folder: Dict[str, str] = {
+        "folder_name":data [0],
+        "contents": {},
+        "size": data[2]
+    }
+    
+    for object_name, value in data[1].items():
+        content_type: str = ""
+        
+        if isinstance(value, dict):
+            content_type = "folder"
+        else:
+            content_type = "file"    
+            
+        current_folder["contents"][object_name] = content_type            
+    
+    return current_folder
+
+    
     
