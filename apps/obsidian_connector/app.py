@@ -119,7 +119,7 @@ def get_file_contents_detailed():
 @app.route("/getFolderContents", methods=["POST"])
 def get_folder():
     request_data = request.json
-    return get_file_contents(request_data["folderName"])
+    return get_folder_contents(request_data["folderName"])
 
 # TODO: Endoint for editing a markdown file.
 # TODO: Endpoint for getting file information like referenced files , lasted edited, first created, last opened, etc.add()

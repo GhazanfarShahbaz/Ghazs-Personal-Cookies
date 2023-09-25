@@ -56,20 +56,25 @@ def get_folder_contents(folder_name: str) -> Dict[str, str]:
     
     # Contents are only only one level down
     current_folder: Dict[str, str] = {
-        "folder_name":data [0],
-        "contents": {},
-        "size": data[2]
+        "folderName":data [0],
+        "contents": [],
+        # "size": data[2]
     }
     
     for object_name, value in data[1].items():
         content_type: str = ""
         
         if isinstance(value, dict):
-            content_type = "folder"
+            content_type = "Folder"
         else:
-            content_type = "file"    
+            content_type = "File"    
             
-        current_folder["contents"][object_name] = content_type            
+        current_folder["contents"].append({
+            "objectName": object_name,
+            "contentType":content_type
+        })
+        
+    current_folder["contents"] = sorted(current_folder["contents"], key=lambda d: d['objectName']) 
     
     return current_folder
 
