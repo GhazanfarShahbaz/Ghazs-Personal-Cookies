@@ -110,7 +110,7 @@ def log_request() -> None:  # pylint: disable=inconsistent-return-statements
         if exclusion.find(request.path):
             excluded = True 
     
-    if not request_form.get("token") and not request.path.find("grantAuthenticationToken"):
+    if not request_form.get("token") and not(request.path.find("grantAuthenticationToken") or request.path.find("validateAuthenticationToken")):
         if not validate_user(request_form.get("username"), request_form.get("password")):
             return {"Status": "Invalid Request"}
             

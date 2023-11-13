@@ -51,7 +51,7 @@ class TokenHandler:
         
         return self._generate_and_register_token(username)
 
-    def validate_token(self, username: str, token: Token) -> str:
+    def validate_token(self, username: str, token: Token) -> dict:
         if not token in self.tokens:
             return  {
                 "ErrorCode": 1,
@@ -138,3 +138,9 @@ def grant_authentication_token():
     return {
         "token": token
     }
+    
+@authentication_blueprint.route("/validateAuthenticationToken", methods=["POST"])
+def validate_authentication_token():
+    request_form = request.json
+    
+    return token_handler.validate_token(request_form.get("username"), request_form.get("token"))
