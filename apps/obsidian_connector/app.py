@@ -19,8 +19,8 @@ from apps.obsidian_connector.utils.utils import (
     get_file_contents_by_name_detailed,
     get_folder_contents
 )
-
-from apps.tool_repository.app import validate_user
+from apps.tool_repository.app import get_login, validate_user
+from apps.tool_repository.blueprints.authentication_blueprint import token_handler
 from apps.tool_repository.tools.endpoint_diagnostics import (
     setup_request,
     commit_endpoint_diagnostics,
@@ -71,7 +71,13 @@ def log_request():
 
         app.logger.info(request_form)
 
-        if not validate_user(
+        
+        if request_form.get("token"):
+            validation_code = token_handler.validate_token(request_form.get("username"), request_form.get("token"))
+
+            if validation_code[ErrorCode] > 0: 
+                return validation_code
+        elif not validate_user(
             request_form.get("username"), request_form.get("password")
         ):
             return {"Status": "Invalid Request"}

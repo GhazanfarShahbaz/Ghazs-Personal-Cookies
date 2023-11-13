@@ -15,6 +15,9 @@ credentials = users_ref.document(environ["FIRESTORE_DOC_ID"]).get().to_dict()
 
 
 def test_get_login_one():
+    login_allow = users_ref.document("allow")
+    login_allow.update({u"allow": False})
+    
     response = get_login(False)
     assert response is None
 
@@ -50,6 +53,22 @@ def test_validate_user():
     response = validate_user(credentials["username"], credentials["password"])
 
     assert response is True
+    
+def test_validate_token_one():
+    login_response = get_login(True)
+    
+    response = app.test_client().post(
+        "/grantAuthenticationToken",
+        json={
+            "username": login_response["username"],
+            "password": login_response["password"],
+        },
+    )
+
+    response_dict = json.loads(response.data.decode("UTF-8"))
+    
+    assert not response_dict is None 
+    assert response_dict["token"] is not None
 
 
 def test_validate_get_help_one():
