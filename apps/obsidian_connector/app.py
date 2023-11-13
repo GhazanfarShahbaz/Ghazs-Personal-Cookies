@@ -71,16 +71,10 @@ def log_request():
 
         app.logger.info(request_form)
 
-        
-        if request_form.get("token"):
-            validation_code = token_handler.validate_token(request_form.get("username"), request_form.get("token"))
+    validation_code = token_handler.validate_token(request_form.get("username"), request_form.get("token"))
 
-            if validation_code[ErrorCode] > 0: 
-                return validation_code
-        elif not validate_user(
-            request_form.get("username"), request_form.get("password")
-        ):
-            return {"Status": "Invalid Request"}
+    if validation_code["ErrorCode"] > 0: 
+        return validation_code
 
     setup_request(request, f"{app.config['app_path']}{request.path}")
 

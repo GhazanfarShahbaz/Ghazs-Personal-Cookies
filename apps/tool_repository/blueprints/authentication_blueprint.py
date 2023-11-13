@@ -60,7 +60,7 @@ class TokenHandler:
             
         token_metadata: TokenMetadata = self.tokens[token]
 
-        if token_metadata.username != username:
+        if token_metadata["username"] != username:
             return  {
                 "ErrorCode": 1,
                 "ErrorString": "Invalid Token"
@@ -68,7 +68,7 @@ class TokenHandler:
             
         current_time: datetime = datetime.now()
         
-        if current_time > token_metadata.expires_on:
+        if current_time > token_metadata["expires_on"]:
             del self.tokens[token]
             
             return  {

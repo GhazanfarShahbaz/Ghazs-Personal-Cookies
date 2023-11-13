@@ -117,7 +117,7 @@ def log_request() -> None:  # pylint: disable=inconsistent-return-statements
     elif not excluded:
         validation_code = token_handler.validate_token(request_form.get("username"), request_form.get("token"))
 
-        if validation_code[ErrorCode] > 0: 
+        if validation_code["ErrorCode"] > 0: 
             return validation_code
             
             
