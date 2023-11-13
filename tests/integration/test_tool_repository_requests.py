@@ -55,13 +55,11 @@ def test_validate_user():
     assert response is True
     
 def test_validate_token_one():
-    login_response = get_login(True)
-    
     response = app.test_client().post(
         "/grantAuthenticationToken",
         json={
-            "username": login_response["username"],
-            "password": login_response["password"],
+            "username": credentials["username"],
+            "password": credentials["password"],
         },
     )
 
@@ -132,6 +130,31 @@ def test_validate_get_current_weather():
         json={
             "username": credentials["username"],
             "password": credentials["password"],
+        },
+    )
+
+    response_dict = json.loads(response.data.decode("UTF-8"))
+
+    assert response.status_code == 200
+    assert "weather" in response_dict
+    
+def test_validate_get_current_weather_w_token():
+    token_response = app.test_client().post(
+        "/grantAuthenticationToken",
+        json={
+            "username": credentials["username"],
+            "password": credentials["password"],
+        },
+    )
+    
+    response_dict = json.loads(token_response.data.decode("UTF-8"))
+    token = response_dict["token"]
+
+    response = app.test_client().post(
+        "/getCurrentWeather",
+        json={
+            "username": credentials["username"],
+            "token": token
         },
     )
 
