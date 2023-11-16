@@ -22,6 +22,8 @@ from json import loads
 from flask import Flask
 from flask import request
 
+from typing import Set
+
 from firebase_admin import credentials, firestore, initialize_app
 
 from apps.tool_repository.tools.endpoint_diagnostics import (
@@ -29,7 +31,11 @@ from apps.tool_repository.tools.endpoint_diagnostics import (
     commit_endpoint_diagnostics,
 )
 
+CREDENTIALS = credentials.Certificate(environ["FIRESTORE_TOKEN"])
+initialize_app(CREDENTIALS)
+
 from apps.tool_repository.blueprints.assignment_blueprint import assignment_blueprint
+from apps.tool_repository.blueprints.authentication_blueprint import token_handler, authentication_blueprint
 from apps.tool_repository.blueprints.class_blueprint import class_blueprint
 from apps.tool_repository.blueprints.diagnostics_blueprint import diagnostics_blueprint
 from apps.tool_repository.blueprints.email_blueprint import email_blueprint
@@ -64,9 +70,10 @@ app.logger.addHandler(handler)
 
 APP_PATH: str = "/tools"
 
-cred = credentials.Certificate(environ["FIRESTORE_TOKEN"])
-initialize_app(cred)
-
+# TODO: Change and make specific
+EXCLUDED_VALIDATION: Set[str] = {
+    "grantAuthenticationToken"
+}
 
 @app.before_request
 def log_request() -> None:  # pylint: disable=inconsistent-return-statements
@@ -87,7 +94,6 @@ def log_request() -> None:  # pylint: disable=inconsistent-return-statements
     """
 
     app.logger.info(" %s %s%s", request.remote_addr, APP_PATH, request.path)
-
     app.logger.info(request.json)
 
     content_type: str = request.content_type
@@ -98,10 +104,23 @@ def log_request() -> None:  # pylint: disable=inconsistent-return-statements
         request.json = request_form
     else:
         request_form = request.json
+    
+    excluded: bool = False 
+    for exclusion in EXCLUDED_VALIDATION:
+        if exclusion.find(request.path):
+            excluded = True 
+    
+    if not request_form.get("token") and not(request.path.find("grantAuthenticationToken") or request.path.find("validateAuthenticationToken")):
+        if not validate_user(request_form.get("username"), request_form.get("password")):
+            return {"Status": "Invalid Request"}
+            
+    elif not excluded:
+        validation_code = token_handler.validate_token(request_form.get("username"), request_form.get("token"))
 
-    if not validate_user(request_form.get("username"), request_form.get("password")):
-        return {"Status": "Invalid Request"}
-
+        if validation_code["ErrorCode"] > 0: 
+            return validation_code
+            
+            
     setup_request(request, f"tools{request.path}")
 
 
@@ -136,7 +155,6 @@ def commit_diagnostics(response):
         )
 
     return response
-
 
 def get_login(from_server=False) -> dict:
     """
@@ -214,6 +232,7 @@ def validate_user(username: str, password: str) -> bool:
     return False
 
 
+app.register_blueprint(authentication_blueprint)
 app.register_blueprint(assignment_blueprint)
 app.register_blueprint(class_blueprint)
 app.register_blueprint(diagnostics_blueprint)

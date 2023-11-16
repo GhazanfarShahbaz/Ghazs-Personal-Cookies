@@ -15,6 +15,9 @@ credentials = users_ref.document(environ["FIRESTORE_DOC_ID"]).get().to_dict()
 
 
 def test_get_login_one():
+    login_allow = users_ref.document("allow")
+    login_allow.update({u"allow": False})
+    
     response = get_login(False)
     assert response is None
 
@@ -50,6 +53,20 @@ def test_validate_user():
     response = validate_user(credentials["username"], credentials["password"])
 
     assert response is True
+    
+def test_validate_token_one():
+    response = app.test_client().post(
+        "/grantAuthenticationToken",
+        json={
+            "username": credentials["username"],
+            "password": credentials["password"],
+        },
+    )
+
+    response_dict = json.loads(response.data.decode("UTF-8"))
+    
+    assert not response_dict is None 
+    assert response_dict["token"] is not None
 
 
 def test_validate_get_help_one():
@@ -113,6 +130,31 @@ def test_validate_get_current_weather():
         json={
             "username": credentials["username"],
             "password": credentials["password"],
+        },
+    )
+
+    response_dict = json.loads(response.data.decode("UTF-8"))
+
+    assert response.status_code == 200
+    assert "weather" in response_dict
+    
+def test_validate_get_current_weather_w_token():
+    token_response = app.test_client().post(
+        "/grantAuthenticationToken",
+        json={
+            "username": credentials["username"],
+            "password": credentials["password"],
+        },
+    )
+    
+    response_dict = json.loads(token_response.data.decode("UTF-8"))
+    token = response_dict["token"]
+
+    response = app.test_client().post(
+        "/getCurrentWeather",
+        json={
+            "username": credentials["username"],
+            "token": token
         },
     )
 

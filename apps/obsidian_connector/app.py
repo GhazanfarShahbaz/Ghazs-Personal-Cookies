@@ -17,9 +17,10 @@ from apps.obsidian_connector.utils.utils import (
     get_vault_files,
     get_vault_file_contents_by_name,
     get_file_contents_by_name_detailed,
+    get_folder_contents
 )
-
-from apps.tool_repository.app import validate_user
+from apps.tool_repository.app import get_login, validate_user
+from apps.tool_repository.blueprints.authentication_blueprint import token_handler
 from apps.tool_repository.tools.endpoint_diagnostics import (
     setup_request,
     commit_endpoint_diagnostics,
@@ -70,10 +71,10 @@ def log_request():
 
         app.logger.info(request_form)
 
-        if not validate_user(
-            request_form.get("username"), request_form.get("password")
-        ):
-            return {"Status": "Invalid Request"}
+    validation_code = token_handler.validate_token(request_form.get("username"), request_form.get("token"))
+
+    if validation_code["ErrorCode"] > 0: 
+        return validation_code
 
     setup_request(request, f"{app.config['app_path']}{request.path}")
 
@@ -115,6 +116,10 @@ def get_file_contents():
 def get_file_contents_detailed():
     return {"contents": get_file_contents_by_name_detailed(request.json.get("fileName"))}
 
+@app.route("/getFolderContents", methods=["POST"])
+def get_folder():
+    request_data = request.json
+    return get_folder_contents(request_data["folderName"])
 
 # TODO: Endoint for editing a markdown file.
 # TODO: Endpoint for getting file information like referenced files , lasted edited, first created, last opened, etc.add()
