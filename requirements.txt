@@ -23,6 +23,7 @@ coverage==7.2.7
 cryptography==41.0.1
 dill==0.3.7
 exceptiongroup==1.1.1
+falcon==3.1.1
 firebase-admin==6.2.0
 Flask==2.3.2
 Flask-APScheduler==1.12.4
@@ -56,7 +57,7 @@ msgpack==1.0.5
 multidict==6.0.4
 mypy-extensions==1.0.0
 numpy==1.25.0
-obsidian-wrapper==0.0.6
+obsidian-wrapper==0.1.0
 packaging==23.1
 pandas==2.0.3
 pathspec==0.11.1
