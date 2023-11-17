@@ -13,12 +13,18 @@ Edit Log:
 # use to combine each Flask app into a larger one that is dispatched based on prefix
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
+# FLASK APPS START HERE
 from apps.personal_website.app import app as personal_website_app
 from apps.tool_repository.app import app as tool_app
 from apps.knowledge_graph.app import app as knowledge_graph_app
 from apps.projects.the_mouseion.app import app as mouseion_app
 from apps.coding_questions.app import app as coding_questions_app
 from apps.obsidian_connector.app import app as obsidian_connector_app
+# FLASK APPS END HERE
+
+# FALCON APPS START HERE
+from apps.falcon_apps.file_transporter.app import app as file_transporter_app
+# FALCON APPS END HERE 
 
 
 
@@ -46,6 +52,9 @@ def set_up_application() -> DispatcherMiddleware:
             "/knowledge_graph": knowledge_graph_app,
             "/coding_questions": coding_questions_app,
             "/obsidian_connector": obsidian_connector_app,
+            # FALCON APPS START HERE 
+            "/file_transporter": file_transporter_app
+            # FALCON APPS END HERE
         },
     )
 
