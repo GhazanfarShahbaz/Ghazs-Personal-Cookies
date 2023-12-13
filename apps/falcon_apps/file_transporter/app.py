@@ -1,5 +1,13 @@
 from wsgiref.simple_server import make_server
 
+# from apps.falcon_apps.file_transporter
+from apps.falcon_apps.file_transporter.resources.register.register_machine_resource import RegisterMachineResource
+
+# from apps.falcon_apps.file_transporter.resources.upload.folder_resource import FolderZipResource
+# from apps.falcon_apps.file_transporter.resources.upload.file_resource import FileResource
+
+from apps.falcon_apps.file_transporter.utils.middleware import Middleware
+
 import falcon
 
 
@@ -27,4 +35,10 @@ app = falcon.App()
 things = ThingsResource()
 
 # things will handle all requests to the '/things' URL path
-app.add_route('/things', things)
+app.add_route('/', things)
+app.add_route('/register', RegisterMachineResource)
+
+
+# app = falcon.API(middleware=[Middleware()])
+# app.add_route('/upload/folder-zip', FolderZipResource())
+# app.add_route('/upload/file', FileResource())
