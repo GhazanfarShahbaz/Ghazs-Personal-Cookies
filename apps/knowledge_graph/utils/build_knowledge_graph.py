@@ -14,7 +14,7 @@ from re import findall
 
 path_to_vault: str = getenv("PATH_TO_OBSIDIAN_VAULT")
 folders_to_ignore: Set[str] = {".obsidian", ".git"}
-files_to_ignore: Set[str] = {".DS_Store"}
+files_to_ignore: Set[str] = {".DS_Store", "Budgeting Sheet.md", "Todo.md"}
 
 
 def get_all_files(
@@ -24,7 +24,7 @@ def get_all_files(
     Recursively scans a directory for Markdown files and other files.
 
     Args:
-        md_files: A dictionary to store the found Markdown files, where the key is the 
+        md_files: A dictionary to store the found Markdown files, where the key is the
         file path and the value is the file name without the extension.
         other_files: A set to store other files found, where each entry is a tuple containing
         the file path and the file name.
@@ -49,7 +49,7 @@ def get_all_files(
             other_files.add((current_path, file_name))
 
 
-def extract_link_from_file(path_to_file: str) -> Set[str]:
+def extract_link_from_file(path_to_file: str, markdown_files) -> Set[str]:
     """
     Extracts links from a Markdown file. The markdown file is assumed to follow the
     obsidian markdown structure.
@@ -65,9 +65,34 @@ def extract_link_from_file(path_to_file: str) -> Set[str]:
     with open(path_to_file, "r", encoding="UTF-8") as md_file:
         for line in md_file:
             matches: List[str] = findall(r"\[\[(.*?)\]\]", line)
-            if matches:
-                for match in matches:
-                    links.add(match)
+
+            for match in matches:
+                actual_link: str = ""
+                previous_character: str = ""
+
+                for character in match:
+                    # "Ghaz's Notes#Table Of Contents | Contents" -> "Ghaz's Notes"
+                    if (
+                        previous_character != "\\"
+                        and character == "#"
+                        or character == "|"
+                    ):
+                        break
+
+                    actual_link += character
+                    previous_character = character
+
+                actual_link = actual_link.strip()
+                # TODO: LOOK FOR A BETTER SOLUTION
+                markdown_exists: bool = False
+
+                for path, file_name in markdown_files.items():
+                    if file_name == actual_link:
+                        markdown_exists = True
+                        break
+
+                if markdown_exists:
+                    links.add(actual_link)
 
     return links
 
@@ -78,7 +103,7 @@ def create_and_save_graph(save_path: str) -> None:
 
     Args:
         save_path: The path to where the graph file will be saved.
-        
+
     Returns:
         None
     """
@@ -105,7 +130,7 @@ def create_and_save_graph(save_path: str) -> None:
     graph: List[Dict[str, str]] = []
 
     for path, file_name in md_files.items():
-        links: Set[str] = extract_link_from_file(path)
+        links: Set[str] = extract_link_from_file(path, md_files)
 
         for connection_to in links:
             graph.append({"source": file_name, "target": connection_to})
@@ -116,7 +141,5 @@ def create_and_save_graph(save_path: str) -> None:
     for data in graph:
         force_graph_data["links"].append(data)
 
-    with open(
-        save_path, "w", encoding="utf-8"
-    ) as output_file:
+    with open(save_path, "w", encoding="utf-8") as output_file:
         dump(force_graph_data, output_file)

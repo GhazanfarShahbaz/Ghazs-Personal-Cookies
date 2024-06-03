@@ -1,7 +1,7 @@
 from apps.tool_repository.tools.class_utils import (
     class_type_list_to_event_dict_list,
 )  # pylint: disable=import-error, useless-option-value, nknown-option-value, unrecognized-option
-from apps.tool_repository.tools.repository.models.class_model import Class
+from repository.models.class_model import Class
 
 import pytest
 

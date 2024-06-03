@@ -1,8 +1,14 @@
-from bs4 import BeautifulSoup
-
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
+"""
+file_name = process_gmail_requests.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/14/2023
+Description: A module for handling email requests using hte gmail api.
+Edit Log:
+07/14/2023
+-   Conformed to pylint conventions.
+07/20/2023
+-   Cache get emails based on filters.
+"""
 
 from typing import Dict
 
@@ -10,13 +16,22 @@ import base64
 import json
 import tempfile
 
+from bs4 import BeautifulSoup
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+
+from apps.tool_repository.tools.redis_decorator import Cache
+
 
 def create_authorization_file(authorization_dict: Dict) -> tempfile:
     """
     Creates a temporary file containing authorization information.
 
-    This function takes a dictionary `authorization_dict` representing authorization information and writes it to a new temporary
-    file. The function returns a handle to the temporary file.
+    This function takes a dictionary `authorization_dict` representing authorization
+    information and writes it to a new temporary file.
+    The function returns a handle to the temporary file.
 
     Args:
         authorization_dict: A dictionary containing authorization information.
@@ -25,11 +40,12 @@ def create_authorization_file(authorization_dict: Dict) -> tempfile:
         A handle to a temporary file containing the authorization information.
     """
 
-    authorization_file: tempfile = tempfile.NamedTemporaryFile()
-
+    authorization_file: tempfile = (
+        tempfile.NamedTemporaryFile()
+    )  # pylint: disable=consider-using-with
     authorization_file.write(json.dumps(authorization_dict).encode("utf-8"))
-
     authorization_file.flush()
+
     return authorization_file
 
 
@@ -37,8 +53,10 @@ def get_credentials(authorization_dict: Dict) -> Credentials:
     """
     Retrieves user credentials from a temporary file.
 
-    This function takes a dictionary `authorization_dict` containing authorization information and creates a temporary file.
-    The function then reads the credentials from the temporary file and returns them as a `Credentials` object.
+    This function takes a dictionary `authorization_dict` containing authorization
+    information and creates a temporary file.
+    The function then reads the credentials from the temporary file and returns them
+    as a `Credentials` object.
 
     Args:
         authorization_dict: A dictionary containing authorization information.
@@ -62,9 +80,10 @@ def extract_full_email(msg) -> dict:
     """
     Extracts specific fields from an email message.
 
-    This function takes an email message `msg` and extracts specific fields from it. The fields that are extracted include
-    the email labels, snippet, subject, sender, and message text. The function returns a dictionary containing the extracted
-    fields.
+    This function takes an email message `msg` and extracts specific fields from it.
+    The fields that are extracted include the email labels, snippet, subject, sender,
+    and message text.
+    The function returns a dictionary containing the extracted fields.
 
     Args:
         msg: An email message.
@@ -78,11 +97,11 @@ def extract_full_email(msg) -> dict:
         headers = payload["headers"]
         subject, sender = None, None
 
-        for d in headers:
-            if d["name"] == "Subject":
-                subject = d["value"]
-            if d["name"] == "From":
-                sender = d["value"]
+        for data in headers:
+            if data["name"] == "Subject":
+                subject = data["value"]
+            if data["name"] == "From":
+                sender = data["value"]
 
         # The Body of the message is in Encrypted format. So, we have to decode it.
         # Get the data and decode it with base 64 decoder.
@@ -103,75 +122,88 @@ def extract_full_email(msg) -> dict:
             "Sender": str(sender),
             "Message": str(body),
         }
-    except:
+    except:  # pylint: disable=bare-except
         return {"Labels": None}
 
 
-def get_emails(
+def get_emails(  # pylint: disable=too-many-locals
     authorization_dict: Dict, label_filters: list, max_results: int, get_snippet: bool
 ) -> dict:
     """
     Retrieves a list of email messages from Gmail.
 
-    This function takes a dictionary `authorization_dict` containing authorization information, a list of label filters `label_filters`,
-    an integer `max_results` representing the maximum number of email messages to retrieve, and a boolean `get_snippet` indicating
-    whether to retrieve only the email header or also the full email body. The function then connects to the Gmail API using the
-    provided authorization information, retrieves a list of email messages based on the provided label filters and maximum number
-    of results, and returns a dictionary containing the email labels, subject, sender, snippet and message text for each email.
+    This function takes a dictionary `authorization_dict` containing authorization information,
+    a list of label filters `label_filters`, an integer `max_results` representing the maximum
+    number of email messages to retrieve, and a boolean `get_snippet` indicating whether to
+    retrieve only the email header or also the full email body. The function then connects to
+    the Gmail API using the provided authorization information, retrieves a list of email messages
+    based on the provided label filters and maximum number of results, and returns a dictionary
+    containing the email labels, subject, sender, snippet and message text for each email.
 
     Args:
         authorization_dict: A dictionary containing the authorization information for the Gmail API.
-        label_filters: A list of strings containing label filters to apply when retrieving email messages.
+        label_filters: A list of strings containing label filters to apply when retrieving email
+        messages.
         max_results: An integer representing the maximum number of email messages to retrieve.
-        get_snippet: A boolean indicating whether to retrieve only the email header or also the full email body.
+        get_snippet: A boolean indicating whether to retrieve only the email header or also the full
+        email body.
 
     Returns:
-        A dictionary containing the email labels, subject, sender, snippet and message text for each email.
+        A dictionary containing the email labels, subject, sender, snippet and message text for each
+        email.
     """
+    cache_key: str = f"{str(label_filters)}_{max_results}_{get_snippet}"
 
-    creds: Credentials = get_credentials(authorization_dict)
+    @Cache(cache_key=cache_key, expiration_time=5)
+    def filter_emails():
+        creds: Credentials = get_credentials(authorization_dict)
 
-    # Connect to the Gmail API
-    service = build("gmail", "v1", credentials=creds)
+        # Connect to the Gmail API
+        service = build("gmail", "v1", credentials=creds)
 
-    # We can also pass maxResults to get any number of emails. Like this:
-    results = (
-        service.users()
-        .messages()
-        .list(userId="me", labelIds=label_filters, maxResults=max_results)
-        .execute()
-    )
-    messages: list = results.get("messages")
+        # We can also pass maxResults to get any number of emails. Like this:
+        results = (
+            service.users()  # pylint: disable=no-member
+            .messages()
+            .list(userId="me", labelIds=label_filters, maxResults=max_results)
+            .execute()
+        )
 
-    email_data: Dict = {}
-    size: int = 0
+        messages: list = results.get("messages")
 
-    for message in messages:
-        msg = service.users().messages().get(userId="me", id=message["id"]).execute()
+        email_data: Dict = {}
+        size: int = 0
 
-        if get_snippet is True:
-            subject, sender = None, None
-            try:
-                payload = msg["payload"]
-                headers = payload["headers"]
+        for message in messages:
+            msg = (
+                service.users().messages().get(userId="me", id=message["id"]).execute()
+            )  # pylint: disable=no-member
 
-                for d in headers:
-                    if d["name"] == "Subject":
-                        subject = d["value"]
-                    if d["name"] == "From":
-                        sender = d["value"]
-            except:
-                None
+            if get_snippet is True:
+                subject, sender = None, None
+                try:
+                    payload = msg["payload"]
+                    headers = payload["headers"]
 
-            email_data[size] = {
-                "Labels": msg["labelIds"],
-                "Snippet": msg["snippet"],
-                "Subject": str(subject),
-                "Sender": str(sender),
-            }
-        else:
-            email_data[size] = extract_full_email(msg)
+                    for data in headers:
+                        if data["name"] == "Subject":
+                            subject = data["value"]
+                        if data["name"] == "From":
+                            sender = data["value"]
+                except:  # pylint: disable=bare-except
+                    continue
 
-        size += 1
+                email_data[size] = {
+                    "Labels": msg["labelIds"],
+                    "Snippet": msg["snippet"],
+                    "Subject": str(subject),
+                    "Sender": str(sender),
+                }
+            else:
+                email_data[size] = extract_full_email(msg)
 
-    return email_data
+            size += 1
+
+        return email_data
+
+    return filter_emails()

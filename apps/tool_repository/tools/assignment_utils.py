@@ -1,6 +1,16 @@
+"""
+file_name = assignment_utils.py
+Creator: Ghazanfar Shahbaz
+Last Updated: 07/09/2023
+Description: A module used for database assignment objects. 
+Edit Log:
+07/09/2023
+-   Conformed to pylint conventions.
+"""
+
 from typing import List
 
-from apps.tool_repository.tools.repository.models.assignment_model import Assignment
+from repository.models.assignment_model import Assignment
 
 
 def assignment_type_list_to_event_dict_list(
